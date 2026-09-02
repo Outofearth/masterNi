@@ -3,7 +3,6 @@ import { useState } from 'react';
 import BirthForm from '@/components/BirthForm';
 import ChartBoard from '@/components/ChartBoard';
 import InsightPanel from '@/components/InsightPanel';
-import TimeNav, { type TimeView } from '@/components/TimeNav';
 import { generateChart } from '@/lib/ziwei/algorithm';
 import type { BirthInfo, ZiweiChart, Palace } from '@/lib/ziwei/types';
 
@@ -20,8 +19,6 @@ import type { BirthInfo, ZiweiChart, Palace } from '@/lib/ziwei/types';
 export default function ChartPage() {
   const [chart, setChart] = useState<ZiweiChart | null>(null);
   const [selectedPalace, setSelectedPalace] = useState<Palace | null>(null);
-  const [view, setView] = useState<TimeView>('mingpan');
-  const [liunianYear, setLiunianYear] = useState(() => new Date().getFullYear());
 
   // ── 未起盘：展示出生信息表单 ──
   if (!chart) {
@@ -38,38 +35,36 @@ export default function ChartPage() {
     );
   }
 
-  // ── 已起盘：命盘 + 解读 ──
+  // ── 已起盘：单屏工作台 ──
+  // 布局规则见 app/globals.css（.ziwei-workspace* / .ziwei-left）：
+  // 整页锁定一屏；左命盘超高时自身滚动；右 AI 解读对话在消息区内上下滚动。
   return (
-    <main style={{ maxWidth: 1280, margin: '0 auto', padding: '24px 16px' }}>
-      <button
-        type="button"
-        onClick={() => { setChart(null); setSelectedPalace(null); }}
-        style={{
-          marginBottom: 16, padding: '6px 14px', cursor: 'pointer',
-          border: '1px solid #ccc', borderRadius: 8, background: 'transparent',
-        }}
-      >
-        ← 重新起盘
-      </button>
+    <div className="ziwei-workspace">
+      {/* 顶栏：返回起盘 */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, padding: '2px 4px' }}>
+        <button
+          type="button"
+          onClick={() => { setChart(null); setSelectedPalace(null); }}
+          style={{
+            padding: '6px 14px', cursor: 'pointer', fontSize: 13,
+            border: '1px solid var(--t-border)', borderRadius: 8,
+            background: 'transparent', color: 'var(--t-text)',
+          }}
+        >
+          ← 重新起盘
+        </button>
+        <span className="hidden sm:block" style={{ fontSize: 12, color: 'var(--t-faint)' }}>
+          倪海厦体系排盘 · 点击宫位 / 话题 / 输入问题，AI 解读在右侧对话区滚动阅读
+        </span>
+      </div>
 
-      <TimeNav
-        chart={chart}
-        view={view}
-        liunianYear={liunianYear}
-        onViewChange={setView}
-        onYearChange={setLiunianYear}
-      />
-
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 380px)',
-          gap: 20, marginTop: 16, alignItems: 'start',
-        }}
-      >
-        <ChartBoard chart={chart} onPalaceSelect={setSelectedPalace} />
+      {/* 工作区：左命盘｜右 AI 解读（对话内部滚动） */}
+      <div className="ziwei-workspace-grid">
+        <div className="ziwei-left">
+          <ChartBoard chart={chart} onPalaceSelect={setSelectedPalace} />
+        </div>
         <InsightPanel chart={chart} selectedPalace={selectedPalace} />
       </div>
-    </main>
+    </div>
   );
 }

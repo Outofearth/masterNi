@@ -172,13 +172,21 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
     color: inputClr,
     borderRadius: '14px',
     padding: '10px 14px',
-    fontSize: '13px',
+    fontSize: '14px',
     width: '100%',
     outline: 'none',
     transition: 'border-color 0.2s',
   } as React.CSSProperties;
 
   const errorInputStyle = { ...inputStyle, borderColor: errorClr };
+
+  // ── 原生下拉（select）专用样式 ──
+  // 暗色模式用「不透明深底 + 浅色高对比文字」：原生 <select> 展开的选项列表会沿用该底色，
+  // 若仍用半透明浅色底会出现「白底 + 浅字 / 深底 + 深字」的难读情况。
+  // option 弹出列表的兜底样式见 app/globals.css 的 select option 规则。
+  const selectBg = isDark ? '#131c36' : 'rgba(255,252,240,0.95)';
+  const selectStyle = { ...inputStyle, background: selectBg };
+  const selectErrorStyle = { ...selectStyle, borderColor: errorClr };
 
   function FieldError({ msg }: { msg: string }) {
     return (
@@ -189,7 +197,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
             animate={{ opacity: 1, y: 0, height: 'auto' }}
             exit={{ opacity: 0, y: -4, height: 0 }}
             transition={{ duration: 0.18 }}
-            style={{ color: errorClr, fontSize: '11px', marginTop: '4px' }}
+            style={{ color: errorClr, fontSize: '12px', marginTop: '4px' }}
           >
             ✕ {msg}
           </motion.p>
@@ -227,7 +235,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
 
       {/* ── 姓名 ── */}
       <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>姓名（可选）</label>
+        <label style={{ display: 'block', fontSize: '12px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>姓名（可选）</label>
         <input
           type="text"
           placeholder="请输入姓名"
@@ -241,13 +249,13 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
 
       {/* ── 出生日期 ── */}
       <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>出生日期（公历）</label>
+        <label style={{ display: 'block', fontSize: '12px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>出生日期（公历）</label>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
           <div>
             <select
               value={form.year}
               onChange={e => { setForm({ ...form, year: e.target.value }); setTouched(t => ({ ...t, year: true })); }}
-              style={showErr('year') && errors.year ? errorInputStyle : inputStyle}
+              style={showErr('year') && errors.year ? selectErrorStyle : selectStyle}
               required
             >
               <option value="">年份</option>
@@ -261,7 +269,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
             <select
               value={form.month}
               onChange={e => { setForm({ ...form, month: e.target.value }); setTouched(t => ({ ...t, month: true })); }}
-              style={showErr('month') && errors.month ? errorInputStyle : inputStyle}
+              style={showErr('month') && errors.month ? selectErrorStyle : selectStyle}
               required
             >
               <option value="">月份</option>
@@ -275,7 +283,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
             <select
               value={form.day}
               onChange={e => { setForm({ ...form, day: e.target.value }); setTouched(t => ({ ...t, day: true })); }}
-              style={showErr('day') && errors.day ? errorInputStyle : inputStyle}
+              style={showErr('day') && errors.day ? selectErrorStyle : selectStyle}
               required
             >
               <option value="">日期</option>
@@ -290,12 +298,12 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
 
       {/* ── 出生地点 ── */}
       <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>出生地点（用于真太阳时校正）</label>
+        <label style={{ display: 'block', fontSize: '12px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>出生地点（用于真太阳时校正）</label>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
           <select
             value={form.province}
             onChange={e => handleProvince(e.target.value)}
-            style={inputStyle}
+            style={selectStyle}
             onFocus={e => { e.target.style.borderColor = focusBorder; }}
             onBlur={e => { e.target.style.borderColor = inputBorder; }}
           >
@@ -308,7 +316,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
             value={form.city}
             onChange={e => handleCity(e.target.value)}
             disabled={!form.province}
-            style={{ ...inputStyle, opacity: form.province ? 1 : 0.45 }}
+            style={{ ...selectStyle, opacity: form.province ? 1 : 0.45 }}
             onFocus={e => { e.target.style.borderColor = focusBorder; }}
             onBlur={e => { e.target.style.borderColor = inputBorder; }}
           >
@@ -325,7 +333,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              style={{ fontSize: '10px', color: isDark ? 'rgba(180,210,235,0.85)' : 'rgba(100,70,10,0.5)', marginTop: '5px' }}
+              style={{ fontSize: '11px', color: isDark ? 'rgba(180,210,235,0.85)' : 'rgba(100,70,10,0.5)', marginTop: '5px' }}
             >
               {form.city || '（请选择城市）'} · 经度 {form.longitude.toFixed(1)}°E · 时差 {offsetMin > 0 ? '+' : ''}{offsetMin} 分钟
             </motion.p>
@@ -335,7 +343,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              style={{ fontSize: '10px', color: isDark ? 'rgba(165,185,210,0.7)' : 'rgba(140,100,20,0.45)', marginTop: '5px' }}
+              style={{ fontSize: '11px', color: isDark ? 'rgba(165,185,210,0.7)' : 'rgba(140,100,20,0.45)', marginTop: '5px' }}
             >
               * 倪海夏批命用真太阳时，建议填写出生地以自动校正时辰
             </motion.p>
@@ -345,13 +353,13 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
 
       {/* ── 出生时间 ── */}
       <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>出生时间（北京时间）</label>
+        <label style={{ display: 'block', fontSize: '12px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>出生时间（北京时间）</label>
         <div style={{ borderRadius: '14px', padding: '12px', background: panelBg, border: `1px solid ${panelBorder}`, opacity: form.unknownTime ? 0.45 : 1, pointerEvents: form.unknownTime ? 'none' : 'auto', transition: 'opacity 0.2s' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
             <select
               value={form.clockHour}
               onChange={e => setForm({ ...form, clockHour: e.target.value })}
-              style={inputStyle}
+              style={selectStyle}
             >
               {Array.from({ length: 24 }, (_, i) => i).map(h => (
                 <option key={h} value={String(h)}>{h.toString().padStart(2, '0')} 时</option>
@@ -360,7 +368,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
             <select
               value={form.clockMinute}
               onChange={e => setForm({ ...form, clockMinute: e.target.value })}
-              style={inputStyle}
+              style={selectStyle}
             >
               {Array.from({ length: 60 }, (_, i) => i).map(min => (
                 <option key={min} value={String(min)}>{min.toString().padStart(2, '0')} 分</option>
@@ -369,12 +377,12 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
           </div>
           {/* 真太阳时结果 */}
           <div style={{ textAlign: 'center', padding: '4px 0' }}>
-            <span style={{ fontSize: '10px', color: isDark ? 'rgba(170,195,220,0.75)' : 'rgba(140,100,20,0.5)' }}>真太阳时 → </span>
+            <span style={{ fontSize: '11px', color: isDark ? 'rgba(170,195,220,0.75)' : 'rgba(140,100,20,0.5)' }}>真太阳时 → </span>
             <span style={{ fontSize: '15px', color: goldText, fontWeight: 600, letterSpacing: '0.08em' }}>
               {SHICHEN_NAMES[branch]}时
             </span>
             {shichenInfo && (
-              <span style={{ fontSize: '10px', color: isDark ? 'rgba(170,195,220,0.75)' : 'rgba(140,100,20,0.5)', marginLeft: '4px' }}>
+              <span style={{ fontSize: '11px', color: isDark ? 'rgba(170,195,220,0.75)' : 'rgba(140,100,20,0.5)', marginLeft: '4px' }}>
                 （{shichenInfo.range}）
               </span>
             )}
@@ -387,7 +395,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
             onChange={e => setForm({ ...form, unknownTime: e.target.checked })}
             style={{ width: '14px', height: '14px', borderRadius: '4px', cursor: 'pointer' }}
           />
-          <span style={{ fontSize: '10px', color: isDark ? 'rgba(165,185,210,0.7)' : 'rgba(140,100,20,0.45)' }}>
+          <span style={{ fontSize: '11px', color: isDark ? 'rgba(165,185,210,0.7)' : 'rgba(140,100,20,0.45)' }}>
             不知道出生时间，以子时（23:00–01:00）起盘
           </span>
         </label>
@@ -395,7 +403,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
 
       {/* ── 性别 ── */}
       <div style={{ marginBottom: '20px' }}>
-        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>性别</label>
+        <label style={{ display: 'block', fontSize: '12px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>性别</label>
         <div style={{ display: 'flex', gap: '10px' }}>
           {(['male', 'female'] as const).map(g => {
             const active = form.gender === g;
@@ -411,7 +419,7 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave, 
                   flex: 1,
                   padding: '11px',
                   borderRadius: '14px',
-                  fontSize: '13px',
+                  fontSize: '14px',
                   fontWeight: 500,
                   border: `1px solid ${active ? `rgba(${accent},0.6)` : inputBorder}`,
                   background: active ? `rgba(${accent},0.08)` : inputBg,

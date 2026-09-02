@@ -37,10 +37,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-CN" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('ziwei-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();` }} />
-      </head>
+    // 服务端固定渲染暗色首帧，与 ThemeProvider 默认值一致，避免 hydration 两端主题不一致；
+    // 用户的本地主题偏好由 ThemeProvider 在挂载后读取并切换（见 components/ThemeProvider.tsx）
+    <html lang="zh-CN" data-theme="dark" suppressHydrationWarning>
       <body className="min-h-screen">
         <ThemeProvider>
           {children}

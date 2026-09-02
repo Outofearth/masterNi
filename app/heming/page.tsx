@@ -5,6 +5,11 @@ import BirthForm, { type BirthFormState } from '@/components/BirthForm';
 import { formToBirthInfo } from '@/lib/ziwei/share';
 import type { BirthInfo, ZiweiChart } from '@/lib/ziwei/types';
 import { useTheme } from '@/components/ThemeProvider';
+import { exportPdfReport, chartSectionHtml, mdToHtml } from '@/lib/reportExport';
+
+function escHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
 // ─── AiContent 渲染器（与 InsightPanel 一致）────────────────
 function AiContent({ text, streaming }: { text: string; streaming?: boolean }) {
@@ -16,7 +21,7 @@ function AiContent({ text, streaming }: { text: string; streaming?: boolean }) {
         if (sectionMatch) {
           return (
             <div key={i} style={{ paddingTop: i === 0 ? 0 : '14px', paddingBottom: '4px' }}>
-              <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--ac)', letterSpacing: '0.04em' }}>
+              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ac)', letterSpacing: '0.04em' }}>
                 【{sectionMatch[1]}】
               </span>
             </div>
@@ -25,7 +30,7 @@ function AiContent({ text, streaming }: { text: string; streaming?: boolean }) {
         if (line.trim() === '') return <div key={i} style={{ height: '4px' }} />;
         const parts = line.split(/\*\*(.+?)\*\*/);
         return (
-          <div key={i} style={{ fontSize: '13px', lineHeight: 1.75, color: 'var(--tx-2)' }}>
+          <div key={i} style={{ fontSize: '14px', lineHeight: 1.8, color: 'var(--tx-2)' }}>
             {parts.map((part, j) =>
               j % 2 === 0
                 ? part
@@ -149,6 +154,23 @@ export default function HemingPage() {
     }
   }, [chartA, chartB, formA, formB, generateChart]);
 
+  // ─── 导出 PDF：双方命盘 + 合盘分析 ─────────────────────────
+  const exportAnalysis = useCallback(() => {
+    if (!chartA || !chartB || !analysis.trim()) return;
+    exportPdfReport({
+      reportTitle: '紫微合盘分析报告',
+      subtitle: `甲方 ${formA ? `${formA.year}-${formA.month}-${formA.day}` : ''} ／ 乙方 ${formB ? `${formB.year}-${formB.month}-${formB.day}` : ''}`,
+      sections: [
+        { html: chartSectionHtml(chartA, '甲方 A · 命盘详情') },
+        { html: chartSectionHtml(chartB, '乙方 B · 命盘详情') },
+        {
+          html: `<div class="sec-box"><h2>AI 合盘分析${question ? ` · ${escHtml(question)}` : ''}</h2>${mdToHtml(analysis)}</div>`,
+        },
+      ],
+      footer: '数据口径：倪海厦《天纪》体系 · 仅供传统文化研究参考',
+    });
+  }, [chartA, chartB, analysis, formA, formB, question]);
+
   const cardStyle = {
     background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.9)',
     border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(200,160,60,0.2)'}`,
@@ -238,6 +260,24 @@ export default function HemingPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: (analysis || analyzing) ? '20px' : '24px' }}>
             <span style={{ color: 'var(--ac)', opacity: 0.6 }}>◉</span>
             <span style={{ fontSize: '11px', letterSpacing: '0.3em', color: 'var(--tx-3)' }}>合盘分析 · HEMING</span>
+            <button
+              type="button"
+              onClick={exportAnalysis}
+              disabled={analyzing || !analysis}
+              style={{
+                marginLeft: 'auto',
+                fontSize: '12px', fontWeight: 500,
+                padding: '6px 14px', borderRadius: 'var(--r-pill)',
+                border: '1px solid rgba(184,146,42,0.35)',
+                background: 'rgba(184,146,42,0.10)',
+                color: 'var(--ac)',
+                cursor: analyzing || !analysis ? 'not-allowed' : 'pointer',
+                opacity: analysis ? 1 : 0.45,
+                transition: 'opacity 0.2s',
+              }}
+            >
+              导出 PDF 报告
+            </button>
           </div>
 
           {/* 状态分支 */}
