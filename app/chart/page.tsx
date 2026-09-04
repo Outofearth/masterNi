@@ -3,6 +3,7 @@ import { useState } from 'react';
 import BirthForm from '@/components/BirthForm';
 import ChartBoard from '@/components/ChartBoard';
 import InsightPanel from '@/components/InsightPanel';
+import ThemeToggle from '@/components/ThemeToggle';
 import { generateChart } from '@/lib/ziwei/algorithm';
 import type { BirthInfo, ZiweiChart, Palace } from '@/lib/ziwei/types';
 
@@ -40,7 +41,7 @@ export default function ChartPage() {
   // 整页锁定一屏；左命盘超高时自身滚动；右 AI 解读对话在消息区内上下滚动。
   return (
     <div className="ziwei-workspace">
-      {/* 顶栏：返回起盘 */}
+      {/* 顶栏：返回起盘 + 主题切换 */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, padding: '2px 4px' }}>
         <button
           type="button"
@@ -56,6 +57,9 @@ export default function ChartPage() {
         <span className="hidden sm:block" style={{ fontSize: 12, color: 'var(--t-faint)' }}>
           倪海厦体系排盘 · 点击宫位 / 话题 / 输入问题，AI 解读在右侧对话区滚动阅读
         </span>
+        <div style={{ marginLeft: 'auto' }}>
+          <ThemeToggle />
+        </div>
       </div>
 
       {/* 工作区：左命盘｜右 AI 解读（对话内部滚动） */}

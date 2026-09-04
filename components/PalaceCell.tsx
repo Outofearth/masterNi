@@ -20,10 +20,10 @@ interface PalaceCellProps {
 }
 
 const SIHUA_STYLES: Record<string, string> = {
-  '禄': 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
-  '权': 'text-blue-400 bg-blue-500/10 border-blue-500/30',
-  '科': 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30',
-  '忌': 'text-red-400 bg-red-500/10 border-red-500/30',
+  '禄': 'sihua-lu',
+  '权': 'sihua-quan',
+  '科': 'sihua-ke',
+  '忌': 'sihua-ji',
 };
 
 const SiHuaBadge = ({
@@ -35,16 +35,22 @@ const SiHuaBadge = ({
   siHua: string;
   overlay?: boolean;
   label?: string;
-  onClick?: (e: React.MouseEvent) => void;
+  onClick?: (e: React.SyntheticEvent) => void;
 }) => {
   return (
     <span
       className={clsx(
-        'inline-flex items-center text-[8px] px-1 rounded-full border leading-none py-px font-bold ml-1 flex-shrink-0',
+        'inline-flex items-center text-[9px] px-1.5 rounded-full border leading-none py-0.5 font-bold ml-1 flex-shrink-0',
         SIHUA_STYLES[siHua],
         overlay && 'border-dashed opacity-80',
         onClick && 'cursor-pointer hover:opacity-100',
       )}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      aria-label={onClick ? `查看化${siHua}详情` : undefined}
+      onKeyDown={onClick ? (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(e); }
+      } : undefined}
       onClick={onClick}
     >
       {overlay && label && <span className="mr-px opacity-70">{label}</span>}
@@ -64,82 +70,97 @@ export default function PalaceCell({
   const luckyStars = stars.filter(s => s.type === 'lucky');
   const shaStars = stars.filter(s => s.type === 'sha');
 
+  const cellLabel = `${name}宫${stars.length ? '：' + stars.map(s => s.name).join('、') : ''}`;
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick?.(); }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.92 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.35, delay, ease: 'easeOut' }}
+      role="button"
+      tabIndex={0}
+      aria-label={cellLabel}
+      onKeyDown={handleKeyDown}
       onClick={onClick}
-      className="relative flex flex-col p-1.5 cursor-pointer transition-all duration-200 h-full"
+      className="relative flex flex-col p-2 cursor-pointer transition-all duration-200 h-full"
       style={{
-        minHeight: '90px',
+        minHeight: '104px',
         background: isCurrentDaXian
-          ? 'rgba(147,51,234,0.08)'
+          ? 'var(--da-xian-bg)'
           : isSelected
-          ? 'rgba(37,99,235,0.18)'
+          ? 'var(--sel-bg)'
           : isSanFang
-          ? 'rgba(37,99,235,0.09)'
+          ? 'var(--sel-bg)'
           : isMingGong
-          ? 'rgba(212,168,67,0.04)'
+          ? 'var(--ac-bg)'
           : 'var(--t-bg)',
         boxShadow: isCurrentDaXian
-          ? 'inset 3px 0 0 rgba(147,51,234,0.5)'
+          ? 'inset 3px 0 0 var(--da-xian-bdr)'
           : isSelected
-          ? 'inset 0 0 0 1.5px rgba(37,99,235,0.7)'
+          ? 'inset 0 0 0 1.5px var(--sel-bdr)'
           : isSanFang
-          ? 'inset 0 0 0 1px rgba(37,99,235,0.4)'
+          ? 'inset 0 0 0 1px var(--sel-bdr)'
           : 'none',
       }}
     >
       {/* 大限年龄 */}
       {daXianAge && (
-        <div className={clsx(
-          'absolute top-1 right-1 text-[9px] font-mono tabular-nums',
-          isCurrentDaXian ? 'text-purple-400' : ''
-        )}
-          style={!isCurrentDaXian ? { color: 'var(--t-faint)', opacity: 0.75 } : undefined}
+        <div
+          className="absolute top-1.5 right-1.5 text-[10px] font-mono tabular-nums"
+          style={{ color: isCurrentDaXian ? 'var(--da-xian)' : 'var(--t-faint)' }}
         >
           {daXianAge[0]}–{daXianAge[1]}
         </div>
       )}
 
       {/* 宫名行 */}
-      <div className="flex items-center gap-1 mb-0.5 pr-8">
-        <span className={clsx('text-[10px] font-medium tracking-wide',
-          isMingGong ? 'text-amber-500' : isShenGong ? 'text-sky-500' : ''
-        )}
-          style={!isMingGong && !isShenGong ? { color: 'var(--t-faint)' } : undefined}
+      <div className="flex items-center gap-1 mb-1 pr-10">
+        <span
+          className="text-[12px] font-medium tracking-wide"
+          style={{ color: isMingGong ? 'var(--ming)' : isShenGong ? 'var(--shen)' : 'var(--t-faint)' }}
         >
           {name}
         </span>
         {isMingGong && (
-          <span className="text-[7px] text-amber-500/80 border border-amber-500/30 px-0.5 rounded leading-tight">命</span>
+          <span className="text-[9px] font-medium border px-0.5 rounded leading-tight" style={{ color: 'var(--ming)', borderColor: 'var(--bdr-med)' }}>命</span>
         )}
         {isShenGong && (
-          <span className="text-[7px] text-sky-500/80 border border-sky-500/30 px-0.5 rounded leading-tight">身</span>
+          <span className="text-[9px] font-medium border px-0.5 rounded leading-tight" style={{ color: 'var(--shen)', borderColor: 'var(--bdr-med)' }}>身</span>
         )}
       </div>
 
       {/* 干支 */}
-      <div className="text-[9px] font-mono mb-1" style={{ color: 'var(--t-faint)', opacity: 0.75 }}>{ganzhi}</div>
+      <div className="text-[10px] font-mono mb-1.5" style={{ color: 'var(--t-faint)' }}>{ganzhi}</div>
 
       {/* 主星 */}
-      <div className="flex flex-col gap-0.5 flex-1">
+      <div className="flex flex-col gap-1 flex-1">
         {majorStars.length === 0 && (
-          <span className="text-[10px] italic" style={{ color: 'var(--t-faint)', opacity: 0.6 }}>空宫</span>
+          <span className="text-[11px] italic" style={{ color: 'var(--t-faint)' }}>空宫</span>
         )}
         {majorStars.map((star) => {
           const overlaySiHua = overlayStarSiHua?.[star.name];
           return (
-            <div
-              key={star.name}
-              className="flex items-center"
-              onClick={e => { e.stopPropagation(); onStarClick?.(star); }}
-            >
-              <span className={clsx(
-                'text-[13px] leading-tight font-bold tracking-tight cursor-pointer hover:brightness-125 transition-all',
-                star.brightness === 'bright' ? 'text-amber-300' : star.brightness === 'dim' ? 'text-amber-700/80' : 'text-amber-500',
-              )}>
+              <div
+                key={star.name}
+                role="button"
+                tabIndex={0}
+                aria-label={`查看${star.name}星详情`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault(); e.stopPropagation(); onStarClick?.(star);
+                  }
+                }}
+                className="flex items-center"
+                onClick={e => { e.stopPropagation(); onStarClick?.(star); }}
+              >
+              <span
+                className="text-[15px] leading-tight font-bold tracking-tight cursor-pointer hover:brightness-125 transition-all"
+                style={{ color: star.brightness === 'bright' ? 'var(--star-major-bright)' : star.brightness === 'dim' ? 'var(--star-major-dim)' : 'var(--star-major)' }}
+              >
                 {star.name}
               </span>
               {star.siHua && <SiHuaBadge siHua={star.siHua} />}
@@ -161,11 +182,11 @@ export default function PalaceCell({
 
       {/* 吉星 */}
       {luckyStars.length > 0 && (
-        <div className="flex flex-wrap gap-x-1 mt-0.5">
+        <div className="flex flex-wrap gap-x-1.5 mt-1">
           {luckyStars.map(s => {
             const overlaySiHua = overlayStarSiHua?.[s.name];
             return (
-              <span key={s.name} className="inline-flex items-center text-[9px] text-sky-500/70 leading-tight">
+              <span key={s.name} className="inline-flex items-center text-[10px] leading-tight" style={{ color: 'var(--lucky)' }}>
                 {s.name}
                 {s.siHua && <SiHuaBadge siHua={s.siHua} />}
                 {overlaySiHua && (
@@ -187,9 +208,9 @@ export default function PalaceCell({
 
       {/* 煞星 */}
       {shaStars.length > 0 && (
-        <div className="flex flex-wrap gap-x-1">
+        <div className="flex flex-wrap gap-x-1.5">
           {shaStars.map(s => (
-            <span key={s.name} className="text-[9px] text-red-500/60 leading-tight">
+            <span key={s.name} className="text-[10px] leading-tight" style={{ color: 'var(--sha)' }}>
               {s.name}{s.siHua && <SiHuaBadge siHua={s.siHua} />}
             </span>
           ))}

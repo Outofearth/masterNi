@@ -104,10 +104,10 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-3"
       >
-        <div className="text-[10px] tracking-[0.5em] uppercase mb-1" style={{ color: 'var(--t-faint)' }}>
+        <div className="text-[11px] tracking-[0.5em] uppercase mb-1" style={{ color: 'var(--t-faint)' }}>
           Zi Wei Dou Shu
         </div>
-        <h2 className="text-sm tracking-[0.25em] font-medium" style={{ color: 'var(--t-gold)' }}>
+        <h2 className="text-base tracking-[0.25em] font-medium" style={{ color: 'var(--t-gold)' }}>
           {chart.birthInfo.name ? `${chart.birthInfo.name} · ` : ''}紫微斗数命盘
         </h2>
       </motion.div>
@@ -157,28 +157,28 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
             ☯
           </div>
 
-          <div className="text-center space-y-1">
-            <div className="text-[9px] tracking-[0.3em] font-medium" style={{ color: 'var(--t-gold)' }}>紫微斗数</div>
-            <div className="text-[10px] space-y-0.5" style={{ color: 'var(--t-faint)' }}>
+          <div className="text-center space-y-1.5">
+            <div className="text-[10px] tracking-[0.3em] font-medium" style={{ color: 'var(--t-gold)' }}>紫微斗数</div>
+            <div className="text-[11px] space-y-1" style={{ color: 'var(--t-faint)' }}>
               <div>命宫 <span style={{ color: 'var(--t-gold)', opacity: 0.7 }}>{BRANCHES[chart.mingGongBranch]}</span></div>
-              <div>身宫 <span className="text-sky-500/70">{BRANCHES[chart.shenGongBranch]}</span></div>
-              <div className="text-[9px]" style={{ color: 'var(--t-gold)', opacity: 0.75 }}>{chart.wuxingJuName}</div>
+              <div>身宫 <span style={{ color: 'var(--shen)' }}>{BRANCHES[chart.shenGongBranch]}</span></div>
+              <div className="text-[10px]" style={{ color: 'var(--t-gold)', opacity: 0.75 }}>{chart.wuxingJuName}</div>
             </div>
           </div>
 
           {chart.currentDaXianIndex >= 0 && (() => {
             const dx = chart.daXians[chart.currentDaXianIndex];
             return (
-              <div className="border border-purple-500/30 rounded-lg px-3 py-1.5 text-center"
-                style={{ background: 'rgba(147,51,234,0.06)' }}>
-                <div className="text-[8px] text-purple-500/80 mb-0.5 tracking-wider">当前大限</div>
-                <div className="text-[12px] text-purple-400 font-medium tabular-nums">{dx.startAge}–{dx.endAge}岁</div>
-                <div className="text-[9px] text-purple-500/60">{dx.palaceName}</div>
+              <div className="border rounded-lg px-3 py-1.5 text-center"
+                style={{ borderColor: 'var(--da-xian-bdr)', background: 'var(--da-xian-bg)' }}>
+                <div className="text-[9px] mb-0.5 tracking-wider" style={{ color: 'var(--da-xian)', opacity: 0.85 }}>当前大限</div>
+                <div className="text-[13px] font-medium tabular-nums" style={{ color: 'var(--da-xian)' }}>{dx.startAge}–{dx.endAge}岁</div>
+                <div className="text-[10px]" style={{ color: 'var(--da-xian)', opacity: 0.7 }}>{dx.palaceName}</div>
               </div>
             );
           })()}
 
-          <div className="text-[8px] text-center leading-relaxed font-mono" style={{ color: 'var(--t-faint)', opacity: 0.75 }}>
+          <div className="text-[9px] text-center leading-relaxed font-mono" style={{ color: 'var(--t-faint)', opacity: 0.75 }}>
             {chart.lunarInfo.lunarYear}·{chart.lunarInfo.isLeapMonth ? '闰' : ''}
             {chart.lunarInfo.lunarMonth}·{chart.lunarInfo.lunarDay}
           </div>
@@ -204,6 +204,7 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
                 width="100%"
                 height="100%"
                 xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
                 style={{ display: 'block' }}
               >
                 {(() => {
@@ -213,7 +214,7 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
                   const p2 = BRANCH_SVG_POS[sanFangBranches[2]]; // 三合1
                   const p3 = BRANCH_SVG_POS[sanFangBranches[3]]; // 三合2
                   const dash = "6,5";
-                  const stroke = "rgba(37,99,235,0.55)";
+                  const stroke = "var(--sel)";
                   const sw = "1.5";
                   return (
                     <>
@@ -221,27 +222,23 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
                       <line
                         x1={`${p0[0]}%`} y1={`${p0[1]}%`}
                         x2={`${p1[0]}%`} y2={`${p1[1]}%`}
-                        stroke={stroke} strokeWidth={sw}
-                        strokeDasharray={dash} strokeLinecap="round"
+                        style={{ stroke, strokeWidth: sw, strokeDasharray: dash, strokeLinecap: 'round', strokeOpacity: 0.55 }}
                       />
                       {/* 三合三角形：本宫 → 三合1 → 三合2 → 本宫 */}
                       <line
                         x1={`${p0[0]}%`} y1={`${p0[1]}%`}
                         x2={`${p2[0]}%`} y2={`${p2[1]}%`}
-                        stroke={stroke} strokeWidth={sw}
-                        strokeDasharray={dash} strokeLinecap="round"
+                        style={{ stroke, strokeWidth: sw, strokeDasharray: dash, strokeLinecap: 'round', strokeOpacity: 0.55 }}
                       />
                       <line
                         x1={`${p2[0]}%`} y1={`${p2[1]}%`}
                         x2={`${p3[0]}%`} y2={`${p3[1]}%`}
-                        stroke={stroke} strokeWidth={sw}
-                        strokeDasharray={dash} strokeLinecap="round"
+                        style={{ stroke, strokeWidth: sw, strokeDasharray: dash, strokeLinecap: 'round', strokeOpacity: 0.55 }}
                       />
                       <line
                         x1={`${p3[0]}%`} y1={`${p3[1]}%`}
                         x2={`${p0[0]}%`} y2={`${p0[1]}%`}
-                        stroke={stroke} strokeWidth={sw}
-                        strokeDasharray={dash} strokeLinecap="round"
+                        style={{ stroke, strokeWidth: sw, strokeDasharray: dash, strokeLinecap: 'round', strokeOpacity: 0.55 }}
                       />
                       {/* 四个宫位中心标记点 */}
                       {[p0, p1, p2, p3].map((p, i) => (
@@ -249,7 +246,7 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
                           key={i}
                           cx={`${p[0]}%`} cy={`${p[1]}%`}
                           r="3"
-                          fill={i === 0 ? 'rgba(37,99,235,0.8)' : 'rgba(37,99,235,0.45)'}
+                          style={{ fill: 'var(--sel)', fillOpacity: i === 0 ? 0.8 : 0.45 }}
                         />
                       ))}
                     </>
@@ -266,13 +263,13 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.7 }}
-        className="mt-3 flex items-center justify-center gap-2 text-[9px] flex-wrap"
+        className="mt-3 flex items-center justify-center gap-2 text-[10px] flex-wrap"
       >
         {[
-          { h: '化禄', c: 'text-emerald-500 border-emerald-500/30' },
-          { h: '化权', c: 'text-blue-500 border-blue-500/30' },
-          { h: '化科', c: 'text-yellow-500 border-yellow-500/30' },
-          { h: '化忌', c: 'text-red-500 border-red-500/30' },
+          { h: '化禄', c: 'sihua-lu' },
+          { h: '化权', c: 'sihua-quan' },
+          { h: '化科', c: 'sihua-ke' },
+          { h: '化忌', c: 'sihua-ji' },
         ].map(({ h, c }) => (
           <span key={h} className={`border px-1.5 py-0.5 rounded-full font-medium ${c}`}>{h}</span>
         ))}

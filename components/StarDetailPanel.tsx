@@ -170,10 +170,10 @@ const levelConfig = {
 };
 
 const siHuaColors: Record<string, string> = {
-  '禄': 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
-  '权': 'text-blue-400 bg-blue-500/10 border-blue-500/30',
-  '科': 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30',
-  '忌': 'text-red-400 bg-red-500/10 border-red-500/30',
+  '禄': 'sihua-lu',
+  '权': 'sihua-quan',
+  '科': 'sihua-ke',
+  '忌': 'sihua-ji',
 };
 
 export default function StarDetailPanel({ star, palaceName, onClose }: StarDetailPanelProps) {
@@ -222,7 +222,7 @@ export default function StarDetailPanel({ star, palaceName, onClose }: StarDetai
                   <div key={tag} className="text-[10px] px-2 py-1 rounded-full"
                     style={{
                       border: '1px solid var(--t-border)',
-                      color: tag.includes('庙旺') ? '#eab308' : tag.includes('落陷') ? '#ef4444' : 'var(--t-text2)',
+                      color: tag.includes('庙旺') ? 'var(--state-good)' : tag.includes('落陷') ? 'var(--state-bad)' : 'var(--t-text2)',
                     }}>
                     {tag}
                   </div>
@@ -285,13 +285,13 @@ export default function StarDetailPanel({ star, palaceName, onClose }: StarDetai
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="text-[10px] p-2.5 rounded-lg" style={{ border: '1px solid rgba(74,222,128,0.15)', background: 'rgba(74,222,128,0.05)' }}>
-                    <div className="text-emerald-500 mb-0.5 font-medium">最佳宫位</div>
-                    <div className="text-emerald-500/70">{detail.bestPalace}</div>
+                  <div className="text-[10px] p-2.5 rounded-lg" style={{ border: '1px solid var(--state-good-bdr)', background: 'var(--state-good-bg)', color: 'var(--state-good)' }}>
+                    <div className="mb-0.5 font-medium">最佳宫位</div>
+                    <div style={{ opacity: 0.7 }}>{detail.bestPalace}</div>
                   </div>
-                  <div className="text-[10px] p-2.5 rounded-lg" style={{ border: '1px solid rgba(248,113,113,0.15)', background: 'rgba(248,113,113,0.05)' }}>
-                    <div className="text-red-500 mb-0.5 font-medium">注意宫位</div>
-                    <div className="text-red-500/70">{detail.worstPalace}</div>
+                  <div className="text-[10px] p-2.5 rounded-lg" style={{ border: '1px solid var(--state-bad-bdr)', background: 'var(--state-bad-bg)', color: 'var(--state-bad)' }}>
+                    <div className="mb-0.5 font-medium">注意宫位</div>
+                    <div style={{ opacity: 0.7 }}>{detail.worstPalace}</div>
                   </div>
                 </div>
               </>

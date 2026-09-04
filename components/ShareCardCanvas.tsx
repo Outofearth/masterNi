@@ -8,6 +8,7 @@
  */
 
 import type { ZiweiChart } from '@/lib/ziwei/types';
+import { BRAND, goldTint } from '@/lib/brand';
 
 const BRANCH_NAMES = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
 
@@ -59,7 +60,7 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
     <div id="share-card" style={{
       width: '680px',
       height: '420px',
-      background: 'linear-gradient(135deg, #fef9eb 0%, #f7e8c4 60%, #efd8a0 100%)',
+      background: `linear-gradient(135deg, ${BRAND.cardTop} 0%, ${BRAND.cardMid} 60%, ${BRAND.cardBot} 100%)`,
       padding: '20px 28px',
       fontFamily: '"PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Microsoft JhengHei", sans-serif',
       position: 'relative',
@@ -73,7 +74,7 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
       <div style={{
         position: 'absolute', top: '-60px', left: '-60px',
         width: '180px', height: '180px', borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(184,146,42,0.18) 0%, transparent 70%)',
+        background: `radial-gradient(circle, ${goldTint(0.18)} 0%, transparent 70%)`,
       }} />
       <div style={{
         position: 'absolute', bottom: '-50px', right: '-50px',
@@ -86,23 +87,23 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
             width: '34px', height: '34px', borderRadius: '50%',
-            background: 'linear-gradient(135deg, #d4a948 0%, #b8922a 100%)',
+            background: `linear-gradient(135deg, ${BRAND.goldLight} 0%, ${BRAND.gold} 100%)`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             color: 'white', fontSize: '15px', fontWeight: 700,
           }}>紫</div>
           <div>
-            <div style={{ fontSize: '15px', color: '#3d2f10', fontWeight: 600, letterSpacing: '0.12em', lineHeight: 1.2 }}>紫微命盘</div>
-            <div style={{ fontSize: '9px', color: '#a89b7c', letterSpacing: '0.18em', marginTop: '2px' }}>倪海夏正宗 · ZI WEI</div>
+            <div style={{ fontSize: '15px', color: BRAND.ink, fontWeight: 600, letterSpacing: '0.12em', lineHeight: 1.2 }}>紫微命盘</div>
+            <div style={{ fontSize: '9px', color: BRAND.goldSoft, letterSpacing: '0.18em', marginTop: '2px' }}>倪海夏正宗 · ZI WEI</div>
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-          <div style={{ fontSize: '10px', color: '#6b5d3f', letterSpacing: '0.05em' }}>
+          <div style={{ fontSize: '10px', color: BRAND.inkSoft, letterSpacing: '0.05em' }}>
             {birth.year}年{birth.month}月{birth.day}日 · {birth.hour.padStart(2,'0')}:{birth.minute.padStart(2,'0')}
-            <span style={{ margin: '0 4px', color: '#b8922a' }}>·</span>
+            <span style={{ margin: '0 4px', color: BRAND.gold }}>·</span>
             {birth.gender === 'male' ? '男命' : '女命'}
-            {birth.city && <><span style={{ margin: '0 4px', color: '#b8922a' }}>·</span>{birth.city}</>}
+            {birth.city && <><span style={{ margin: '0 4px', color: BRAND.gold }}>·</span>{birth.city}</>}
           </div>
-          <div style={{ fontSize: '8px', color: '#b8922a', letterSpacing: '0.08em', marginTop: '2px' }}>
+          <div style={{ fontSize: '8px', color: BRAND.gold, letterSpacing: '0.08em', marginTop: '2px' }}>
             wdyziweidoushu666.com
           </div>
         </div>
@@ -115,7 +116,7 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
           width: '300px',
           height: '288px',
           background: 'rgba(255,255,255,0.5)',
-          border: '1px solid rgba(184,146,42,0.3)',
+          border: `1px solid ${goldTint(0.3)}`,
           borderRadius: '8px',
           padding: '6px',
           display: 'grid',
@@ -131,10 +132,10 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
               <div key={i} style={{
                 gridRow: cell.row + 1,
                 gridColumn: cell.col + 1,
-                background: cell.isMing ? 'rgba(184,146,42,0.18)' : 'rgba(255,255,255,0.6)',
+                background: cell.isMing ? goldTint(0.18) : 'rgba(255,255,255,0.6)',
                 border: cell.isMing
-                  ? '1.5px solid #b8922a'
-                  : '0.5px solid rgba(184,146,42,0.2)',
+                  ? `1.5px solid ${BRAND.gold}`
+                  : `0.5px solid ${goldTint(0.2)}`,
                 borderRadius: '4px',
                 padding: '4px 5px',
                 display: 'flex',
@@ -145,7 +146,7 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
                 {/* 宫名 + 地支 */}
                 <div style={{
                   fontSize: '8px',
-                  color: cell.isMing ? '#8b6a14' : '#a89b7c',
+                  color: cell.isMing ? BRAND.goldDeep : BRAND.goldSoft,
                   letterSpacing: '0.05em',
                   display: 'flex',
                   justifyContent: 'space-between',
@@ -170,14 +171,14 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
                     <div key={j} style={{
                       fontSize: '11px',
                       fontWeight: 600,
-                      color: cell.isMing ? '#8b6a14' : '#3d2f10',
+                      color: cell.isMing ? BRAND.goldDeep : BRAND.ink,
                       letterSpacing: '0.02em',
                       lineHeight: 1.1,
                     }}>
-                      {s.name}{s.siHua ? <span style={{ fontSize: '8px', color: '#c45a2d', marginLeft: '1px' }}>{s.siHua}</span> : ''}
+                      {s.name}{s.siHua ? <span style={{ fontSize: '8px', color: BRAND.cinnabar, marginLeft: '1px' }}>{s.siHua}</span> : ''}
                     </div>
                   )) : (
-                    <div style={{ fontSize: '9px', color: '#a89b7c', fontStyle: 'italic' }}>空宫</div>
+                    <div style={{ fontSize: '9px', color: BRAND.goldSoft, fontStyle: 'italic' }}>空宫</div>
                   )}
                 </div>
               </div>
@@ -192,15 +193,15 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            background: 'rgba(184,146,42,0.06)',
-            border: '0.5px dashed rgba(184,146,42,0.3)',
+            background: goldTint(0.06),
+            border: `0.5px dashed ${goldTint(0.3)}`,
             borderRadius: '4px',
           }}>
-            <div style={{ fontSize: '8px', color: '#a89b7c', letterSpacing: '0.2em', marginBottom: '4px' }}>ZI WEI</div>
-            <div style={{ fontSize: '14px', color: '#3d2f10', fontWeight: 600, letterSpacing: '0.1em' }}>紫微斗数</div>
-            <div style={{ fontSize: '10px', color: '#6b5d3f', marginTop: '6px' }}>命宫 · {mingBranchName}</div>
-            <div style={{ fontSize: '10px', color: '#6b5d3f' }}>身宫 · {shenBranchName}</div>
-            <div style={{ fontSize: '10px', color: '#6b5d3f', marginTop: '4px', fontWeight: 600 }}>{chart.wuxingJuName}</div>
+            <div style={{ fontSize: '8px', color: BRAND.goldSoft, letterSpacing: '0.2em', marginBottom: '4px' }}>ZI WEI</div>
+            <div style={{ fontSize: '14px', color: BRAND.ink, fontWeight: 600, letterSpacing: '0.1em' }}>紫微斗数</div>
+            <div style={{ fontSize: '10px', color: BRAND.inkSoft, marginTop: '6px' }}>命宫 · {mingBranchName}</div>
+            <div style={{ fontSize: '10px', color: BRAND.inkSoft }}>身宫 · {shenBranchName}</div>
+            <div style={{ fontSize: '10px', color: BRAND.inkSoft, marginTop: '4px', fontWeight: 600 }}>{chart.wuxingJuName}</div>
           </div>
         </div>
 
@@ -208,11 +209,11 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           {/* 命宫主星 */}
           <div>
-            <div style={{ fontSize: '10px', color: '#a89b7c', letterSpacing: '0.25em', marginBottom: '2px' }}>命 宫 · {mingBranchName}</div>
+            <div style={{ fontSize: '10px', color: BRAND.goldSoft, letterSpacing: '0.25em', marginBottom: '2px' }}>命 宫 · {mingBranchName}</div>
             <div style={{
               fontSize: '52px',
               fontWeight: 800,
-              color: '#8b6a14',
+              color: BRAND.goldDeep,
               letterSpacing: '0.03em',
               lineHeight: 1,
               marginBottom: '12px',
@@ -222,11 +223,11 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
             {highlight && (
               <div style={{
                 fontSize: '12px',
-                color: '#5b4c2e',
+                color: BRAND.inkWarm,
                 fontWeight: 500,
                 padding: '8px 10px',
                 background: 'rgba(255,255,255,0.5)',
-                borderLeft: '3px solid #b8922a',
+                borderLeft: `3px solid ${BRAND.gold}`,
                 borderRadius: '4px',
                 letterSpacing: '0.04em',
                 marginBottom: '12px',
@@ -239,27 +240,27 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
             {dx && (
               <div style={{
                 fontSize: '11px',
-                color: '#3d2f10',
+                color: BRAND.ink,
                 marginBottom: '10px',
                 letterSpacing: '0.05em',
               }}>
-                <span style={{ color: '#a89b7c' }}>当前大限 </span>
+                <span style={{ color: BRAND.goldSoft }}>当前大限 </span>
                 <span style={{ fontWeight: 600 }}>{dx.startAge}–{dx.endAge} 岁 · {dx.palaceName}</span>
               </div>
             )}
             <div style={{
               padding: '10px 12px',
               background: 'linear-gradient(135deg, rgba(212,169,72,0.18) 0%, rgba(184,146,42,0.08) 100%)',
-              border: '1px solid rgba(184,146,42,0.3)',
+              border: `1px solid ${goldTint(0.3)}`,
               borderRadius: '6px',
             }}>
-              <div style={{ fontSize: '11px', color: '#3d2f10', fontWeight: 600, letterSpacing: '0.08em', lineHeight: 1.4 }}>
+              <div style={{ fontSize: '11px', color: BRAND.ink, fontWeight: 600, letterSpacing: '0.08em', lineHeight: 1.4 }}>
                 紫微为门 · 天地人为路
               </div>
-              <div style={{ fontSize: '10px', color: '#8b6a14', fontWeight: 600, letterSpacing: '0.08em', lineHeight: 1.4, marginTop: '2px' }}>
+              <div style={{ fontSize: '10px', color: BRAND.goldDeep, fontWeight: 600, letterSpacing: '0.08em', lineHeight: 1.4, marginTop: '2px' }}>
                 倪海夏为师 · AI 答疑伴学
               </div>
-              <div style={{ fontSize: '8px', color: '#a89b7c', letterSpacing: '0.15em', marginTop: '4px' }}>
+              <div style={{ fontSize: '8px', color: BRAND.goldSoft, letterSpacing: '0.15em', marginTop: '4px' }}>
                 扫码起你的命盘 →
               </div>
             </div>

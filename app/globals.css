@@ -31,11 +31,41 @@
   --ac-bg:  rgba(184,146,42,0.07);
   --ac-bdr: rgba(184,146,42,0.22);
 
-  /* 四化语义色（仅用于命盘数据，不用于UI装饰） */
-  --lu:   #2D7A4A;
-  --quan: #1A56A8;
-  --ke:   #8A7018;
-  --ji:   #A83228;
+  /* 四化语义色（仅用于命盘数据，不用于UI装饰）——主题感知：命盘表面跟随主题，
+     浅色主题用深版保证对比度，暗色主题用亮版（保持既有观感）。 */
+  --lu:   #1f7a3f;  --lu-bg:   rgba(31,122,63,0.08);   --lu-bdr:   rgba(31,122,63,0.22);
+  --quan: #1d4ed8;  --quan-bg: rgba(29,78,216,0.08);   --quan-bdr: rgba(29,78,216,0.22);
+  --ke:   #9a7b11;  --ke-bg:   rgba(154,123,17,0.08);  --ke-bdr:   rgba(154,123,17,0.22);
+  --ji:   #c0392b;  --ji-bg:   rgba(192,57,43,0.08);   --ji-bdr:   rgba(192,57,43,0.22);
+
+  /* 吉/凶状态色（庙旺·最佳宫位 / 落陷·注意宫位） */
+  --state-good: #1f7a3f;  --state-good-bg: rgba(31,122,63,0.08);  --state-good-bdr: rgba(31,122,63,0.20);
+  --state-bad:  #c0392b;  --state-bad-bg:  rgba(192,57,43,0.08);  --state-bad-bdr:  rgba(192,57,43,0.20);
+
+  /* 大限（紫）与选中/三方四正（蓝）语义 token */
+  --da-xian: #7c3aed;  --da-xian-bg: rgba(124,58,237,0.08);  --da-xian-bdr: rgba(124,58,237,0.25);
+  --sel:     #2563eb;  --sel-bg:     rgba(37,99,235,0.10);   --sel-bdr:     rgba(37,99,235,0.28);
+
+  /* 命盘星曜语义色（主题感知：浅色用深版保证对比度，暗色用亮版）——统一替代散落的 amber/sky/red 硬编色 */
+  --star-major:        #8a5a0e;  /* 主星·普通（金） */
+  --star-major-bright: #9a6a08;  /* 主星·庙旺（更饱和金） */
+  --star-major-dim:    #6f4a16;  /* 主星·落陷（暗金，仍达 WCAG AA） */
+  --ming:              #b45309;  /* 命宫标（朱） */
+  --shen:              #0e7490;  /* 身宫标（青） */
+  --lucky:             #0e7490;  /* 吉星（青，与身宫同族） */
+  --sha:               #9f2d23;  /* 煞星（砖红，去饱和以区别于化忌亮红） */
+
+  /* 命盘工作台语义 token（接入双主题；原代码大量引用但从未定义，此处补齐别名） */
+  --t-bg:         var(--bg-0);
+  --t-surface:    var(--bg-1);
+  --t-card:       var(--bg-card);
+  --t-border:     var(--bdr);
+  --t-border-acc: var(--ac-bdr);
+  --t-faint:      #6b6b63;            /* 浅色下由 #8A8A82 降级到 #6b6b63，9px 小字也可达 WCAG AA 4.5:1 */
+  --t-text:       var(--tx-1);
+  --t-text1:      var(--tx-0);
+  --t-text2:      var(--tx-2);
+  --t-gold:       var(--ac-dim);      /* 浅色下金用更深 ac-dim，保证金字可读（原 --ac 仅 2.9:1 不合格） */
 
   /* 边框 */
   --bdr:      rgba(0,0,0,0.07);
@@ -91,6 +121,37 @@
 
   --bg-card: rgba(255,255,255,0.04);
   --bg-page: #020810;
+
+  /* 命盘工作台 token 暗色覆盖 */
+  --t-bg:         #020810;
+  --t-surface:    #0a1020;
+  --t-card:       rgba(255,255,255,0.04);
+  --t-border:     rgba(255,255,255,0.07);
+  --t-border-acc: rgba(212,168,67,0.25);
+  --t-faint:      #6a7a96;
+  --t-text:       #dce4f0;
+  --t-text1:      #e8eef6;
+  --t-text2:      #9db0d0;
+  --t-gold:       #d4a843;
+
+  /* 四化 / 状态 / 强调色 暗色覆盖（命盘表面为暗底，用亮版保证对比度） */
+  --lu:   #4ade80;  --lu-bg:   rgba(74,222,128,0.08);  --lu-bdr:   rgba(74,222,128,0.22);
+  --quan: #60a5fa;  --quan-bg: rgba(96,165,250,0.08);  --quan-bdr: rgba(96,165,250,0.22);
+  --ke:   #facc15;  --ke-bg:   rgba(250,204,21,0.08);  --ke-bdr:   rgba(250,204,21,0.22);
+  --ji:   #f87171;  --ji-bg:   rgba(248,113,113,0.08); --ji-bdr:   rgba(248,113,113,0.22);
+  --state-good: #4ade80;  --state-good-bg: rgba(74,222,128,0.08);  --state-good-bdr: rgba(74,222,128,0.22);
+  --state-bad:  #f87171;  --state-bad-bg:  rgba(248,113,113,0.08); --state-bad-bdr:  rgba(248,113,113,0.22);
+  --da-xian: #a78bfa;     --da-xian-bg: rgba(147,51,234,0.10);  --da-xian-bdr: rgba(147,51,234,0.35);
+  --sel:     #60a5fa;     --sel-bg:     rgba(96,165,250,0.12);   --sel-bdr:     rgba(96,165,250,0.40);
+
+  /* 命盘星曜语义色 暗色覆盖（命盘表面为暗底，用亮版保证对比度） */
+  --star-major:        #e8c060;
+  --star-major-bright: #f5d77a;
+  --star-major-dim:    #c79a2e;
+  --ming:              #f59e42;
+  --shen:              #22d3ee;
+  --lucky:             #22d3ee;
+  --sha:               #f08a7e;
 }
 
 /* ─── 全局基础 ───────────────────────────────────────────── */
@@ -153,6 +214,24 @@ body {
   border: 1px solid var(--bdr);
   border-radius: var(--r-md);
 }
+/* 命盘侧栏玻璃卡 / 内层卡（此前未定义，引用处无表面样式） */
+.card-glass {
+  background: var(--bg-card);
+  border: 1px solid var(--t-border);
+  border-radius: var(--r-md);
+  box-shadow: var(--sh-sm);
+}
+.card-inner {
+  background: var(--t-surface);
+  border: 1px solid var(--t-border);
+  border-radius: var(--r-md);
+}
+
+/* 四化徽章（禄权科忌）——统一引用主题感知 token，替代散落的 Tailwind 亮色 */
+.sihua-lu   { color: var(--lu);   background: var(--lu-bg);   border-color: var(--lu-bdr); }
+.sihua-quan { color: var(--quan); background: var(--quan-bg); border-color: var(--quan-bdr); }
+.sihua-ke   { color: var(--ke);   background: var(--ke-bg);   border-color: var(--ke-bdr); }
+.sihua-ji   { color: var(--ji);   background: var(--ji-bg);   border-color: var(--ji-bdr); }
 
 /* 深色区块 */
 .section-dark {

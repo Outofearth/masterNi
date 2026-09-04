@@ -89,7 +89,7 @@ export default function ChartSummary({ chart }: ChartSummaryProps) {
             <div className="text-[9px] mb-1" style={{ color: 'var(--t-faint)', opacity: 0.85 }}>五行局 · 当前大限</div>
             <div className="text-[11px]" style={{ color: 'var(--t-text2)' }}>{chart.wuxingJuName}</div>
             {currentDx && (
-              <div className="text-[11px] text-purple-500 mt-0.5">
+              <div className="text-[11px] mt-0.5" style={{ color: 'var(--da-xian)' }}>
                 {currentDx.startAge}~{currentDx.endAge}岁 · {currentDx.palaceName}
               </div>
             )}
@@ -124,10 +124,10 @@ export default function ChartSummary({ chart }: ChartSummaryProps) {
           <div className="grid grid-cols-2 gap-2">
             {siHuaSummary.map(({ name, siHua, palaceName }) => {
               const colors: Record<string, { text: string; bg: string; border: string }> = {
-                '禄': { text: '#4ade80', bg: 'rgba(74,222,128,0.06)', border: 'rgba(74,222,128,0.2)' },
-                '权': { text: '#60a5fa', bg: 'rgba(96,165,250,0.06)', border: 'rgba(96,165,250,0.2)' },
-                '科': { text: '#facc15', bg: 'rgba(250,204,21,0.06)', border: 'rgba(250,204,21,0.2)' },
-                '忌': { text: '#f87171', bg: 'rgba(248,113,113,0.06)', border: 'rgba(248,113,113,0.2)' },
+                '禄': { text: 'var(--lu)', bg: 'var(--lu-bg)', border: 'var(--lu-bdr)' },
+                '权': { text: 'var(--quan)', bg: 'var(--quan-bg)', border: 'var(--quan-bdr)' },
+                '科': { text: 'var(--ke)', bg: 'var(--ke-bg)', border: 'var(--ke-bdr)' },
+                '忌': { text: 'var(--ji)', bg: 'var(--ji-bg)', border: 'var(--ji-bdr)' },
               };
               const c = colors[siHua] || colors['禄'];
               return (
@@ -234,7 +234,7 @@ export default function ChartSummary({ chart }: ChartSummaryProps) {
       >
       <div className="card-glass rounded-xl p-4">
         <div className="text-[10px] tracking-widest mb-3 flex items-center gap-2" style={{ color: 'var(--t-faint)' }}>
-          <span className="text-purple-500/60">◎</span>
+          <span style={{ color: 'var(--da-xian)', opacity: 0.6 }}>◎</span>
           大限运程
         </div>
         <div className="grid grid-cols-3 gap-2">
@@ -246,10 +246,10 @@ export default function ChartSummary({ chart }: ChartSummaryProps) {
                 className="text-[10px] px-2 py-2 rounded-lg text-center transition-colors"
                 style={{
                   border: isCurrent
-                    ? '1px solid rgba(147,51,234,0.4)'
+                    ? '1px solid var(--da-xian-bdr)'
                     : '1px solid var(--t-border)',
-                  background: isCurrent ? 'rgba(147,51,234,0.08)' : 'transparent',
-                  color: isCurrent ? '#a78bfa' : 'var(--t-faint)',
+                  background: isCurrent ? 'var(--da-xian-bg)' : 'transparent',
+                  color: isCurrent ? 'var(--da-xian)' : 'var(--t-faint)',
                 }}
               >
                 <div className="font-mono tabular-nums">{dx.startAge}~{dx.endAge}</div>
