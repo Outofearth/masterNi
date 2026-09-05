@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import type { ZiweiChart } from '@/lib/ziwei/types';
 import { BRANCHES, STEMS } from '@/lib/ziwei/constants';
 import { detectPatterns, getMingGongSummary } from '@/lib/ziwei/patterns';
+import { matchFamousPersons } from '@/lib/ziwei/match-famous';
 
 interface ChartSummaryProps {
   chart: ZiweiChart;
@@ -17,6 +18,7 @@ const PatternLevelStyle = {
 
 export default function ChartSummary({ chart }: ChartSummaryProps) {
   const patterns = detectPatterns(chart);
+  const famousMatches = matchFamousPersons(chart, 3);
   const { stars: mingStars, keywords, nature } = getMingGongSummary(chart);
   const currentDx = chart.daXians[chart.currentDaXianIndex];
 
@@ -260,6 +262,89 @@ export default function ChartSummary({ chart }: ChartSummaryProps) {
         </div>
       </div>
       </motion.div>
+
+      {/* B8 · 名人命盘比对 */}
+      {famousMatches.length > 0 && famousMatches[0].score > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mt-4 rounded-2xl p-5"
+          style={{
+            background: 'linear-gradient(135deg, rgba(212,168,67,0.06), rgba(212,168,67,0.02))',
+            border: '1px solid rgba(212,168,67,0.25)',
+          }}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="text-[10px] tracking-[0.25em] mb-1" style={{ color: 'var(--t-gold)', opacity: 0.85 }}>
+                B8 · 这盘像谁
+              </div>
+              <h4 className="text-base font-medium">命盘相似名人</h4>
+            </div>
+            <span className="text-[9px] tracking-widest" style={{ color: 'var(--t-faint)' }}>
+              11 位比对
+            </span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {famousMatches.map((m, i) => (
+              <div
+                key={m.id}
+                className="rounded-xl p-4"
+                style={{
+                  background: 'var(--t-surface)',
+                  border: `1px solid ${i === 0 ? 'rgba(212,168,67,0.35)' : 'var(--t-border)'}`,
+                }}
+              >
+                <div className="flex items-baseline justify-between gap-2 mb-2">
+                  <span className="text-sm font-medium" style={{ color: 'var(--t-text)' }}>
+                    {m.name}
+                  </span>
+                  <span
+                    className="text-[9px] tracking-widest px-1.5 py-0.5 rounded shrink-0"
+                    style={{
+                      background: 'rgba(212,168,67,0.10)',
+                      color: 'var(--t-gold)',
+                    }}
+                  >
+                    {m.score} 分
+                  </span>
+                </div>
+                <div className="text-[10px] tracking-widest mb-2" style={{ color: 'var(--t-faint)' }}>
+                  {m.category} · {m.description}
+                </div>
+                <p className="text-[10px] leading-relaxed mb-3" style={{ color: 'var(--t-text)', opacity: 0.85 }}>
+                  {m.notable}
+                </p>
+                {(m.mingGongMatched.length > 0 || m.shenGongMatched.length > 0) && (
+                  <div className="flex flex-wrap gap-1 pt-2" style={{ borderTop: '1px solid var(--t-border)' }}>
+                    {m.mingGongMatched.length > 0 && (
+                      <span className="text-[9px]" style={{ color: 'var(--t-gold)' }}>
+                        命·{m.mingGongMatched.join('/')}
+                      </span>
+                    )}
+                    {m.shenGongMatched.length > 0 && (
+                      <span className="text-[9px] ml-1" style={{ color: 'var(--t-faint)' }}>
+                        身·{m.shenGongMatched.join('/')}
+                      </span>
+                    )}
+                    {m.guanLuMatched.length > 0 && (
+                      <span className="text-[9px] ml-1" style={{ color: 'var(--t-faint)' }}>
+                        官·{m.guanLuMatched.join('/')}
+                      </span>
+                    )}
+                    {m.caiBoMatched.length > 0 && (
+                      <span className="text-[9px] ml-1" style={{ color: 'var(--t-faint)' }}>
+                        财·{m.caiBoMatched.join('/')}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
     </motion.div>
   );
 }

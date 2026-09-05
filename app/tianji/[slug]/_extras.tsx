@@ -11,11 +11,12 @@
  */
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTheme } from '@/components/ThemeProvider';
 import { useTianjiColors } from '../_colors';
 import { STAR_DESCRIPTIONS } from '@/lib/ziwei/constants';
 import { analyzeText, lookupRadicalWuxing } from '@/lib/cezi/dict';
+import { FENGSHUI_ENTRIES } from '@/lib/nihai/tianji';
 
 // ─── 通用小部件 ─────────────────────────────────────────
 
@@ -200,35 +201,167 @@ const LUOSHU_LAYOUT = [4, 9, 2, 3, 5, 7, 8, 1, 6];
 function KanyuExtra() {
   const { theme } = useTheme();
   const c = useTianjiColors(theme);
+  const [activeFilter, setActiveFilter] = useState<'all' | 'yangzhai' | 'yinzhai' | 'theory'>('all');
+  const [openId, setOpenId] = useState<string | null>(null);
 
   const cells = LUOSHU_LAYOUT.map(n => {
     const s = NINE_STARS.find(x => x.num === n)!;
     return { label: s.name, sub: `${n}白·${s.trigram}`, tone: s.tone };
   });
 
+  const filtered = useMemo(() => {
+    if (activeFilter === 'all') return FENGSHUI_ENTRIES;
+    return FENGSHUI_ENTRIES.filter(e => e.category === activeFilter);
+  }, [activeFilter]);
+
+  const counts = useMemo(() => ({
+    all: FENGSHUI_ENTRIES.length,
+    yangzhai: FENGSHUI_ENTRIES.filter(e => e.category === 'yangzhai').length,
+    yinzhai: FENGSHUI_ENTRIES.filter(e => e.category === 'yinzhai').length,
+    theory: FENGSHUI_ENTRIES.filter(e => e.category === 'theory').length,
+  }), []);
+
+  const catLabel = (cat: string) =>
+    cat === 'yangzhai' ? '阳宅' : cat === 'yinzhai' ? '阴宅' : '理论';
+
   return (
-    <Block title="紫白九星飞泊" subtitle="洛书九宫 · 杨救贫流派">
-      <NineGrid
-        cells={cells}
-        center="一白、六白、八白为三吉星；二黑、五黄为大凶，宜避之。飞泊随元运而转，当运者旺，失运者衰。"
-      />
-      <div className="max-w-2xl mx-auto mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {NINE_STARS.map(s => (
-          <div
-            key={s.num}
-            className="rounded-lg px-3 py-2 flex items-center justify-between"
-            style={c_cardStyle(theme, s.tone)}
-          >
-            <span className="text-xs" style={{ fontFamily: 'var(--font-serif)' }}>
-              {s.num}·{s.name}
-            </span>
-            <span className="text-[9px]">
-              {s.trigram}宫 · {s.element}
-            </span>
-          </div>
-        ))}
-      </div>
-    </Block>
+    <>
+      {/* 九宫图（保留） */}
+      <Block title="紫白九星飞泊" subtitle="洛书九宫 · 杨救贫流派">
+        <NineGrid
+          cells={cells}
+          center="一白、六白、八白为三吉星；二黑、五黄为大凶，宜避之。飞泊随元运而转，当运者旺，失运者衰。"
+        />
+        <div className="max-w-2xl mx-auto mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {NINE_STARS.map(s => (
+            <div
+              key={s.num}
+              className="rounded-lg px-3 py-2 flex items-center justify-between"
+              style={c_cardStyle(theme, s.tone)}
+            >
+              <span className="text-xs" style={{ fontFamily: 'var(--font-serif)' }}>
+                {s.num}·{s.name}
+              </span>
+              <span className="text-[9px]">
+                {s.trigram}宫 · {s.element}
+              </span>
+            </div>
+          ))}
+        </div>
+      </Block>
+
+      {/* B5 · 堪舆条目检索 */}
+      <Block title="堪舆条目检索" subtitle={`共 ${FENGSHUI_ENTRIES.length} 条 · 倪师天纪遗稿整理`}>
+        {/* 类别过滤器 */}
+        <div className="max-w-2xl mx-auto mb-4 flex flex-wrap gap-2">
+          {([
+            { k: 'all', label: '全部' },
+            { k: 'yangzhai', label: '阳宅' },
+            { k: 'yinzhai', label: '阴宅' },
+            { k: 'theory', label: '理论' },
+          ] as { k: typeof activeFilter; label: string }[]).map(t => {
+            const on = activeFilter === t.k;
+            return (
+              <button
+                key={t.k}
+                type="button"
+                onClick={() => setActiveFilter(t.k)}
+                aria-pressed={on}
+                className="px-3 py-1 rounded-full text-[11px] tracking-wider transition-colors"
+                style={{
+                  background: on ? c.goldSolid : c.featureBg,
+                  border: `1px solid ${on ? c.goldLine : c.featureBord}`,
+                  color: on ? '#fff' : c.textSecond,
+                }}
+              >
+                {t.label}
+                <span className="ml-1.5 text-[9px]" style={{ color: on ? c.goldSolid : c.textFaint }}>
+                  {counts[t.k]}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* 条目列表 */}
+        <div className="max-w-2xl mx-auto space-y-2">
+          {filtered.map(e => {
+            const on = openId === e.id;
+            return (
+              <div
+                key={e.id}
+                className="rounded-xl overflow-hidden transition-all"
+                style={{ background: c.featureBg, border: `1px solid ${on ? c.goldLine : c.featureBord}` }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpenId(on ? null : e.id)}
+                  aria-expanded={on}
+                  className="w-full text-left px-4 py-3 flex items-center justify-between gap-3"
+                >
+                  <div className="flex items-center gap-3 min-1">
+                    <span
+                      className="text-[9px] tracking-[0.15em] px-2 py-0.5 rounded"
+                      style={{
+                        background: c.cardBg,
+                        border: `1px solid ${c.featureBord}`,
+                        color: catLabel(e.category) === '阳宅'
+                          ? c.goldSolid
+                          : catLabel(e.category) === '阴宅'
+                          ? '#9db0d0'
+                          : c.textFaint,
+                      }}
+                    >
+                      {catLabel(e.category)}
+                    </span>
+                    <span className="text-sm font-serif" style={{ color: c.textPrimary }}>
+                      {e.title}
+                    </span>
+                  </div>
+                  <span
+                    className="text-[10px] transition-transform shrink-0"
+                    style={{
+                      color: c.textFaint,
+                      transform: on ? 'rotate(90deg)' : 'rotate(0deg)',
+                    }}
+                  >
+                    ▶
+                  </span>
+                </button>
+                {on && (
+                  <div
+                    className="px-4 pb-4 pt-1 space-y-2"
+                    style={{ borderTop: `1px solid ${c.featureBord}` }}
+                  >
+                    <p className="text-[11px] leading-relaxed" style={{ color: c.textSecond }}>
+                      {e.description}
+                    </p>
+                    <div>
+                      <div className="text-[9px] tracking-[0.15em] mb-1.5" style={{ color: c.tagText }}>
+                        要点
+                      </div>
+                      <ul className="space-y-1">
+                        {e.keyPoints.map((kp, j) => (
+                          <li key={j} className="text-[11px] flex gap-2" style={{ color: c.textSecond }}>
+                            <span style={{ color: c.goldSolid }}>·</span>
+                            <span>{kp}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          {filtered.length === 0 && (
+            <p className="text-center text-[11px] py-6" style={{ color: c.textFaint }}>
+              该分类暂无条目
+            </p>
+          )}
+        </div>
+      </Block>
+    </>
   );
 }
 

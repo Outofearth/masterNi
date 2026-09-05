@@ -31,21 +31,23 @@ export const HOME_TABS: HomeTabDef[] = [
   },
   {
     key: 'diji', name: '地纪', en: 'Di Ji', icon: '⊞',
-    status: 'soon',
-    readyNote: '',
-    soonNote: '地纪模块筹备中：国家地理志 · 堪舆理论 · 遗稿研读 · 数据在整理中',
+    href: '/diji', status: 'live',
+    readyNote: '已上线',
+    soonNote: '',
   },
   {
     key: 'renji', name: '人纪', en: 'Ren Ji', icon: '⊕',
-    status: 'soon',
-    readyNote: '',
-    soonNote: '人纪模块筹备中：内经 · 伤寒 · 金匮 · 针灸，数据梳理中',
+    href: '/renji', status: 'live',
+    readyNote: '已上线',
+    soonNote: '',
   },
 ];
 
 export function getTabByPath(path: string | null): TabKey {
   if (!path) return 'ziwei';
   if (path.startsWith('/tianji')) return 'tianji';
+  if (path.startsWith('/diji')) return 'diji';
+  if (path.startsWith('/renji')) return 'renji';
   return 'ziwei';
 }
 

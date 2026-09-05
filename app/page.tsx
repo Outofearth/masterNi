@@ -121,20 +121,22 @@ const SECTIONS = [
     name: '地纪',
     en: 'Di Ji',
     desc: '倪师未竟之业 · 后辈补注',
-    status: 'soon' as const,
-    when: '筹备中',
+    status: 'ready' as const,
+    when: '已上线',
     icon: '⊞',  // 方+井（地/田视觉），与 ⊙ 同字宽
     note: '遗稿研读',
+    href: '/diji',
   },
   {
     key: 'renji',
     name: '人纪',
     en: 'Ren Ji',
-    desc: '内经 · 伤寒 · 金匮 · 针灸',
-    status: 'soon' as const,
-    when: '筹备中',
+    desc: '针灸 215 条 · 内经 · 伤寒 · 金匮',
+    status: 'ready' as const,
+    when: '已上线',
     icon: '⊕',  // 圆+十字（医道/阴阳调和），与 ⊙/⊞ 同字宽
-    note: '',
+    note: '症状→穴位检索',
+    href: '/renji',
   },
 ];
 
@@ -653,13 +655,44 @@ export default function HomePage() {
 
           <div className="flex flex-col gap-5 lg:grid lg:grid-cols-4 lg:gap-4">
             {SECTIONS.map((s, i) => {
-              const ready = s.status === 'ready';
+              const ready = s.status === 'ready' && !!s.href;
+              // 统一交互（可点：跳路由；不可点：弹 toast）
+              const handleEnter = (e: React.SyntheticEvent) => {
+                if (!ready) {
+                  e.preventDefault();
+                  setToast(`${s.name} · 筹备中，敬请期待`);
+                  return;
+                }
+                // 阻止子节点冒泡时一并把冒泡事件 stop 掉，避免多次触发
+                e.stopPropagation();
+              };
+              const handleKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
+                if (!ready) return;
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  router.push(s.href!);
+                }
+              };
               return (
-                <motion.div key={s.key}
+                <motion.div
+                  key={s.key}
                   initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                  whileHover={ready ? { y: -4, scale: 1.02 } : undefined}
+                  whileTap={ready ? { scale: 0.98 } : undefined}
                   transition={{ delay: i * 0.15, duration: 0.5 }}
                   viewport={{ once: true }}
-                  className="relative flex flex-row lg:flex-col items-center lg:items-center text-left lg:text-center gap-4 lg:gap-0">
+                  role={ready ? 'button' : undefined}
+                  tabIndex={ready ? 0 : undefined}
+                  aria-label={ready ? `进入 ${s.name}` : `${s.name} 筹备中`}
+                  onClick={ready ? () => router.push(s.href!) : handleEnter}
+                  onKeyDown={handleKey}
+                  className={`relative flex flex-row lg:flex-col items-center lg:items-center text-left lg:text-center gap-4 lg:gap-0 ${ready ? 'rounded-2xl px-2 py-2 lg:px-4 lg:py-5 cursor-pointer' : ''}`}
+                  style={ready ? {
+                    background: theme === 'dark' ? 'rgba(212,168,67,0.06)' : 'rgba(212,168,67,0.05)',
+                    border: `1px solid ${c.goldLine}`,
+                    boxShadow: theme === 'dark' ? '0 2px 12px rgba(0,0,0,0.3)' : '0 2px 12px rgba(140,100,20,0.08)',
+                  } : undefined}
+                >
                   {/* 节点圆 */}
                   <div className="relative w-14 h-14 shrink-0 rounded-full flex items-center justify-center lg:mb-3"
                     style={{
@@ -719,6 +752,14 @@ export default function HomePage() {
                       style={{ color: c.textSecond }}>
                       {s.desc}
                     </div>
+                    {/* 「进入 →」视觉提示（仅已上线显示，让 hover 时更有引导） */}
+                    {ready && (
+                      <div className="hidden lg:flex items-center gap-1 mt-2 text-[10px] tracking-[0.2em]"
+                        style={{ color: c.goldSolid, opacity: 0.7 }}>
+                        <span>进入</span>
+                        <span>→</span>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               );
