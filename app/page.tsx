@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
 import StarField from '@/components/StarField';
 import { useTheme, type Theme } from '@/components/ThemeProvider';
-import AnnouncementModal from '@/components/AnnouncementModal';
 import ThemeToggle from '@/components/ThemeToggle';
 
 // ─── 滚动入场 wrapper ────────────────────────────────────
@@ -99,19 +98,21 @@ const SECTIONS = [
     en: 'Zi Wei',
     desc: '14 主星 · 13 宫位 · AI 解读',
     status: 'ready' as const,
-    when: '5 月',
+    when: '已上线',
     icon: '◉',  // 实心圆+内点，紫微星视觉
     note: '',
+    href: '/chart',
   },
   {
     key: 'tianji',
     name: '天纪',
     en: 'Tian Ji',
-    desc: '紫微 · 周易 · 奇门遁甲',
-    status: 'soon' as const,
-    when: '6 月',
+    desc: '紫微斗数 · 易经 64 卦 · 堪舆学',
+    status: 'ready' as const,
+    when: '已上线',
     icon: '⊙',  // 圆+内点（古文"日"），与 ◉ 同字宽
     note: '',
+    href: '/tianji',
   },
   {
     key: 'diji',
@@ -119,7 +120,7 @@ const SECTIONS = [
     en: 'Di Ji',
     desc: '倪师未竟之业 · 后辈补注',
     status: 'soon' as const,
-    when: '6 月',
+    when: '筹备中',
     icon: '⊞',  // 方+井（地/田视觉），与 ⊙ 同字宽
     note: '遗稿研读',
   },
@@ -129,7 +130,7 @@ const SECTIONS = [
     en: 'Ren Ji',
     desc: '内经 · 伤寒 · 金匮 · 针灸',
     status: 'soon' as const,
-    when: '7 月',
+    when: '筹备中',
     icon: '⊕',  // 圆+十字（医道/阴阳调和），与 ⊙/⊞ 同字宽
     note: '',
   },
@@ -421,9 +422,6 @@ export default function HomePage() {
 
   return (
     <div style={{ background: c.bgBase, transition: 'background 0.35s ease' }} className="overflow-x-hidden">
-      {/* 致用户公告——首次访问全屏覆盖，关闭后才进入首页 */}
-      <AnnouncementModal />
-
       <StarField />
 
       {/* 全局光晕 */}
@@ -1042,7 +1040,7 @@ export default function HomePage() {
               return (
                 <a
                   key={s.key}
-                  href={ready ? '/chart' : undefined}
+                  href={ready ? (s.href ?? '#') : undefined}
                   onClick={ready ? undefined : (e) => e.preventDefault()}
                   className="rounded-lg px-3 py-3 text-center transition-all"
                   style={{
