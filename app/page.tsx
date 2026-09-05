@@ -1,8 +1,10 @@
 'use client';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
 import StarField from '@/components/StarField';
+import HomeTabs, { type TabKey, getTabByPath } from '@/components/HomeTabs';
+import AppToast from '@/components/AppToast';
 import { useTheme, type Theme } from '@/components/ThemeProvider';
 import ThemeToggle from '@/components/ThemeToggle';
 
@@ -401,8 +403,18 @@ function FeatureVisual({ index, colors: c }: { index: number; colors: ReturnType
 // ─── 主页 ─────────────────────────────────────────────────
 export default function HomePage() {
   const router = useRouter();
+  const pathname = usePathname();
   const { theme } = useTheme();
   const c = useColors(theme);
+
+  // 三纪 Tab 激活态：紫微 / 天纪 可改；地纪/人纪 点只弹 toast，不改 active
+  const [activeTab, setActiveTab] = useState<TabKey>(getTabByPath(pathname));
+  const [toast, setToast] = useState<string | null>(null);
+
+  // 路由变化时同步 active（用户可能从 /tianji 返回首页）
+  useEffect(() => {
+    setActiveTab(getTabByPath(pathname));
+  }, [pathname]);
 
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
@@ -435,13 +447,22 @@ export default function HomePage() {
       </div>
 
       {/* ── 顶部导航 ── nav 与 hero 同色（c.bgBase），无 blur 无 border，彻底无色差带 */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-8 py-3 sm:py-4 gap-2"
+      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 gap-2"
         style={{
           background: c.navBg,
         }}>
-        <div className="text-[11px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] font-medium transition-colors duration-300 flex-shrink-0"
-          style={{ color: c.goldSolid }}>
-          紫微命盘
+        <div className="flex items-center gap-3 sm:gap-5 min-w-0">
+          <div className="text-[11px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] font-medium transition-colors duration-300 flex-shrink-0"
+            style={{ color: c.goldSolid }}>
+            紫微命盘
+          </div>
+          {/* 三纪 Tab（nav 紧凑版） */}
+          <HomeTabs
+            variant="nav"
+            active={activeTab}
+            onActive={setActiveTab}
+            onSoon={setToast}
+          />
         </div>
         <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
           <ThemeToggle />
@@ -465,15 +486,16 @@ export default function HomePage() {
       {/* ══ HERO ══════════════════════════════════════════ */}
       <section ref={heroRef} className="relative min-h-[82svh] lg:min-h-[92vh] flex flex-col items-center justify-center px-6 z-10 pb-24 pt-10">
         <motion.div style={{ y: heroY, opacity: heroOpacity, maxWidth: '960px' }} className="text-center w-full mx-auto mt-10">
-          {/* 标签行 */}
+          {/* 三纪 Tab（hero 完整版）— 替换原装饰标签行 */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex items-center justify-center gap-3 mb-8">
-            <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-            <span className="text-[11px] tracking-[0.45em] transition-colors duration-300" style={{ color: c.tagText }}>
-              紫微斗数 · 倪海夏体系
-            </span>
-            <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
+            className="flex items-center justify-center mb-8">
+            <HomeTabs
+              variant="hero"
+              active={activeTab}
+              onActive={setActiveTab}
+              onSoon={setToast}
+            />
           </motion.div>
 
           {/* 主标题 */}
@@ -1081,6 +1103,9 @@ export default function HomePage() {
           </p>
         </div>
       </footer>
+
+      {/* 筹备中 toast（右下角浮出） */}
+      <AppToast message={toast} onClose={() => setToast(null)} />
     </div>
   );
 }
