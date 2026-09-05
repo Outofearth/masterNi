@@ -13,11 +13,96 @@ import {
   type Advice,
 } from '@/lib/qigua/yaoci';
 import { useMemo, useState } from 'react';
+import { TIANJI_QUOTES } from '@/lib/nihai';
 
 interface Props {
   result: DivinationResult;
   /** 点击「问天纪」时回调，参数为所占之事（可为空） */
   onAskAi?: (question: string) => void;
+}
+
+/**
+ * B12 · 占卜 → 倪师语录关联
+ *
+ * 匹配策略（自上而下）：
+ *   1. 本卦/变卦/互卦名直接命中 TIANJI_QUOTES.text 中的关键字
+ *   2. 命中数量不足时，从 topic 为「易经」「命学哲理」中随机补足
+ *   3. 兜底 3 条通用易经语录
+ */
+function pickRelatedQuotes(hexName: string | null, upper: string, lower: string): string[] {
+  if (!hexName && !upper && !lower) return [];
+
+  const QUOTE_POOL = TIANJI_QUOTES.map(q => q.text);
+  const seen = new Set<string>();
+
+  const matched: string[] = [];
+  // 1. 直接关键词匹配（本卦名/上下卦名 出现在语录文本中）
+  for (const txt of QUOTE_POOL) {
+    const targets = [hexName, upper, lower].filter(Boolean);
+    if (targets.some(t => t && txt.includes(t))) {
+      if (!seen.has(txt)) {
+        seen.add(txt);
+        matched.push(txt);
+        if (matched.length >= 4) break;
+      }
+    }
+  }
+  // 2. 易经 / 命学哲理 topic 补足
+  if (matched.length < 4) {
+    for (const q of TIANJI_QUOTES) {
+      if (matched.length >= 4) break;
+      if ((q.topic === '易经' || q.topic === '命学哲理') && !seen.has(q.text)) {
+        seen.add(q.text);
+        matched.push(q.text);
+      }
+    }
+  }
+  // 3. 兜底
+  if (matched.length < 3) {
+    const fallbacks = [
+      '不疑何卜——只有有疑虑时才占卜',
+      '外象一直在变，但精神是一样的',
+      '算命就是一个讨论果的哲学',
+      '命运可以推算，但心念一转，命数随改',
+    ];
+    for (const f of fallbacks) {
+      if (matched.length >= 4) break;
+      if (!seen.has(f)) {
+        seen.add(f);
+        matched.push(f);
+      }
+    }
+  }
+  return matched.slice(0, 4);
+}
+
+/** 倪师语录关联条 */
+function NiQuoteRow({ quote, accent }: { quote: string; accent?: boolean }) {
+  const { theme } = useTheme();
+  const c = useTianjiColors(theme);
+  return (
+    <div
+      className="rounded-lg px-4 py-3 mb-2 last:mb-0"
+      style={{
+        background: accent ? c.glowTint : 'transparent',
+        borderLeft: `3px solid ${c.goldSolid}`,
+      }}
+      role="blockquote"
+    >
+      <p
+        className="text-sm leading-relaxed"
+        style={{ color: accent ? c.textPrimary : c.textSecond }}
+      >
+        {quote}
+      </p>
+      <p
+        className="text-[10px] mt-1.5 tracking-[0.25em] text-right"
+        style={{ color: c.textFaint }}
+      >
+        —— 倪海厦《天纪》
+      </p>
+    </div>
+  );
 }
 
 const POS_NAMES = ['初爻', '二爻', '三爻', '四爻', '五爻', '上爻'];
@@ -293,6 +378,10 @@ export default function QiguaResult({ result, onAskAi }: Props) {
 
   const hasChanged = result.changingLines.length > 0;
   const reading = useMemo(() => buildFullReading(result), [result]);
+  const relatedQuotes = useMemo(
+    () => pickRelatedQuotes(result.hexagram?.name ?? null, result.upper, result.lower),
+    [result.hexagram?.name, result.upper, result.lower],
+  );
   const [question, setQuestion] = useState('');
 
   return (
@@ -399,6 +488,17 @@ export default function QiguaResult({ result, onAskAi }: Props) {
 
       {/* 宜 / 忌 */}
       {reading.advice && <AdviceBlock advice={reading.advice} />}
+
+      {/* B12 · 倪师语录 · 关联本卦 */}
+      {relatedQuotes.length > 0 && (
+        <Section title="倪师语录 · 关联本卦" subtitle={`与「${result.hexagram?.name ?? result.upper + result.lower}」相关`}>
+          <div>
+            {relatedQuotes.map((q, i) => (
+              <NiQuoteRow key={i} quote={q} accent={i === 0} />
+            ))}
+          </div>
+        </Section>
+      )}
 
       {/* 操作按钮 */}
       <div className="flex flex-wrap justify-center gap-3 mb-12">

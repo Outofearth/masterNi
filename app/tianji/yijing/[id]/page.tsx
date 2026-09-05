@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { useTheme } from '@/components/ThemeProvider';
 import TianjiChatPanel from '@/components/TianjiChatPanel';
 import { HEXAGRAMS } from '@/lib/nihai';
+import { getHexClassicSource } from '@/lib/yijing/classic-sources';
 import {
   useTianjiColors,
   useSyncBodyBackground,
@@ -49,6 +50,9 @@ export default function HexagramDetailPage() {
     () => (hex ? { type: 'hexagram' as const, data: hex } : { type: 'general' as const }),
     [hex],
   );
+
+  // B11 · 古籍对照：64 卦引证锚点
+  const classicSrc = useMemo(() => (hex ? getHexClassicSource(hex.number) : undefined), [hex]);
 
   if (!hex) {
     return (
@@ -129,7 +133,7 @@ export default function HexagramDetailPage() {
       <section className="relative px-6 pb-12">
         <div className="mx-auto" style={{ maxWidth: '960px' }}>
           <div className="space-y-4">
-            {/* 卦辞要点 */}
+            {/* 卦辞要点 · 古籍出处 */}
             <TianjiFadeIn delay={0.1}>
               <motion.div
                 whileHover={{ y: -2 }} transition={{ duration: 0.1 }}
@@ -139,18 +143,137 @@ export default function HexagramDetailPage() {
                   border: `1px solid ${c.cardBorder}`,
                   boxShadow: c.featureShadow,
                 }}>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="h-px w-6" style={{ background: c.goldLine }} />
-                  <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
-                    卦辞 · Meaning
-                  </span>
+                <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="h-px w-6" style={{ background: c.goldLine }} />
+                    <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
+                      卦辞 · Meaning
+                    </span>
+                  </div>
+                  {classicSrc && (
+                    <span
+                      title={classicSrc.classicalExcerpt}
+                      className="text-[10px] px-2 py-1 rounded-full"
+                      style={{
+                        color: c.goldSolid,
+                        background: c.featureBg,
+                        border: `1px solid ${c.goldLine}`,
+                        letterSpacing: '0.15em',
+                        fontFamily: 'var(--font-serif)',
+                      }}
+                    >
+                      {classicSrc.classicalReference}
+                    </span>
+                  )}
                 </div>
-                <p className="text-base lg:text-lg leading-relaxed"
+                <p className="text-base lg:text-lg leading-relaxed mb-4"
                   style={{ color: c.textPrimary, fontFamily: 'var(--font-serif)' }}>
                   {hex.meaning}
                 </p>
+                {classicSrc?.classicalExcerpt && (
+                  <p className="text-xs leading-relaxed mb-3"
+                    style={{ color: c.textMuted, fontFamily: 'var(--font-serif)', fontStyle: 'italic' }}>
+                    原文摘录：「{classicSrc.classicalExcerpt}」
+                  </p>
+                )}
+                <div className="flex items-center gap-2 flex-wrap pt-3"
+                  style={{ borderTop: `1px dashed ${c.cardBorder}` }}>
+                  <span className="text-[10px] tracking-[0.2em]" style={{ color: c.tagText }}>
+                    古籍引证
+                  </span>
+                  <Link
+                    href={`/library/search?q=${encodeURIComponent(classicSrc?.libraryQuery ?? hex.name)}`}
+                    className="text-[11px] tracking-wider inline-flex items-center gap-1 hover:underline"
+                    style={{ color: c.goldSolid }}
+                    aria-label={`在古籍库中检索 ${hex.name} 卦相关章节`}
+                  >
+                    在《周易》《紫微斗数全集》《骨髓赋》中检索 →
+                  </Link>
+                </div>
               </motion.div>
             </TianjiFadeIn>
+
+            {/* B11 · 古籍原文 vs 倪师解读 · 双栏对照 */}
+            {classicSrc && (
+              <TianjiFadeIn delay={0.15}>
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="rounded-2xl p-6 lg:p-8"
+                  style={{
+                    background: c.featureBg,
+                    border: `1px solid ${c.goldLine}`,
+                    boxShadow: c.featureShadow,
+                  }}
+                  aria-label={`${hex.name}卦古籍原文与倪师解读对照`}
+                >
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="h-px w-6" style={{ background: c.goldSolid }} />
+                    <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid }}>
+                      古籍原文 · 倪师解读 对照
+                    </span>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {/* 古籍原文列 */}
+                    <div
+                      className="rounded-xl p-4 lg:p-5"
+                      style={{
+                        background: c.bgBase,
+                        border: `1px solid ${c.cardBorder}`,
+                      }}
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <span aria-hidden="true" style={{ fontSize: 14 }}>📜</span>
+                        <span className="text-[10px] tracking-[0.3em]" style={{ color: c.tagText }}>
+                          古籍原文
+                        </span>
+                      </div>
+                      <p className="text-[10px] tracking-wider mb-2"
+                        style={{ color: c.goldSolid, fontFamily: 'var(--font-serif)' }}>
+                        {classicSrc.classicalReference}
+                      </p>
+                      <p className="text-sm lg:text-base leading-relaxed"
+                        style={{ color: c.textPrimary, fontFamily: 'var(--font-serif)' }}>
+                        「{classicSrc.classicalExcerpt}」
+                      </p>
+                      <p className="text-xs mt-3 leading-relaxed"
+                        style={{ color: c.textMuted }}>
+                        即《{classicSrc.classicalReference.replace(/^《|》$/g, '')}》开篇所立卦辞要旨。
+                      </p>
+                    </div>
+                    {/* 倪师解读列 */}
+                    <div
+                      className="rounded-xl p-4 lg:p-5"
+                      style={{
+                        background: c.bgBase,
+                        border: `1px solid ${c.goldLine}`,
+                        boxShadow: `inset 0 0 0 1px ${c.goldLine}`,
+                      }}
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <span aria-hidden="true" style={{ fontSize: 14 }}>🪶</span>
+                        <span className="text-[10px] tracking-[0.3em]" style={{ color: c.goldSolid }}>
+                          倪师解读
+                        </span>
+                      </div>
+                      <p className="text-[10px] tracking-wider mb-2"
+                        style={{ color: c.tagText, fontFamily: 'var(--font-serif)' }}>
+                        倪海厦《天纪》易经象数派
+                      </p>
+                      <p className="text-sm lg:text-base leading-relaxed"
+                        style={{ color: c.textPrimary }}>
+                        {hex.niInterpretation}
+                      </p>
+                      <p className="text-xs mt-3 leading-relaxed"
+                        style={{ color: c.textMuted }}>
+                        {classicSrc.niashiCorePoint}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              </TianjiFadeIn>
+            )}
 
             {/* 倪师解读 */}
             <TianjiFadeIn delay={0.2}>

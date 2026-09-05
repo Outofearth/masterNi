@@ -17,7 +17,9 @@ import {
   castByTime,
   castByNumber,
 } from '@/lib/qigua/core';
+import { buildFullReading } from '@/lib/qigua/yaoci';
 import type { TianjiContext } from '@/lib/nihai/chat';
+import ExportReportButton from '@/components/ExportReportButton';
 
 const TABS = [
   { key: 'coin', label: '铜钱起卦', desc: '摇六次 · 观阴阳' },
@@ -74,6 +76,7 @@ export default function QiguaPage() {
   const [result, setResult] = useState<DivinationResult | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [mounted, setMounted] = useState(false);
+  const resultRef = useRef<HTMLDivElement>(null);
 
   // 历史抽屉
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -170,6 +173,8 @@ export default function QiguaPage() {
         changed: result.changedHexagram,
         hu: result.huHexagram,
         changingLines: result.changingLines,
+        // yaoci 引擎解读：让 AI 能精确引用逐爻/变卦/互卦/宜忌
+        yaociReading: buildFullReading(result),
       },
     };
   }, [result, aiQuestion]);
@@ -240,18 +245,28 @@ export default function QiguaPage() {
           </div>
         </TianjiFadeIn>
 
-        {/* 历史入口 */}
+        {/* 历史入口 + 导出 */}
         {mounted && history.length > 0 && (
-          <div className="relative z-10 mt-5">
+          <div className="relative z-10 mt-5 flex items-center justify-center gap-3">
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
-              className="px-4 py-1.5 rounded-full text-[10px] tracking-[0.2em] transition-colors"
+              className="px-4 py-1.5 rounded-full text-[10px] tracking-[0.2em] transition-colors qigua-history-btn"
               style={{ border: `1px solid ${c.goldLine}`, color: c.goldSolid }}
               aria-label="查看起卦历史"
             >
               起卦历史 · {history.length}
             </button>
+            {result && (
+              <ExportReportButton
+                targetRef={resultRef}
+                filename={`qigua-${result.hexagram?.name ?? 'unknown'}`}
+                printTitle={`起卦报告 · ${result.hexagram?.name ?? ''}`}
+                gold={c.goldSolid}
+                textColor={c.textPrimary}
+                borderColor={c.goldLine}
+              />
+            )}
           </div>
         )}
       </section>
@@ -287,7 +302,13 @@ export default function QiguaPage() {
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <QiguaResult result={result} onAskAi={handleAskAi} />
+            <div ref={resultRef} className="export-root">
+              <h1 className="export-page-title">
+                起卦报告 · {result.hexagram?.name ?? ''}
+                {result.changedHexagram ? ` → ${result.changedHexagram.name}` : ''}
+              </h1>
+              <QiguaResult result={result} onAskAi={handleAskAi} />
+            </div>
           </motion.section>
         )}
       </AnimatePresence>

@@ -1,9 +1,10 @@
 'use client';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import BirthForm from '@/components/BirthForm';
 import ChartBoard from '@/components/ChartBoard';
 import InsightPanel from '@/components/InsightPanel';
 import ThemeToggle from '@/components/ThemeToggle';
+import ExportReportButton from '@/components/ExportReportButton';
 import { generateChart } from '@/lib/ziwei/algorithm';
 import type { BirthInfo, ZiweiChart, Palace } from '@/lib/ziwei/types';
 
@@ -20,6 +21,7 @@ import type { BirthInfo, ZiweiChart, Palace } from '@/lib/ziwei/types';
 export default function ChartPage() {
   const [chart, setChart] = useState<ZiweiChart | null>(null);
   const [selectedPalace, setSelectedPalace] = useState<Palace | null>(null);
+  const boardRef = useRef<HTMLDivElement>(null);
 
   // ── 未起盘：展示出生信息表单 ──
   if (!chart) {
@@ -41,7 +43,7 @@ export default function ChartPage() {
   // 整页锁定一屏；左命盘超高时自身滚动；右 AI 解读对话在消息区内上下滚动。
   return (
     <div className="ziwei-workspace">
-      {/* 顶栏：返回起盘 + 主题切换 */}
+      {/* 顶栏：返回起盘 + 导出 PDF/PNG + 主题切换 */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, padding: '2px 4px' }}>
         <button
           type="button"
@@ -57,7 +59,12 @@ export default function ChartPage() {
         <span className="hidden sm:block" style={{ fontSize: 12, color: 'var(--t-faint)' }}>
           倪海厦体系排盘 · 点击宫位 / 话题 / 输入问题，AI 解读在右侧对话区滚动阅读
         </span>
-        <div style={{ marginLeft: 'auto' }}>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
+          <ExportReportButton
+            targetRef={boardRef}
+            filename="ziwei-chart"
+            printTitle="紫微命盘报告"
+          />
           <ThemeToggle />
         </div>
       </div>
@@ -65,7 +72,10 @@ export default function ChartPage() {
       {/* 工作区：左命盘｜右 AI 解读（对话内部滚动） */}
       <div className="ziwei-workspace-grid">
         <div className="ziwei-left">
-          <ChartBoard chart={chart} onPalaceSelect={setSelectedPalace} />
+          <div ref={boardRef} className="export-root">
+            <h1 className="export-page-title">紫微斗数命盘报告</h1>
+            <ChartBoard chart={chart} onPalaceSelect={setSelectedPalace} />
+          </div>
         </div>
         <InsightPanel chart={chart} selectedPalace={selectedPalace} />
       </div>

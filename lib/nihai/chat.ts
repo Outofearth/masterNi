@@ -7,9 +7,10 @@
  */
 
 import type { Hexagram, NiModule } from './types';
+import type { FullReading } from '../qigua/yaoci';
 
 // ─── 上下文类型 ───────────────────────────────────────────
-/** 起卦结果上下文（本卦 / 变卦 / 互卦 / 动爻） */
+/** 起卦结果上下文（本卦 / 变卦 / 互卦 / 动爻 / 爻位解读） */
 export interface DivinationContext {
   /** 所占之事 */
   question?: string;
@@ -19,6 +20,11 @@ export interface DivinationContext {
   hu: Hexagram | null;
   /** 动爻爻位（1-6） */
   changingLines: number[];
+  /**
+   * yaoci 引擎已合成的解读（逐爻 + 变卦 + 互卦 + 宜忌）。
+   * 不传时仅给卦象骨架；传了则 AI 可精确到爻位与宜忌。
+   */
+  yaociReading?: FullReading;
 }
 
 export type TianjiContext =
@@ -107,6 +113,27 @@ export function buildTianjiSystemPrompt(ctx: TianjiContext): string {
             `  断事：${h.divination}`,
           ].join('\n')
         : `· ${label}：未明`;
+
+    // ── yaoci 爻位解读注入 ──
+    const yaoci = d.yaociReading;
+    const yaociYaos = yaoci?.yaoReadings
+      ?.map(y =>
+        [
+          `  - ${y.title}（${y.yaoNature}，${y.deweiText}）${y.isChanging ? ' · 动爻' : ''}`,
+          `    ${y.reading}`,
+        ].join('\n')
+      )
+      .join('\n');
+    const yaociChanged = yaoci?.changed
+      ? `\n【变卦解读】\n${yaoci.changed.title}（${yaoci.changed.subtitle}）\n${yaoci.changed.body}`
+      : '';
+    const yaociHu = yaoci?.hu
+      ? `\n【互卦解读】\n${yaoci.hu.title}（${yaoci.hu.subtitle}）\n${yaoci.hu.body}`
+      : '';
+    const yaociAdvice = yaoci?.advice
+      ? `\n【宜 / 忌】\n  宜：${yaoci.advice.yi.join('、')}\n  忌：${yaoci.advice.ji.join('、')}`
+      : '';
+
     parts.push(
       '',
       '【当前起卦 —— 用户刚起的一卦，请据此断事】',
@@ -116,12 +143,19 @@ export function buildTianjiSystemPrompt(ctx: TianjiContext): string {
       hex('本卦（当下之象）', d.ben),
       hex('变卦（事之结果）', d.changed),
       hex('互卦（事之内在）', d.hu),
+      yaociYaos
+        ? `\n【逐爻解读 —— yaoci 引擎已生成，可直接引用】\n${yaociYaos}`
+        : '',
+      yaociChanged,
+      yaociHu,
+      yaociAdvice,
       '',
       '【断卦次第 —— 必须遵循】',
       '1. 先看本卦：定当下处境与事情的性质（取上卦下卦之象）',
-      '2. 再看动爻：动爻是变化之机，说明事情从何处开始转变',
+      '2. 再看动爻：动爻是变化之机，说明事情从何处开始转变；具体到「爻位时义」则看 yaoci 解读',
       '3. 后看变卦：动爻变化后的卦才是事情的结果与吉凶所归',
       '4. 参看互卦：揭示表象之下的真实底蕴与隐情',
+      '5. 如用户问「该不该做」「怎么选」，必须落到宜 / 忌',
       '',
       '用户所问之事，请严格按上述次第逐层拆解，最后给出可执行建议。'
         + '若用户未说明所占之事，请先给出卦象本身的解读，再询问所占何事。',
@@ -174,6 +208,29 @@ export function contextDigest(ctx: TianjiContext): string {
     const line = (label: string, h: Hexagram | null) =>
       h ? `【${label}】第 ${h.number} 卦 ${h.name}（${h.composition}）\n卦辞：${h.meaning}\n断事：${h.divination}`
         : `【${label}】未明`;
+
+    // ── yaoci 解读摘要（离线模式展示） ──
+    const yaoci = d.yaociReading;
+    const yaociBlock: string[] = [];
+    if (yaoci?.yaoReadings?.length) {
+      yaociBlock.push('【逐爻解读】');
+      yaoci.yaoReadings.forEach(y => {
+        yaociBlock.push(
+          `${y.title}（${y.yaoNature} · ${y.deweiText}${y.isChanging ? ' · 动爻' : ''}）`,
+          `  ${y.reading}`,
+        );
+      });
+    }
+    if (yaoci?.changed) {
+      yaociBlock.push(`【${yaoci.changed.title}】${yaoci.changed.subtitle}\n${yaoci.changed.body}`);
+    }
+    if (yaoci?.hu) {
+      yaociBlock.push(`【${yaoci.hu.title}】${yaoci.hu.subtitle}\n${yaoci.hu.body}`);
+    }
+    if (yaoci?.advice) {
+      yaociBlock.push(`【宜】${yaoci.advice.yi.join('、')}\n【忌】${yaoci.advice.ji.join('、')}`);
+    }
+
     return [
       `【${d.methodLabel}】${d.question ? '所占：' + d.question : '未说明所占之事'}`,
       `动爻：${d.changingLines.length ? d.changingLines.map(n => `${names[n - 1]}爻`).join('、') : '无'}`,
@@ -183,6 +240,7 @@ export function contextDigest(ctx: TianjiContext): string {
       line('变卦 · 结果', d.changed),
       '',
       line('互卦 · 内在', d.hu),
+      ...(yaociBlock.length ? ['', ...yaociBlock] : []),
     ].join('\n');
   }
   return '天纪 · 倪海厦天文术数体系：紫微斗数（三合派）、易经 64 卦（象数派）、堪舆（九星派）、推命（河洛数理派）、面相、测字。';

@@ -587,3 +587,49 @@ strong, b { font-weight: 600; }
   .ziwei-workspace-grid { grid-template-rows: auto; }
   .ziwei-left { overflow: visible; }
 }
+
+/* ─── B13 打印 / 另存 PDF 通用样式 ───────────────────────
+ * 触发条件：body.print-mode（点「导出 PDF」按钮时挂上）
+ *   · 隐藏导航、按钮、抽屉、AI 面板、滚动条、动画
+ *   · 强制白底黑字，方便打印 / 另存 PDF
+ *   · 命盘/卦象区块容器加 .export-root 以被打快照
+ * ──────────────────────────────────────────────────── */
+@media print {
+  body.print-mode,
+  body.print-mode * {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body.print-mode .site-header,
+  body.print-mode .no-export,
+  body.print-mode button,
+  body.print-mode nav,
+  body.print-mode .fixed,
+  body.print-mode [role="tablist"],
+  body.print-mode .export-btn-row,
+  body.print-mode .qigua-history-btn {
+    display: none !important;
+  }
+  body.print-mode .export-root {
+    box-shadow: none !important;
+    border: 1px solid #d4d4d4 !important;
+    page-break-inside: avoid;
+    margin: 0 auto !important;
+  }
+  body.print-mode .export-page-title {
+    display: block !important;
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #b8922a;
+  }
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+}
+/* 屏幕下隐藏打印标题 */
+.export-page-title { display: none; }
