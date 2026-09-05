@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/components/ThemeProvider';
 import TianjiChatPanel from '@/components/TianjiChatPanel';
@@ -44,6 +44,9 @@ export default function TianjiOverviewPage() {
       ).slice(0, 6),
     []
   );
+
+  // DVD 时间轴：默认折叠 highlights（点击展开全部要点）
+  const [openDvd, setOpenDvd] = useState<number | null>(null);
 
   return (
     <div style={{ background: c.bgBase, transition: 'background 0.35s ease' }} className="overflow-x-hidden">
@@ -145,6 +148,58 @@ export default function TianjiOverviewPage() {
                 }}>
                 立即起卦
               </Link>
+            </div>
+          </TianjiFadeIn>
+        </div>
+      </section>
+
+      {/* ══ Hero 视频位 ═════════════════════════════ */}
+      <section className="relative px-6 pb-12">
+        <div className="mx-auto" style={{ maxWidth: '960px' }}>
+          <TianjiFadeIn>
+            <div
+              className="relative rounded-2xl overflow-hidden aspect-video flex items-center justify-center"
+              style={{
+                background: c.featureBg,
+                border: `1px solid ${c.goldLine}`,
+                boxShadow: c.featureShadow,
+              }}
+              aria-label="倪师天纪 DVD 视频位（资源筹备中）"
+              role="img"
+            >
+              {/* 装饰底纹 */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: `radial-gradient(ellipse at center, ${c.glowTint} 0%, transparent 70%)`,
+                }}
+              />
+              <div
+                className="absolute inset-0 pointer-events-none opacity-30"
+                style={{
+                  backgroundImage: `repeating-linear-gradient(45deg, ${c.featureBord} 0 1px, transparent 1px 14px)`,
+                }}
+              />
+              {/* 中央内容 */}
+              <div className="relative text-center px-6">
+                <div className="text-5xl lg:text-6xl mb-3" style={{ color: c.goldSolid }} aria-hidden="true">
+                  ▶
+                </div>
+                <div className="text-base lg:text-lg tracking-[0.2em] mb-2" style={{ color: c.textPrimary, fontFamily: 'var(--font-serif)' }}>
+                  倪海夏天纪 DVD · 视频位
+                </div>
+                <div className="text-[11px] tracking-[0.25em] mb-1" style={{ color: c.tagText }}>
+                  24 集 · 48 小时 · 原声讲义
+                </div>
+                <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full text-[10px] tracking-[0.2em]"
+                  style={{
+                    background: 'transparent',
+                    border: `1px dashed ${c.goldLine}`,
+                    color: c.goldSolid,
+                  }}>
+                  ◇ 视频资源筹备中 · 敬请期待
+                </div>
+              </div>
             </div>
           </TianjiFadeIn>
         </div>
@@ -413,65 +468,85 @@ export default function TianjiOverviewPage() {
             </div>
           </TianjiFadeIn>
 
-          {/* 时间轴 */}
+          {/* 时间轴：每集可展开 */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-            {TIANJI_EPISODES.map((ep, i) => (
-              <TianjiFadeIn key={ep.dvd} delay={0.02 * (i % 8)}>
-                <motion.div
-                  whileHover={{ y: -2 }}
-                  transition={{ duration: 0.1 }}
-                  className="rounded-xl p-4 h-full"
-                  style={{
-                    background: c.featureBg,
-                    border: `1px solid ${c.featureBord}`,
-                  }}
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center text-base font-bold tracking-wider flex-shrink-0"
-                      style={{
-                        background: c.cardBg,
-                        border: `1px solid ${c.goldLine}`,
-                        color: c.goldSolid,
-                        fontFamily: 'var(--font-serif)',
-                      }}>
-                      {ep.dvd}
-                    </div>
-                    <div className="text-[9px] tracking-[0.2em]" style={{ color: c.textMuted }}>
-                      DVD · 第 {ep.dvd} 集
-                    </div>
-                  </div>
-                  <div className="space-y-2 mb-3">
-                    <div>
-                      <div className="text-[9px] tracking-[0.15em] mb-0.5" style={{ color: c.tagText }}>
-                        前半 · 命学
+            {TIANJI_EPISODES.map((ep, i) => {
+              const isOpen = openDvd === ep.dvd;
+              return (
+                <TianjiFadeIn key={ep.dvd} delay={0.02 * (i % 8)}>
+                  <motion.div
+                    transition={{ duration: 0.15 }}
+                    className="rounded-xl overflow-hidden"
+                    style={{
+                      background: c.featureBg,
+                      border: `1px solid ${isOpen ? c.goldLine : c.featureBord}`,
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setOpenDvd(isOpen ? null : ep.dvd)}
+                      aria-expanded={isOpen}
+                      aria-controls={`dvd-panel-${ep.dvd}`}
+                      className="w-full text-left p-4 cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-10 h-10 rounded-lg flex items-center justify-center text-base font-bold tracking-wider flex-shrink-0"
+                          style={{
+                            background: c.cardBg,
+                            border: `1px solid ${c.goldLine}`,
+                            color: c.goldSolid,
+                            fontFamily: 'var(--font-serif)',
+                          }}>
+                          {ep.dvd}
+                        </div>
+                        <div className="text-[9px] tracking-[0.2em]" style={{ color: c.textMuted }}>
+                          DVD · 第 {ep.dvd} 集
+                        </div>
+                        <div className="ml-auto text-base" style={{ color: c.goldSolid }}>
+                          {isOpen ? '−' : '+'}
+                        </div>
                       </div>
-                      <div className="text-xs font-medium leading-relaxed" style={{ color: c.textPrimary }}>
-                        {ep.firstHalf}
+                      <div className="space-y-2">
+                        <div>
+                          <div className="text-[9px] tracking-[0.15em] mb-0.5" style={{ color: c.tagText }}>
+                            前半 · 命学
+                          </div>
+                          <div className="text-xs font-medium leading-relaxed" style={{ color: c.textPrimary }}>
+                            {ep.firstHalf}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-[9px] tracking-[0.15em] mb-0.5" style={{ color: c.tagText }}>
+                            后半 · 易经
+                          </div>
+                          <div className="text-xs leading-relaxed" style={{ color: c.textSecond }}>
+                            {ep.secondHalf}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <div className="text-[9px] tracking-[0.15em] mb-0.5" style={{ color: c.tagText }}>
-                        后半 · 易经
+                    </button>
+                    {/* 展开区：全部 highlights */}
+                    {isOpen && ep.highlights.length > 0 && (
+                      <div
+                        id={`dvd-panel-${ep.dvd}`}
+                        className="px-4 pb-4 pt-2 space-y-1.5"
+                        style={{ borderTop: `1px solid ${c.featureBord}` }}
+                      >
+                        <div className="text-[9px] tracking-[0.2em] mb-1" style={{ color: c.tagText }}>
+                          本集要诀
+                        </div>
+                        {ep.highlights.map((h, j) => (
+                          <div key={j} className="text-[10px] flex items-start gap-1.5" style={{ color: c.textMuted }}>
+                            <span style={{ color: c.goldSolid }}>·</span>
+                            <span>{h}</span>
+                          </div>
+                        ))}
                       </div>
-                      <div className="text-xs leading-relaxed" style={{ color: c.textSecond }}>
-                        {ep.secondHalf}
-                      </div>
-                    </div>
-                  </div>
-                  {ep.highlights.length > 0 && (
-                    <ul className="space-y-1 pt-2"
-                      style={{ borderTop: `1px solid ${c.featureBord}` }}>
-                      {ep.highlights.slice(0, 2).map((h, j) => (
-                        <li key={j} className="text-[10px] flex items-start gap-1.5" style={{ color: c.textMuted }}>
-                          <span style={{ color: c.goldSolid }}>·</span>
-                          <span>{h}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </motion.div>
-              </TianjiFadeIn>
-            ))}
+                    )}
+                  </motion.div>
+                </TianjiFadeIn>
+              );
+            })}
           </div>
         </div>
       </section>

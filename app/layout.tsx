@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import SiteHeader from '@/components/SiteHeader';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="zh-CN" data-theme="dark" suppressHydrationWarning>
       <body className="min-h-screen">
         <ThemeProvider>
+          <SiteHeader />
           {children}
         </ThemeProvider>
         <Analytics />

@@ -11,6 +11,7 @@ import {
   useSyncBodyBackground,
 } from '../_colors';
 import TianjiFadeIn from '../TianjiFadeIn';
+import ModuleExtra from './_extras';
 
 /**
  * 天纪子模块详情页
@@ -257,6 +258,9 @@ export default function ModuleDetailPage() {
           </div>
         </section>
       )}
+
+      {/* ══ 差异化定制区块 ══════════════════════════════════════ */}
+      <ModuleExtra slug={slug} />
 
       {/* ══ 关键词 + 参考书目 ══════════════════════════════════════ */}
       <section className="relative px-6 py-12" style={{ background: c.bgAlt }}>

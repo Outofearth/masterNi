@@ -42,16 +42,35 @@ export default function YijingPage() {
   // 过滤状态：null 表示不过滤
   const [filterUpper, setFilterUpper] = useState<BaguaName | null>(null);
   const [filterLower, setFilterLower] = useState<BaguaName | null>(null);
+  const [search, setSearch] = useState('');
 
   const filtered: Hexagram[] = useMemo(() => {
+    const q = search.trim().toLowerCase();
     return HEXAGRAMS.filter(h => {
       if (filterUpper && h.upper !== filterUpper) return false;
       if (filterLower && h.lower !== filterLower) return false;
+      if (q) {
+        const numStr = String(h.number);
+        const padNum = numStr.padStart(2, '0');
+        const match =
+          h.name.includes(q) ||
+          h.composition.toLowerCase().includes(q) ||
+          numStr === q ||
+          padNum === q ||
+          `第${numStr}` === q;
+        if (!match) return false;
+      }
       return true;
     });
-  }, [filterUpper, filterLower]);
+  }, [filterUpper, filterLower, search]);
 
-  const clearFilter = () => { setFilterUpper(null); setFilterLower(null); };
+  const clearFilter = () => {
+    setFilterUpper(null);
+    setFilterLower(null);
+    setSearch('');
+  };
+
+  const hasAnyFilter = !!(filterUpper || filterLower || search.trim());
 
   return (
     <div style={{ background: c.bgBase, transition: 'background 0.35s ease' }} className="overflow-x-hidden">
@@ -117,6 +136,40 @@ export default function YijingPage() {
                 border: `1px solid ${c.cardBorder}`,
                 boxShadow: c.featureShadow,
               }}>
+              {/* 搜索框 */}
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-[10px] tracking-[0.25em] uppercase whitespace-nowrap"
+                  style={{ color: c.tagText, minWidth: '64px' }}>
+                  搜索
+                </span>
+                <div className="relative flex-1 max-w-sm">
+                  <input
+                    type="text"
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                    placeholder="卦名 / 卦序 / 标签，如「乾」「1」「第64」「变革」"
+                    aria-label="按卦名或卦序搜索"
+                    className="w-full px-3 py-1.5 pr-8 rounded-full text-xs outline-none transition-colors"
+                    style={{
+                      background: c.featureBg,
+                      border: `1px solid ${search ? c.goldLine : c.featureBord}`,
+                      color: c.textPrimary,
+                    }}
+                  />
+                  {search && (
+                    <button
+                      type="button"
+                      onClick={() => setSearch('')}
+                      aria-label="清除搜索"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-xs leading-none"
+                      style={{ color: c.textMuted }}
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              </div>
+
               {/* 上卦 */}
               <div className="flex items-center gap-3 mb-4 flex-wrap">
                 <span className="text-[10px] tracking-[0.25em] uppercase whitespace-nowrap"
@@ -171,14 +224,15 @@ export default function YijingPage() {
               </div>
 
               {/* 状态条 */}
-              <div className="flex items-center justify-between pt-3"
+              <div className="flex items-center justify-between pt-3 flex-wrap gap-2"
                 style={{ borderTop: `1px solid ${c.featureBord}` }}>
                 <span className="text-[11px] tracking-wider" style={{ color: c.textMuted }}>
                   显示 <span style={{ color: c.goldSolid, fontWeight: 600 }}>{filtered.length}</span> 卦
                   {filterUpper && ` · 上卦 ${filterUpper}`}
                   {filterLower && ` · 下卦 ${filterLower}`}
+                  {search.trim() && ` · 搜索 "${search.trim()}"`}
                 </span>
-                {(filterUpper || filterLower) && (
+                {hasAnyFilter && (
                   <button type="button" onClick={clearFilter}
                     className="text-[11px] tracking-wider cursor-pointer transition-colors"
                     style={{ color: c.goldSolid }}>

@@ -9,9 +9,22 @@
 import type { Hexagram, NiModule } from './types';
 
 // ─── 上下文类型 ───────────────────────────────────────────
+/** 起卦结果上下文（本卦 / 变卦 / 互卦 / 动爻） */
+export interface DivinationContext {
+  /** 所占之事 */
+  question?: string;
+  methodLabel: string;
+  ben: Hexagram | null;
+  changed: Hexagram | null;
+  hu: Hexagram | null;
+  /** 动爻爻位（1-6） */
+  changingLines: number[];
+}
+
 export type TianjiContext =
   | { type: 'hexagram'; data: Hexagram }
   | { type: 'module'; data: NiModule }
+  | { type: 'divination'; data: DivinationContext }
   | { type: 'general' };
 
 // ─── 天纪体系系统提示词 ───────────────────────────────────
@@ -80,6 +93,39 @@ export function buildTianjiSystemPrompt(ctx: TianjiContext): string {
       '',
       '用户可能想了解这一模块讲什么、怎么学、与其它模块/诸术如何贯通。请据此作答。',
     );
+  } else if (ctx.type === 'divination') {
+    const d = ctx.data;
+    const names = ['初', '二', '三', '四', '五', '上'];
+    const dong = d.changingLines.length
+      ? d.changingLines.map(n => `${names[n - 1]}爻`).join('、')
+      : '无动爻（静卦）';
+    const hex = (label: string, h: Hexagram | null) =>
+      h
+        ? [
+            `· ${label}：第 ${h.number} 卦 ${h.name}（${h.composition}，上${h.upper}下${h.lower}）`,
+            `  卦辞：${h.meaning}`,
+            `  断事：${h.divination}`,
+          ].join('\n')
+        : `· ${label}：未明`;
+    parts.push(
+      '',
+      '【当前起卦 —— 用户刚起的一卦，请据此断事】',
+      `· 起卦方式：${d.methodLabel}`,
+      d.question ? `· 所占之事：${d.question}` : '· 所占之事：未说明（可先请用户补充，或就卦象本身作通用解读）',
+      `· 动爻：${dong}`,
+      hex('本卦（当下之象）', d.ben),
+      hex('变卦（事之结果）', d.changed),
+      hex('互卦（事之内在）', d.hu),
+      '',
+      '【断卦次第 —— 必须遵循】',
+      '1. 先看本卦：定当下处境与事情的性质（取上卦下卦之象）',
+      '2. 再看动爻：动爻是变化之机，说明事情从何处开始转变',
+      '3. 后看变卦：动爻变化后的卦才是事情的结果与吉凶所归',
+      '4. 参看互卦：揭示表象之下的真实底蕴与隐情',
+      '',
+      '用户所问之事，请严格按上述次第逐层拆解，最后给出可执行建议。'
+        + '若用户未说明所占之事，请先给出卦象本身的解读，再询问所占何事。',
+    );
   } else {
     parts.push(
       '',
@@ -122,6 +168,23 @@ export function contextDigest(ctx: TianjiContext): string {
       ...(m.chapters ?? []).map(ch => `${ch.order}. ${ch.title}${ch.subtitle ? ' —— ' + ch.subtitle : ''}`),
     ].filter(Boolean).join('\n');
   }
+  if (ctx.type === 'divination') {
+    const d = ctx.data;
+    const names = ['初', '二', '三', '四', '五', '上'];
+    const line = (label: string, h: Hexagram | null) =>
+      h ? `【${label}】第 ${h.number} 卦 ${h.name}（${h.composition}）\n卦辞：${h.meaning}\n断事：${h.divination}`
+        : `【${label}】未明`;
+    return [
+      `【${d.methodLabel}】${d.question ? '所占：' + d.question : '未说明所占之事'}`,
+      `动爻：${d.changingLines.length ? d.changingLines.map(n => `${names[n - 1]}爻`).join('、') : '无'}`,
+      '',
+      line('本卦 · 当下', d.ben),
+      '',
+      line('变卦 · 结果', d.changed),
+      '',
+      line('互卦 · 内在', d.hu),
+    ].join('\n');
+  }
   return '天纪 · 倪海厦天文术数体系：紫微斗数（三合派）、易经 64 卦（象数派）、堪舆（九星派）、推命（河洛数理派）、面相、测字。';
 }
 
@@ -147,6 +210,21 @@ export function presetQuestionsFor(ctx: TianjiContext): string[] {
       `${name}在倪师体系中处于什么位置？`,
       `${name}有哪些必须掌握的核心要点？`,
       `${name}的实际应用场景有哪些？`,
+    ];
+  }
+  if (ctx.type === 'divination') {
+    const d = ctx.data;
+    const ben = d.ben?.name ?? '本卦';
+    const changed = d.changed?.name ?? '变卦';
+    const hasDong = d.changingLines.length > 0;
+    const q = d.question ? `（${d.question}）` : '';
+    return [
+      `这一卦${q}整体上该怎么看？`,
+      hasDong ? `动爻在此处发动，意味着什么变化？` : `六爻皆静（静卦），该怎么理解？`,
+      `本卦${ben}到变卦${changed}，事情会如何发展？`,
+      `互卦在此揭示了什么隐情？`,
+      `这件事我该进还是该退？`,
+      `倪师断此卦，会给出什么行动建议？`,
     ];
   }
   return [

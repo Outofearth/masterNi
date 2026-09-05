@@ -109,7 +109,7 @@ const SECTIONS = [
     key: 'tianji',
     name: '天纪',
     en: 'Tian Ji',
-    desc: '紫微斗数 · 易经 64 卦 · 堪舆学',
+    desc: '紫微斗数 · 易经 64 卦 · 占卜 · 堪舆 · 面相 · 测字',
     status: 'ready' as const,
     when: '已上线',
     icon: '⊙',  // 圆+内点（古文"日"），与 ◉ 同字宽
