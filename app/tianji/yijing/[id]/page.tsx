@@ -1,8 +1,10 @@
 'use client';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/components/ThemeProvider';
+import TianjiChatPanel from '@/components/TianjiChatPanel';
 import { HEXAGRAMS } from '@/lib/nihai';
 import {
   useTianjiColors,
@@ -41,6 +43,12 @@ export default function HexagramDetailPage() {
   const hex = idx >= 0 ? HEXAGRAMS[idx] : null;
   const prev = idx > 0 ? HEXAGRAMS[idx - 1] : null;
   const next = idx >= 0 && idx < HEXAGRAMS.length - 1 ? HEXAGRAMS[idx + 1] : null;
+
+  // AI 解读上下文：切卦时重建（useMemo 保证引用稳定，避免重复清空对话）
+  const chatContext = useMemo(
+    () => (hex ? { type: 'hexagram' as const, data: hex } : { type: 'general' as const }),
+    [hex],
+  );
 
   if (!hex) {
     return (
@@ -188,6 +196,27 @@ export default function HexagramDetailPage() {
               </motion.div>
             </TianjiFadeIn>
           </div>
+        </div>
+      </section>
+
+      {/* ══ AI 解读 ══════════════════════════════════════ */}
+      <section className="relative px-6 py-12" style={{ background: c.bgAlt }}>
+        <div className="mx-auto" style={{ maxWidth: '960px' }}>
+          <div className="mb-5 text-center">
+            <div className="text-[10px] tracking-[0.3em] mb-1" style={{ color: c.tagText }}>
+              AI · 问卦
+            </div>
+            <h2 className="text-lg font-medium tracking-wider"
+              style={{ color: c.textPrimary, fontFamily: 'var(--font-serif)' }}>
+              就这一卦提问
+            </h2>
+          </div>
+          <TianjiChatPanel
+            context={chatContext}
+            title={`AI 解卦 · 第 ${hex.number} 卦「${hex.name}」`}
+            subtitle="倪海厦《天纪》象数派口径 · 结合卦象卦辞作答"
+            height={520}
+          />
         </div>
       </section>
 

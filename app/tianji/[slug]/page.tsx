@@ -1,8 +1,10 @@
 'use client';
 import Link from 'next/link';
 import { redirect, useParams } from 'next/navigation';
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/components/ThemeProvider';
+import TianjiChatPanel from '@/components/TianjiChatPanel';
 import { TIANJI_MODULES } from '@/lib/nihai';
 import {
   useTianjiColors,
@@ -53,6 +55,9 @@ export default function ModuleDetailPage() {
   }
 
   const sortedChapters = [...mod.chapters].sort((a, b) => a.order - b.order);
+
+  // AI 解读上下文：切模块时重建（useMemo 保证引用稳定，避免重复清空对话）
+  const chatContext = useMemo(() => ({ type: 'module' as const, data: mod }), [mod]);
 
   return (
     <div style={{ background: c.bgBase, transition: 'background 0.35s ease' }} className="overflow-x-hidden">
@@ -311,6 +316,27 @@ export default function ModuleDetailPage() {
               </div>
             </TianjiFadeIn>
           </div>
+        </div>
+      </section>
+
+      {/* ══ AI 解读 ══════════════════════════════════════ */}
+      <section className="relative px-6 py-12" style={{ background: c.bgAlt }}>
+        <div className="mx-auto" style={{ maxWidth: '960px' }}>
+          <div className="mb-5 text-center">
+            <div className="text-[10px] tracking-[0.3em] mb-1" style={{ color: c.tagText }}>
+              AI · 问学
+            </div>
+            <h2 className="text-lg font-medium tracking-wider"
+              style={{ color: c.textPrimary, fontFamily: 'var(--font-serif)' }}>
+              就这一模块提问
+            </h2>
+          </div>
+          <TianjiChatPanel
+            context={chatContext}
+            title={`AI 解读 · ${mod.name}`}
+            subtitle={`${mod.school ?? '倪师体系'} · 结合本模块讲义作答`}
+            height={520}
+          />
         </div>
       </section>
 

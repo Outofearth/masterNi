@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/components/ThemeProvider';
+import TianjiChatPanel from '@/components/TianjiChatPanel';
 import {
   TIANJI_MODULES,
   TIANJI_EPISODES,
@@ -25,7 +26,11 @@ import TianjiFadeIn from './TianjiFadeIn';
  *   3. 24 集 DVD 时间轴（双栏：前半段命学/后半段易经）
  *   4. 易经 64 卦入口卡片（跳转到 /tianji/yijing）
  *   5. 倪师语录精选
+ *   6. AI 天纪解读面板（/api/tianji-chat，通用 context）
  */
+
+// 通用天纪 context（模块级常量，引用稳定，避免每次 render 清空对话）
+const GENERAL_CONTEXT = { type: 'general' as const };
 
 export default function TianjiOverviewPage() {
   const { theme } = useTheme();
@@ -131,14 +136,14 @@ export default function TianjiOverviewPage() {
                 style={{ background: c.ctaBg, color: c.ctaText }}>
                 浏览 64 卦 →
               </Link>
-              <Link href="/chart"
+              <Link href="/tianji/qigua"
                 className="px-8 py-3 font-medium text-sm tracking-[0.2em] rounded-full transition-all duration-300"
                 style={{
                   border: `1px solid ${c.goldLine}`,
                   color: c.goldSolid,
                   background: 'transparent',
                 }}>
-                立即起紫微盘
+                立即起卦
               </Link>
             </div>
           </TianjiFadeIn>
@@ -515,6 +520,37 @@ export default function TianjiOverviewPage() {
               </TianjiFadeIn>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ══ AI 解读（天纪通用）════════════════════════ */}
+      <section className="relative px-6 py-16 lg:py-20">
+        <div className="mx-auto" style={{ maxWidth: '960px' }}>
+          <TianjiFadeIn>
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center gap-3 mb-3">
+                <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
+                <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
+                  AI Interprets Tian Ji
+                </span>
+                <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
+              </div>
+              <h2 className="text-2xl lg:text-3xl font-bold mb-3 tracking-[0.15em]"
+                style={{ color: c.textPrimary, fontFamily: 'var(--font-serif)' }}>
+                问天纪
+              </h2>
+              <p className="text-xs tracking-wider" style={{ color: c.textMuted }}>
+                紫微 · 易经 · 堪舆 · 推命 · 面相 · 测字，任一主题皆可问
+              </p>
+            </div>
+          </TianjiFadeIn>
+
+          <TianjiChatPanel
+            context={GENERAL_CONTEXT}
+            title="AI 天纪解读"
+            subtitle="倪海厦《天纪》体系 · 三合派 / 象数派 / 九星派 / 河洛数理派"
+            height={560}
+          />
         </div>
       </section>
 
