@@ -6,6 +6,7 @@
 
 import Link from 'next/link';
 import { ALL_BOOKS, TOTAL_PARAGRAPHS } from '@/lib/classics';
+import { getKeywordCloud, getLibrarySnapshot } from '@/lib/classics/keywords';
 import LibrarySearch from './LibrarySearch';
 
 export const metadata = {
@@ -14,6 +15,18 @@ export const metadata = {
 };
 
 export default function LibraryHomePage() {
+  const snapshot = getLibrarySnapshot();
+  const cloud = getKeywordCloud().slice(0, 28); // top 28 关键词
+
+  // 按 category 分桶展示
+  const cloudByCat = {
+    主星: cloud.filter(k => k.category === '主星').slice(0, 8),
+    宫位: cloud.filter(k => k.category === '宫位').slice(0, 6),
+    四化: cloud.filter(k => k.category === '四化'),
+    格局: cloud.filter(k => k.category === '格局').slice(0, 6),
+    术语: cloud.filter(k => k.category === '术语').slice(0, 6),
+  };
+
   return (
     <div style={{ background: 'var(--bg-page)', minHeight: '100vh' }}>
       {/* 顶栏 */}
@@ -42,13 +55,87 @@ export default function LibraryHomePage() {
         </h1>
         <p style={{ fontSize: '14px', color: 'var(--tx-2)', letterSpacing: '0.1em', maxWidth: '600px', margin: '0 auto', lineHeight: 1.7 }}>
           紫微斗数权威古籍全文检索<br />
-          收录 <strong style={{ color: 'var(--ac)' }}>{ALL_BOOKS.length}</strong> 部古籍 · 共 <strong style={{ color: 'var(--ac)' }}>{TOTAL_PARAGRAPHS}</strong> 段精华
+          收录 <strong style={{ color: 'var(--ac)' }}>{snapshot.bookCount}</strong> 部古籍 · <strong style={{ color: 'var(--ac)' }}>{snapshot.chapterCount}</strong> 章节 · <strong style={{ color: 'var(--ac)' }}>{snapshot.paragraphCount}</strong> 段精华
         </p>
       </div>
 
       {/* 搜索 */}
       <div className="max-w-2xl mx-auto px-6 mb-12">
         <LibrarySearch />
+      </div>
+
+      {/* 关键词热度词云 */}
+      <div className="max-w-5xl mx-auto px-6 pb-12">
+        <div className="flex items-center gap-3 mb-5">
+          <div style={{ height: '1px', width: '32px', background: 'var(--ac)' }} />
+          <span style={{ fontSize: '11px', color: 'var(--ac)', letterSpacing: '0.4em', fontWeight: 600 }}>
+            关键词热度 · CLASSIC KEYWORDS
+          </span>
+          <div style={{ height: '1px', flex: 1, background: 'rgba(184,146,42,0.15)' }} />
+        </div>
+        <div style={{
+          background: 'var(--bg-card)',
+          border: '1px solid rgba(184,146,42,0.18)',
+          borderRadius: '14px',
+          padding: '24px 28px',
+        }}>
+          {Object.entries(cloudByCat).map(([cat, list]) => list.length > 0 ? (
+            <div key={cat} className="mb-4 last:mb-0">
+              <div style={{
+                fontSize: '10px',
+                color: 'var(--ac-dim)',
+                letterSpacing: '0.3em',
+                fontWeight: 600,
+                marginBottom: '8px',
+              }}>
+                {cat}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {list.map(k => (
+                  <Link
+                    key={k.text}
+                    href={`/library/keyword/${encodeURIComponent(k.text)}`}
+                    title={`${k.brief} · 全集 ${k.count} 次`}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      padding: '5px 12px',
+                      fontSize: '13px',
+                      color: 'var(--tx-0)',
+                      background: 'rgba(184,146,42,0.06)',
+                      border: '1px solid rgba(184,146,42,0.2)',
+                      borderRadius: '16px',
+                      textDecoration: 'none',
+                      fontWeight: k.count > 20 ? 600 : 400,
+                      letterSpacing: '0.05em',
+                    }}
+                    className="hover:!bg-[rgba(184,146,42,0.15)] transition-colors"
+                  >
+                    {k.text}
+                    <span style={{
+                      fontSize: '10px',
+                      color: 'var(--ac-dim)',
+                      marginLeft: '2px',
+                    }}>
+                      {k.count}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ) : null)}
+          <div style={{
+            marginTop: '14px',
+            paddingTop: '14px',
+            borderTop: '1px dashed rgba(184,146,42,0.15)',
+            fontSize: '11px',
+            color: 'var(--tx-3)',
+            lineHeight: 1.7,
+          }}>
+            字号大小反映该词在全部古籍中的提及次数。点击任一关键词，查看其所在的所有原文段落。
+          </div>
+        </div>
       </div>
 
       {/* 古籍列表 */}

@@ -293,6 +293,89 @@ export default function RenjiPage() {
         </div>
       </section>
 
+      {/* 方剂库入口 */}
+      <section className="max-w-6xl mx-auto px-4 pb-12">
+        <TianjiFadeIn delay={0.18}>
+          <div className="mb-6">
+            <div className="text-[10px] tracking-[0.3em] mb-2" style={{ color: c.tagText }}>
+              方剂速查
+            </div>
+            <h3 className="text-2xl font-serif tracking-wider" style={{ color: c.textPrimary }}>
+              仲景经方库
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Link href="/renji/shanghan" className="block group">
+              <div
+                className="rounded-xl p-6 h-full transition-transform hover:scale-[1.01]"
+                style={{
+                  background: c.cardBg,
+                  border: `1px solid ${c.featureBord}`,
+                }}
+              >
+                <div className="flex items-start gap-4">
+                  <div
+                    className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl font-serif shrink-0"
+                    style={{
+                      background: c.goldSolid,
+                      color: '#fff',
+                    }}
+                  >
+                    伤
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-[10px] tracking-[0.2em] mb-1" style={{ color: c.tagText }}>
+                      六经辨证
+                    </div>
+                    <h4 className="text-lg font-serif tracking-wider mb-2 group-hover:underline" style={{ color: c.textPrimary }}>
+                      《伤寒论》方剂
+                    </h4>
+                    <p className="text-[11px] leading-relaxed" style={{ color: c.textSecond }}>
+                      32 张核心方剂，按太阳/阳明/少阳/太阴/少阴/厥阴六经分组。
+                      含主治、君药、组成、倪师要点与现代应用。
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            <Link href="/renji/jingui" className="block group">
+              <div
+                className="rounded-xl p-6 h-full transition-transform hover:scale-[1.01]"
+                style={{
+                  background: c.cardBg,
+                  border: `1px solid ${c.featureBord}`,
+                }}
+              >
+                <div className="flex items-start gap-4">
+                  <div
+                    className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl font-serif shrink-0"
+                    style={{
+                      background: c.goldSolid,
+                      color: '#fff',
+                    }}
+                  >
+                    金
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-[10px] tracking-[0.2em] mb-1" style={{ color: c.tagText }}>
+                      杂病论
+                    </div>
+                    <h4 className="text-lg font-serif tracking-wider mb-2 group-hover:underline" style={{ color: c.textPrimary }}>
+                      《金匮要略》方剂
+                    </h4>
+                    <p className="text-[11px] leading-relaxed" style={{ color: c.textSecond }}>
+                      40 张核心方剂，按篇章分组：痉湿暍、虚劳、胸痹、痰饮、黄疸、妇人妊娠产后等。
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </TianjiFadeIn>
+      </section>
+
       {/* 倪师人纪语录 */}
       <section className="max-w-6xl mx-auto px-4 pb-20">
         <TianjiFadeIn delay={0.2}>

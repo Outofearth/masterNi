@@ -146,6 +146,94 @@ export default function DijiPage() {
         </div>
       </section>
 
+      {/* 扩展阅读：廿四山向 + 地理五诀 */}
+      <section className="max-w-6xl mx-auto px-4 pb-12">
+        <TianjiFadeIn delay={0.18}>
+          <div className="mb-6">
+            <div className="text-[10px] tracking-[0.3em] mb-2" style={{ color: c.tagText }}>
+              扩展阅读
+            </div>
+            <h3 className="text-2xl font-serif tracking-wider" style={{ color: c.textPrimary }}>
+              堪舆基础工具
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Link href="/diji/mountains" className="block group">
+              <motion.div
+                whileHover={{ y: -3 }}
+                transition={{ duration: 0.15 }}
+                className="rounded-xl p-6 h-full"
+                style={{
+                  background: c.cardBg,
+                  border: `1px solid ${c.featureBord}`,
+                }}
+              >
+                <div className="flex items-start gap-4">
+                  <div
+                    className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl font-serif shrink-0"
+                    style={{
+                      background: c.goldSolid,
+                      color: '#fff',
+                    }}
+                  >
+                    罗
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-[10px] tracking-[0.2em] mb-1" style={{ color: c.tagText }}>
+                      罗经正针
+                    </div>
+                    <h4 className="text-lg font-serif tracking-wider mb-2 group-hover:underline" style={{ color: c.textPrimary }}>
+                      廿四山向
+                    </h4>
+                    <p className="text-[11px] leading-relaxed" style={{ color: c.textSecond }}>
+                      壬子癸、艮寅甲、卯乙辰、巽巳丙、午丁未、坤申庚、酉辛戌、乾亥壬
+                      —— 八宫二十四山，分天元地元人元龙，详列阴阳五行、阳宅阴宅吉凶。
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </Link>
+
+            <Link href="/diji/wujue" className="block group">
+              <motion.div
+                whileHover={{ y: -3 }}
+                transition={{ duration: 0.15 }}
+                className="rounded-xl p-6 h-full"
+                style={{
+                  background: c.cardBg,
+                  border: `1px solid ${c.featureBord}`,
+                }}
+              >
+                <div className="flex items-start gap-4">
+                  <div
+                    className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl font-serif shrink-0"
+                    style={{
+                      background: c.goldSolid,
+                      color: '#fff',
+                    }}
+                  >
+                    五
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-[10px] tracking-[0.2em] mb-1" style={{ color: c.tagText }}>
+                      地理五诀
+                    </div>
+                    <h4 className="text-lg font-serif tracking-wider mb-2 group-hover:underline" style={{ color: c.textPrimary }}>
+                      龙穴砂水向
+                    </h4>
+                    <p className="text-[11px] leading-relaxed" style={{ color: c.textSecond }}>
+                      寻龙点穴、察砂观水、立向定向 —— 五大要素相辅相成，缺一不可。
+                      详列各要素吉象、凶象与倪师心法。
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </Link>
+          </div>
+        </TianjiFadeIn>
+      </section>
+
       {/* 倪师地纪语录 */}
       <section className="max-w-6xl mx-auto px-4 pb-20">
         <TianjiFadeIn delay={0.2}>
