@@ -1,7 +1,9 @@
 'use client';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { Palace, Star } from '@/lib/ziwei/types';
 import { STEMS, BRANCHES } from '@/lib/ziwei/constants';
+import { STAR_TO_SLUG } from '@/lib/seo/knowledge';
 import clsx from 'clsx';
 
 interface PalaceCellProps {
@@ -143,6 +145,8 @@ export default function PalaceCell({
         )}
         {majorStars.map((star) => {
           const overlaySiHua = overlayStarSiHua?.[star.name];
+          // A4-2：主星 → 知识库直达（14 主星均有 slug；辅星无 slug 则不加角标）
+          const starSlug = STAR_TO_SLUG[star.name];
           return (
               <div
                 key={star.name}
@@ -154,7 +158,7 @@ export default function PalaceCell({
                     e.preventDefault(); e.stopPropagation(); onStarClick?.(star);
                   }
                 }}
-                className="flex items-center"
+                className="flex items-center group"
                 onClick={e => { e.stopPropagation(); onStarClick?.(star); }}
               >
               <span
@@ -174,6 +178,21 @@ export default function PalaceCell({
                     onSiHuaClick?.(star.name, overlaySiHua);
                   }}
                 />
+              )}
+              {starSlug && (
+                <Link
+                  href={`/library/keyword/${encodeURIComponent(star.name)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={`查${star.name}星在古籍中的全部出处`}
+                  aria-label={`查${star.name}星在古籍中的全部出处（新窗口打开）`}
+                  className="ml-0.5 flex-shrink-0 no-underline leading-none opacity-0 group-hover:opacity-70 hover:!opacity-100 transition-opacity"
+                  style={{ color: 'var(--t-gold)', fontSize: '10px' }}
+                  onClick={e => e.stopPropagation()}
+                  onKeyDown={e => e.stopPropagation()}
+                >
+                  ↗
+                </Link>
               )}
             </div>
           );

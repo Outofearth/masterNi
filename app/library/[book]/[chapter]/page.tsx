@@ -1,10 +1,13 @@
 /**
  * /library/[book]/[chapter] — 单章节阅读页
+ *
+ * A4-3：段落正文 / 白话 / 倪师注 中的 14 主星名自动链到知识库（StarText）
  */
 
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ALL_BOOKS, getChapter } from '@/lib/classics';
+import StarText from '@/components/StarText';
 
 export async function generateStaticParams() {
   return ALL_BOOKS.flatMap(b =>
@@ -62,6 +65,20 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
           )}
         </div>
 
+        {/* A4-3：主星名可点提示 */}
+        <div style={{
+          maxWidth: 'max-content',
+          margin: '0 auto 20px',
+          fontSize: '10px',
+          color: 'var(--tx-3)',
+          letterSpacing: '0.1em',
+          padding: '5px 12px',
+          border: '1px dashed rgba(184,146,42,0.3)',
+          borderRadius: '999px',
+        }}>
+          文中 <span style={{ color: 'var(--ac)', fontWeight: 600, borderBottom: '1px dashed rgba(184,146,42,0.55)' }}>带下划线</span> 的星曜名可点击，直达知识库详解
+        </div>
+
         {/* 段落 */}
         <div style={{ background: 'var(--bg-card)', borderRadius: '14px', border: '1px solid rgba(184,146,42,0.2)', padding: '32px 28px' }}>
           {chapter.paragraphs.map((p, i) => (
@@ -97,7 +114,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
                   letterSpacing: '0.04em',
                   fontFamily: '"PingFang SC", "Hiragino Sans GB", serif',
                 }}>
-                  {p.text}
+                  <StarText text={p.text} />
                 </p>
               </div>
               {p.translation && (
@@ -112,7 +129,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
                   lineHeight: 1.8,
                 }}>
                   <span style={{ fontSize: '10px', color: 'var(--ac)', marginRight: '6px' }}>白话</span>
-                  {p.translation}
+                  <StarText text={p.translation} />
                 </div>
               )}
               {p.niNote && (
@@ -127,11 +144,46 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
                   lineHeight: 1.8,
                 }}>
                   <span style={{ fontSize: '10px', color: 'var(--ji)', marginRight: '6px' }}>倪师注</span>
-                  {p.niNote}
+                  <StarText text={p.niNote} />
                 </div>
               )}
             </div>
           ))}
+        </div>
+
+        {/* A4-4：延伸阅读 */}
+        <div style={{
+          marginTop: '24px',
+          padding: '16px 20px',
+          background: 'var(--bg-card)',
+          border: '1px solid rgba(184,146,42,0.18)',
+          borderRadius: '10px',
+        }}>
+          <div style={{ fontSize: '10px', color: 'var(--tx-3)', letterSpacing: '0.2em', marginBottom: '10px' }}>
+            延伸阅读
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            <Link href="/knowledge" style={{
+              fontSize: '12px', padding: '6px 14px', borderRadius: '999px', textDecoration: 'none',
+              color: 'var(--ac)', background: 'rgba(184,146,42,0.08)', border: '1px solid rgba(184,146,42,0.25)',
+            }}>
+              知识库 · 14 主星 × 13 宫位 →
+            </Link>
+            <Link href="/chart" style={{
+              fontSize: '12px', padding: '6px 14px', borderRadius: '999px', textDecoration: 'none',
+              color: 'var(--tx-2)', background: 'var(--bg-page)', border: '1px solid rgba(184,146,42,0.18)',
+            }}>
+              排盘实测 →
+            </Link>
+            {book.slug && (
+              <Link href={`/library/${book.slug}`} style={{
+                fontSize: '12px', padding: '6px 14px', borderRadius: '999px', textDecoration: 'none',
+                color: 'var(--tx-2)', background: 'var(--bg-page)', border: '1px solid rgba(184,146,42,0.18)',
+              }}>
+                《{book.title}》目录 →
+              </Link>
+            )}
+          </div>
         </div>
 
         {/* 章节导航 */}

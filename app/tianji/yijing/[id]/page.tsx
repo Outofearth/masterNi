@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import CrossLinks from '@/components/CrossLinks';
 import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/components/ThemeProvider';
@@ -402,6 +403,20 @@ export default function HexagramDetailPage() {
               </Link>
             ) : <div className="flex-1" />}
           </div>
+        </div>
+      </section>
+
+      {/* A4-4 · 延伸阅读 */}
+      <section className="relative px-6 pb-4">
+        <div className="mx-auto" style={{ maxWidth: '960px' }}>
+          <CrossLinks
+            links={[
+              { href: '/tianji/qigua', label: '起卦实测 →', desc: '就当下疑问亲自占一卦' },
+              { href: `/library/search?q=${encodeURIComponent(hex.name)}`, label: `古籍检索「${hex.name}」→`, desc: '在原典库中查找此卦相关原文' },
+              { href: '/tianji', label: '天纪总览 →', desc: '倪师天纪体系：紫微 / 易经 / 堪舆 / 面相 / 测字' },
+              { href: '/chart', label: '紫微排盘 →', desc: '输入生辰，即时生成命盘' },
+            ]}
+          />
         </div>
       </section>
 

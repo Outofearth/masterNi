@@ -14,6 +14,7 @@
 
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import CrossLinks from '@/components/CrossLinks';
 import type { TopicKey } from '@/lib/ziwei/db-analysis';
 import {
   ALL_STARS,
@@ -270,6 +271,18 @@ export default async function KnowledgePage({ params }: { params: Promise<{ star
           <Link href="/library" style={{ fontSize: '13px', color: 'var(--ac)', fontWeight: 500, letterSpacing: '0.1em', textDecoration: 'none' }}>
             📜 查阅古籍原典库 — 紫微斗数全集 / 全书 / 骨髓赋 →
           </Link>
+        </div>
+
+        {/* A4-4 · 延伸阅读 */}
+        <div style={{ marginTop: '20px' }}>
+          <CrossLinks
+            links={[
+              { href: `/library/search?q=${encodeURIComponent(star)}`, label: `古籍检索「${star}」→`, desc: '在原典库中查找此星相关原文' },
+              { href: '/chart', label: '排盘实测 →', desc: '输入生辰，看此星落入何宫' },
+              { href: '/knowledge/pattern', label: '格局速查 →', desc: '杀破狼 / 机月同梁等经典格局' },
+              { href: '/tianji', label: '天纪总览 →', desc: '倪师天纪：易经 · 堪舆 · 面相 · 测字' },
+            ]}
+          />
         </div>
       </article>
 

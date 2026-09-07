@@ -2,11 +2,11 @@
 import { useRef, useState } from 'react';
 import BirthForm from '@/components/BirthForm';
 import ChartBoard from '@/components/ChartBoard';
-import InsightPanel from '@/components/InsightPanel';
+import InsightPanel, { type SelectedSiHua, type SelectedStar } from '@/components/InsightPanel';
 import ThemeToggle from '@/components/ThemeToggle';
 import ExportReportButton from '@/components/ExportReportButton';
 import { generateChart } from '@/lib/ziwei/algorithm';
-import type { BirthInfo, ZiweiChart, Palace } from '@/lib/ziwei/types';
+import type { BirthInfo, ZiweiChart, Palace, Star } from '@/lib/ziwei/types';
 
 /**
  * 命盘页 —— 开源版「排盘引擎 Demo」
@@ -21,6 +21,9 @@ import type { BirthInfo, ZiweiChart, Palace } from '@/lib/ziwei/types';
 export default function ChartPage() {
   const [chart, setChart] = useState<ZiweiChart | null>(null);
   const [selectedPalace, setSelectedPalace] = useState<Palace | null>(null);
+  // A4-1：主星点选 / 四化飞化点选（此前未接线，点击无反应）
+  const [selectedStar, setSelectedStar] = useState<SelectedStar | null>(null);
+  const [selectedSiHua, setSelectedSiHua] = useState<SelectedSiHua | null>(null);
   const boardRef = useRef<HTMLDivElement>(null);
 
   // ── 未起盘：展示出生信息表单 ──
@@ -47,7 +50,12 @@ export default function ChartPage() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, padding: '2px 4px' }}>
         <button
           type="button"
-          onClick={() => { setChart(null); setSelectedPalace(null); }}
+          onClick={() => {
+            setChart(null);
+            setSelectedPalace(null);
+            setSelectedStar(null);
+            setSelectedSiHua(null);
+          }}
           style={{
             padding: '6px 14px', cursor: 'pointer', fontSize: 13,
             border: '1px solid var(--t-border)', borderRadius: 8,
@@ -57,7 +65,7 @@ export default function ChartPage() {
           ← 重新起盘
         </button>
         <span className="hidden sm:block" style={{ fontSize: 12, color: 'var(--t-faint)' }}>
-          倪海厦体系排盘 · 点击宫位 / 话题 / 输入问题，AI 解读在右侧对话区滚动阅读
+          倪海厦体系排盘 · 点宫位看三方四正、点主星看单星详解、点四化看飞化，AI 解读在右侧对话区滚动阅读
         </span>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
           <ExportReportButton
@@ -74,10 +82,20 @@ export default function ChartPage() {
         <div className="ziwei-left">
           <div ref={boardRef} className="export-root">
             <h1 className="export-page-title">紫微斗数命盘报告</h1>
-            <ChartBoard chart={chart} onPalaceSelect={setSelectedPalace} />
+            <ChartBoard
+              chart={chart}
+              onPalaceSelect={setSelectedPalace}
+              onStarSelect={(star: Star, palace: Palace) => setSelectedStar({ star, palace })}
+              onSiHuaClick={(starName, siHua, view) => setSelectedSiHua({ starName, siHua, view })}
+            />
           </div>
         </div>
-        <InsightPanel chart={chart} selectedPalace={selectedPalace} />
+        <InsightPanel
+          chart={chart}
+          selectedPalace={selectedPalace}
+          selectedStar={selectedStar}
+          selectedSiHua={selectedSiHua}
+        />
       </div>
     </div>
   );

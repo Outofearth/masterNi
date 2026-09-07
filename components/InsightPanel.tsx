@@ -1,26 +1,46 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Fragment } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { ZiweiChart, Palace } from '@/lib/ziwei/types';
+import type { ZiweiChart, Palace, Star } from '@/lib/ziwei/types';
 import type { TimeView } from './TimeNav';
 import { exportChartPdf } from '@/lib/reportExport';
+import { STAR_TO_SLUG } from '@/lib/seo/knowledge';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
   hidden?: boolean; // don't show user bubble for auto/topic messages
+  /** A4-1：本条解读关联的主星，渲染成「延伸查阅」跨模块链接卡 */
+  quickLinks?: QuickLink[];
 }
 
-interface SelectedSiHua {
+/** 一条主星 → 知识库 / 古籍 的跨模块入口 */
+interface QuickLink {
+  star: string;
+  slug: string;
+  palace: string;
+}
+
+/** 四化飞化选中态：星名 + 四化 + 时间维度（本命/大限/流年） */
+export interface SelectedSiHua {
   starName: string;
   siHua: string;
   view: TimeView;
+}
+
+/** A4-1：命盘上点选的主星及其所在宫位 */
+export interface SelectedStar {
+  star: Star;
+  palace: Palace;
 }
 
 interface InsightPanelProps {
   chart: ZiweiChart;
   selectedPalace?: Palace | null;
   selectedSiHua?: SelectedSiHua | null;
+  /** A4-1：命盘上点选的主星（点击主星名触发单星详解） */
+  selectedStar?: SelectedStar | null;
 }
 
 const TOPICS = [
@@ -183,7 +203,64 @@ function AiContent({ text, streaming }: { text: string; streaming?: boolean }) {
   );
 }
 
-export default function InsightPanel({ chart, selectedPalace, selectedSiHua }: InsightPanelProps) {
+/**
+ * A4-1 · 跨模块链接卡
+ * 命盘解读中涉及的主星 → 知识库详解 / 古籍原文检索（均新窗口打开）
+ */
+function StarQuickLinks({ links }: { links: QuickLink[] }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-lg p-2.5"
+      style={{
+        background: 'rgba(212,168,67,0.06)',
+        border: '1px solid rgba(212,168,67,0.18)',
+      }}
+    >
+      <div className="text-[10px] tracking-widest mb-2 flex items-center gap-1.5" style={{ color: 'var(--t-faint)' }}>
+        <span style={{ color: 'var(--t-gold)', opacity: 0.5 }}>✦</span>
+        本段涉及主星 · 延伸查阅
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        {links.map(l => (
+          <Fragment key={`${l.palace}-${l.star}`}>
+            <Link
+              href={`/library/keyword/${encodeURIComponent(l.star)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px] px-2 py-1 rounded-md no-underline transition-opacity hover:opacity-80"
+              style={{
+                background: 'rgba(212,168,67,0.12)',
+                border: '1px solid rgba(212,168,67,0.25)',
+                color: 'var(--t-gold)',
+              }}
+              aria-label={`查${l.star}星在古籍中的全部出处`}
+            >
+              {l.star} · 古籍出处 ↗
+            </Link>
+            <Link
+              href={`/library/search?q=${encodeURIComponent(l.star)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px] px-2 py-1 rounded-md no-underline transition-opacity hover:opacity-80"
+              style={{
+                background: 'var(--t-card)',
+                border: '1px solid var(--t-border)',
+                color: 'var(--t-text2)',
+              }}
+              aria-label={`在古籍库中全文检索${l.star}星`}
+            >
+              {l.star} · 原文检索 ↗
+            </Link>
+          </Fragment>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+export default function InsightPanel({ chart, selectedPalace, selectedSiHua, selectedStar }: InsightPanelProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -193,6 +270,7 @@ export default function InsightPanel({ chart, selectedPalace, selectedSiHua }: I
   const autoLoaded = useRef(false);
   const lastPalaceBranch = useRef<number | undefined>(undefined);
   const lastSiHuaKey = useRef<string | undefined>(undefined);
+  const lastStarKey = useRef<string | undefined>(undefined);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Keep refs in sync
@@ -238,7 +316,12 @@ ${selectedPalace.name}在命盘中的意义，以及这种星曜配置的整体�
 **【实际建议】**
 基于此宫的具体建议。`;
 
-    sendMessage(prompt, true);
+    // A4-1：本宫主星 → 知识库 / 古籍 跨模块入口
+    const quickLinks: QuickLink[] = majorStars
+      .filter(s => STAR_TO_SLUG[s.name])
+      .map(s => ({ star: s.name, slug: STAR_TO_SLUG[s.name], palace: selectedPalace.name }));
+
+    sendMessage(prompt, true, quickLinks.length ? quickLinks : undefined);
   }, [selectedPalace]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 注入四化飞化分析
@@ -272,8 +355,52 @@ ${selectedSiHua.starName}化${selectedSiHua.siHua}落在【${palaceName}】，�
 **【实际建议】**
 基于此四化的具体可操作建议。`;
 
-    sendMessage(prompt, true);
+    const qSlug = STAR_TO_SLUG[selectedSiHua.starName];
+    sendMessage(
+      prompt,
+      true,
+      qSlug ? [{ star: selectedSiHua.starName, slug: qSlug, palace: palaceName }] : undefined,
+    );
   }, [selectedSiHua]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // A4-1：命盘点选主星 → 单星详解 + 跨模块入口
+  useEffect(() => {
+    if (!selectedStar) return;
+    const { star, palace } = selectedStar;
+    const key = `${star.name}-${palace.branch}`;
+    if (key === lastStarKey.current) return;
+    lastStarKey.current = key;
+
+    const role = PALACE_ROLES[palace.name] ?? '';
+    const siHuaPart = star.siHua ? `，且此星化${star.siHua}` : '';
+
+    const prompt = `请详解【${star.name}星】坐守【${palace.name}】（主管：${role}）${siHuaPart}，按以下结构输出：
+
+**【星性本质】**
+${star.name}星的五行属性、核心星性与代表人物原型。
+
+**【入${palace.name}】**
+${star.name}落在${palace.name}的具体表现，引用倪海夏体系的具体论断。
+
+**【四化影响】**
+${star.siHua
+  ? `${star.name}化${star.siHua}在此宫的吉凶倾向与应事方向。`
+  : '此星在本命盘未四化，说明其静态的、持续性的影响方式。'}
+
+**【三方四正联动】**
+本宫三方四正对此星的加强或牵制。
+
+**【实际建议】**
+基于此星此宫配置的具体可操作建议。`;
+
+    const slug = STAR_TO_SLUG[star.name];
+    setActiveTopic('star');
+    sendMessage(
+      prompt,
+      true,
+      slug ? [{ star: star.name, slug, palace: palace.name }] : undefined,
+    );
+  }, [selectedStar]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const streamResponse = async (apiMessages: { role: 'user' | 'assistant'; content: string }[]) => {
     try {
@@ -318,12 +445,12 @@ ${selectedSiHua.starName}化${selectedSiHua.siHua}落在【${palaceName}】，�
     }
   };
 
-  const sendMessage = (text: string, hidden = false) => {
+  const sendMessage = (text: string, hidden = false, quickLinks?: QuickLink[]) => {
     if (!text.trim() || loadingRef.current) return;
     loadingRef.current = true;
     setLoading(true);
 
-    const userMsg: Message = { role: 'user', content: text, hidden };
+    const userMsg: Message = { role: 'user', content: text, hidden, quickLinks };
     // Capture current messages synchronously via ref (avoids stale closure)
     const apiMessages = [...messagesRef.current, userMsg].map(m => ({
       role: m.role,
@@ -414,7 +541,12 @@ ${selectedSiHua.starName}化${selectedSiHua.siHua}落在【${palaceName}】，�
 
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => {
-            if (msg.role === 'user' && msg.hidden) return null;
+            // A4-1：隐含的用户消息不显示气泡，但其携带的跨模块链接卡要渲染
+            if (msg.role === 'user' && msg.hidden) {
+              return msg.quickLinks?.length
+                ? <StarQuickLinks key={`ql-${i}`} links={msg.quickLinks} />
+                : null;
+            }
 
             if (msg.role === 'user') {
               return (
