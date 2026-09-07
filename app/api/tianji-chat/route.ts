@@ -15,9 +15,11 @@ import { streamChat, readLlmConfig, type ChatMsg } from '../_lib/llm';
 import { textChunks } from '../_lib/sse';
 import {
   buildTianjiSystemPrompt,
+  buildTianjiSystemPromptV2,
   contextDigest,
   type TianjiContext,
 } from '@/lib/nihai/chat';
+import { summarizeHistory } from '@/lib/nihai/chat-memory';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -51,6 +53,18 @@ export async function POST(req: NextRequest) {
     : [];
   const offline = req.headers.get('x-offline') === '1';
 
+  // v2 选项：风格 / 多视角 / 历史摘要
+  const style = payload?.style === 'clinical' || payload?.style === 'poetic' ? payload.style : 'classic';
+  const multiPerspective = Boolean(payload?.multiPerspective);
+  // 把最近 6 条消息做成摘要注入 prompt（避免重复用户说过的内容）
+  const historySummary = summarizeHistory(
+    messages
+      .filter((m): m is { role: 'user' | 'assistant'; content: string } =>
+        (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
+      .map(m => ({ role: m.role, content: m.content as string, ts: 0 })),
+    600,
+  );
+
   const lastUser = [...messages].reverse().find(m => m.role === 'user')?.content;
   const question = typeof lastUser === 'string' ? clip(lastUser.trim(), 2000) : '';
 
@@ -59,7 +73,11 @@ export async function POST(req: NextRequest) {
     .slice(-12)
     .map(m => ({ role: m.role as ChatMsg['role'], content: clip(m.content as string, 2000) }));
 
-  const systemPrompt = buildTianjiSystemPrompt(context);
+  const systemPrompt = buildTianjiSystemPromptV2(context, {
+    style,
+    multiPerspective,
+    historySummary,
+  });
   const digest = contextDigest(context);
 
   const stream = new ReadableStream<Uint8Array>({

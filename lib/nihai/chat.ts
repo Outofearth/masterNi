@@ -294,3 +294,130 @@ export function presetQuestionsFor(ctx: TianjiContext): string[] {
     '天纪和地纪、人纪是什么关系？',
   ];
 }
+
+// ─── 系统化 Prompt 构建（v2 · 支持风格/历史摘要/多视角）────
+import { buildFullSystemPrompt } from './prompt-templates';
+
+export interface SystemPromptOptions {
+  /** 解读风格：classic / clinical / poetic */
+  style?: 'classic' | 'clinical' | 'poetic';
+  /** 多视角分析模式 */
+  multiPerspective?: boolean;
+  /** 对话历史摘要（最近 N 条） */
+  historySummary?: string;
+}
+
+/**
+ * v2 系统提示词 —— 拆自 prompt-templates.ts 的 6 段结构
+ *
+ * 与 v1 区别：
+ *  - 角色定位 + 原则 + 风格 + 边界 + 次第 + 格式 6 段分离可复用
+ *  - 支持风格切换（classic / clinical / poetic）
+ *  - 支持多视角模式（一次给 2-3 种解读）
+ *  - 支持对话历史摘要（让 AI 知道前文已说过什么）
+ */
+export function buildTianjiSystemPromptV2(
+  ctx: TianjiContext,
+  opts: SystemPromptOptions = {},
+): string {
+  const ctxType = ctx.type;
+  // 把 chart 暂时映射到 'chart'（v1 没有 chart，用 hexagram 兜底）
+  const promptType: 'hexagram' | 'chart' | 'divination' | 'general' =
+    (ctxType as string) === 'chart'
+      ? 'chart'
+      : ctxType === 'divination'
+        ? 'divination'
+        : ctxType === 'hexagram'
+          ? 'hexagram'
+          : 'general';
+
+  const basePrompt = buildFullSystemPrompt({
+    type: promptType,
+    style: opts.style,
+    multiPerspective: opts.multiPerspective,
+    historySummary: opts.historySummary,
+  });
+
+  // 上下文内容（卦象 / 模块 / 起卦）—— 与 v1 共享
+  const ctxBlock: string[] = [];
+  if (ctx.type === 'hexagram') {
+    const h = ctx.data;
+    ctxBlock.push(
+      '【当前卦象】',
+      `· 卦序：第 ${h.number} 卦`,
+      `· 卦名：${h.name}`,
+      `· 卦象：${h.composition}（上${h.upper}下${h.lower}）`,
+      `· 卦辞：${h.meaning}`,
+      `· 倪师解读：${h.niInterpretation}`,
+      `· 断事要诀：${h.divination}`,
+    );
+  } else if (ctx.type === 'divination') {
+    const d = ctx.data;
+    const names = ['初', '二', '三', '四', '五', '上'];
+    const dong = d.changingLines.length
+      ? d.changingLines.map(n => `${names[n - 1]}爻`).join('、')
+      : '无动爻（静卦）';
+    const hex = (label: string, h: Hexagram | null) =>
+      h
+        ? [
+            `· ${label}：第 ${h.number} 卦 ${h.name}（${h.composition}，上${h.upper}下${h.lower}）`,
+            `  卦辞：${h.meaning}`,
+            `  断事：${h.divination}`,
+          ].join('\n')
+        : `· ${label}：未明`;
+    const yaoci = d.yaociReading;
+    const yaociYaos = yaoci?.yaoReadings
+      ?.map(y =>
+        [
+          `  - ${y.title}（${y.yaoNature}，${y.deweiText}）${y.isChanging ? ' · 动爻' : ''}`,
+          `    ${y.reading}`,
+        ].join('\n'),
+      )
+      .join('\n');
+    const yaociChanged = yaoci?.changed ? `\n【变卦解读】\n${yaoci.changed.title}\n${yaoci.changed.body}` : '';
+    const yaociHu = yaoci?.hu ? `\n【互卦解读】\n${yaoci.hu.title}\n${yaoci.hu.body}` : '';
+    const yaociAdvice = yaoci?.advice
+      ? `\n【宜 / 忌】\n  宜：${yaoci.advice.yi.join('、')}\n  忌：${yaoci.advice.ji.join('、')}`
+      : '';
+    ctxBlock.push(
+      '【当前起卦】',
+      `· 起卦方式：${d.methodLabel}`,
+      d.question ? `· 所占之事：${d.question}` : '· 所占之事：未说明',
+      `· 动爻：${dong}`,
+      hex('本卦（当下之象）', d.ben),
+      hex('变卦（事之结果）', d.changed),
+      hex('互卦（事之内在）', d.hu),
+      yaociYaos ? `\n【逐爻解读】\n${yaociYaos}` : '',
+      yaociChanged,
+      yaociHu,
+      yaociAdvice,
+    );
+  } else if (ctx.type === 'module') {
+    const m = ctx.data;
+    ctxBlock.push(
+      '【当前学习模块】',
+      `· 模块名：${m.name}（${m.nameEn ?? ''}）`,
+      `· 学派：${m.school ?? '—'}`,
+      `· 课时：${m.lessons ?? '—'}`,
+      `· 简介：${m.description ?? ''}`,
+      m.details?.length ? `· 要点：\n${m.details.map(d => '  - ' + d).join('\n')}` : '',
+    );
+  } else {
+    ctxBlock.push(
+      '【当前位置】用户在天纪总览页，未指定具体卦象或模块。',
+      '可从天纪整体体系（紫微斗数 / 易经 64 卦 / 堪舆 / 推命 / 面相 / 测字）任一主题作答。',
+    );
+  }
+
+  return [basePrompt, '', ...ctxBlock].join('\n');
+}
+
+/** 推荐问题（v2 · 支持多视角） */
+export function presetQuestionsForV2(ctx: TianjiContext, opts: { multiPerspective?: boolean } = {}): string[] {
+  const base = presetQuestionsFor(ctx);
+  if (!opts.multiPerspective) return base;
+  return [
+    ...base.slice(0, 4),
+    '请从三种不同视角分别解读（正向 / 反向 / 中性）',
+  ];
+}

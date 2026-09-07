@@ -5,22 +5,32 @@ import {
   presetQuestionsFor,
   type TianjiContext,
 } from '@/lib/nihai/chat';
+import {
+  contextToKey,
+  loadHistory,
+  saveHistory,
+  clearHistory,
+  loadPrefs,
+  savePrefs,
+  type StoredMessage,
+  type UserPrefs,
+} from '@/lib/nihai/chat-memory';
 
 /**
- * 天纪 AI 解读面板
+ * 天纪 AI 解读面板 —— v2
  *
- * 与命盘页 ChatPanel 同款视觉（--t-* CSS 变量，主题感知），
- * 但走独立的 /api/tianji-chat 路由 + 倪师《天纪》体系 system prompt。
- *
- * props:
- *   context  —— 卦象 / 模块 / 通用，决定 system prompt 与预设问题
- *   title    —— 面板标题（默认「AI 天纪解读」）
- *   subtitle —— 面板副标题
+ * 升级：
+ *  - localStorage 多轮对话记忆（自动恢复 / 自动保存）
+ *  - 解读风格切换（classic 古朴 / clinical 临床 / poetic 诗意）
+ *  - 多视角分析开关（一次给 2-3 种解读）
+ *  - 对话历史摘要送入 system prompt（避免重复）
+ *  - 清空历史 / 复制对话 快捷操作
  */
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+  ts: number;
 }
 
 interface Props {
@@ -39,26 +49,56 @@ export default function TianjiChatPanel({
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [prefs, setPrefs] = useState<UserPrefs>({
+    style: 'classic',
+    multiPerspective: false,
+    focusAreas: [],
+  });
+  const [showSettings, setShowSettings] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-
+  const key = useMemo(() => contextToKey(context as { type: string; data?: unknown }), [context]);
   const presets = useMemo(() => presetQuestionsFor(context), [context]);
 
-  // context 变化（切换卦象 / 模块）时清空对话，避免串味
+  // 初次加载：读偏好 + 历史
   useEffect(() => {
-    setMessages([]);
-    setInput('');
-  }, [context]);
+    setPrefs(loadPrefs());
+    setMessages(loadHistory(key));
+  }, [key]);
 
+  // 滚动到底部
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
 
-  const sendMessage = async (text: string) => {
+  // 保存偏好
+  const updatePrefs = (patch: Partial<UserPrefs>) => {
+    const next = { ...prefs, ...patch };
+    setPrefs(next);
+    savePrefs(next);
+  };
+
+  // 清空当前对话
+  const handleClear = () => {
+    if (!confirm('清空当前对话？')) return;
+    setMessages([]);
+    clearHistory(key);
+  };
+
+  // 复制最后一条 AI 回答
+  const handleCopy = () => {
+    const lastAssistant = [...messages].reverse().find(m => m.role === 'assistant');
+    if (!lastAssistant) return;
+    navigator.clipboard?.writeText(lastAssistant.content).catch(() => {});
+  };
+
+  const sendMessage = async (text: string, forceMulti = false) => {
     if (!text.trim() || loading) return;
-    const userMsg: Message = { role: 'user', content: text };
-    setMessages(prev => [...prev, userMsg]);
+    const userMsg: Message = { role: 'user', content: text, ts: Date.now() };
+    const useMulti = forceMulti || prefs.multiPerspective;
+    const updated = [...messages, userMsg];
+    setMessages(updated);
     setInput('');
     setLoading(true);
 
@@ -66,7 +106,12 @@ export default function TianjiChatPanel({
       const res = await fetch('/api/tianji-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ context, messages: [...messages, userMsg] }),
+        body: JSON.stringify({
+          context,
+          messages: updated.map(m => ({ role: m.role, content: m.content })),
+          style: prefs.style,
+          multiPerspective: useMulti,
+        }),
       });
 
       if (!res.ok) throw new Error('请求失败');
@@ -76,7 +121,7 @@ export default function TianjiChatPanel({
       const decoder = new TextDecoder();
       let assistantText = '';
 
-      setMessages(prev => [...prev, { role: 'assistant', content: '' }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: '', ts: Date.now() }]);
 
       while (true) {
         const { done, value } = await reader.read();
@@ -92,19 +137,29 @@ export default function TianjiChatPanel({
             if (delta) {
               assistantText += delta;
               setMessages(prev => {
-                const updated = [...prev];
-                updated[updated.length - 1] = { role: 'assistant', content: assistantText };
-                return updated;
+                const next = [...prev];
+                next[next.length - 1] = { role: 'assistant', content: assistantText, ts: Date.now() };
+                return next;
               });
             }
           } catch { /* skip 非 JSON 行 */ }
         }
       }
+      // 持久化
+      setMessages(prev => {
+        saveHistory(key, prev as unknown as StoredMessage[]);
+        return prev;
+      });
     } catch {
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: '解读失败，请检查 API 配置或稍后重试。',
-      }]);
+      setMessages(prev => {
+        const next = [...prev, {
+          role: 'assistant' as const,
+          content: '解读失败，请检查 API 配置或稍后重试。',
+          ts: Date.now(),
+        }];
+        saveHistory(key, next as unknown as StoredMessage[]);
+        return next;
+      });
     } finally {
       setLoading(false);
     }
@@ -115,13 +170,133 @@ export default function TianjiChatPanel({
       className="flex flex-col rounded-xl overflow-hidden card-glass"
       style={{ height }}
     >
-      {/* 标题 */}
-      <div className="px-4 py-3 flex-shrink-0" style={{ borderBottom: '1px solid var(--t-border)' }}>
-        <h3 className="text-xs font-medium tracking-widest" style={{ color: 'var(--t-gold)' }}>
-          {title}
-        </h3>
-        <p className="text-[10px] mt-0.5" style={{ color: 'var(--t-faint)' }}>{subtitle}</p>
+      {/* 标题栏 */}
+      <div
+        className="px-4 py-3 flex-shrink-0 flex items-center justify-between"
+        style={{ borderBottom: '1px solid var(--t-border)' }}
+      >
+        <div>
+          <h3 className="text-xs font-medium tracking-widest" style={{ color: 'var(--t-gold)' }}>
+            {title}
+          </h3>
+          <p className="text-[10px] mt-0.5" style={{ color: 'var(--t-faint)' }}>
+            {subtitle} · {prefs.style === 'clinical' ? '临床' : prefs.style === 'poetic' ? '诗意' : '古朴'}
+            {prefs.multiPerspective && ' · 多视角'}
+          </p>
+        </div>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => setShowSettings(s => !s)}
+            className="text-[10px] px-2 py-1 rounded transition-colors"
+            style={{
+              color: showSettings ? 'var(--t-gold)' : 'var(--t-faint)',
+              border: `1px solid ${showSettings ? 'rgba(212,168,67,0.3)' : 'var(--t-border)'}`,
+            }}
+            aria-label="设置"
+            title="设置"
+          >
+            ⚙
+          </button>
+          {messages.length > 0 && (
+            <>
+              <button
+                type="button"
+                onClick={handleCopy}
+                className="text-[10px] px-2 py-1 rounded transition-colors"
+                style={{ color: 'var(--t-faint)', border: '1px solid var(--t-border)' }}
+                aria-label="复制最后一条回答"
+                title="复制回答"
+              >
+                复制
+              </button>
+              <button
+                type="button"
+                onClick={handleClear}
+                className="text-[10px] px-2 py-1 rounded transition-colors"
+                style={{ color: 'var(--t-faint)', border: '1px solid var(--t-border)' }}
+                aria-label="清空对话"
+                title="清空对话"
+              >
+                清空
+              </button>
+            </>
+          )}
+        </div>
       </div>
+
+      {/* 设置面板 */}
+      <AnimatePresence>
+        {showSettings && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="flex-shrink-0 overflow-hidden"
+            style={{ borderBottom: '1px solid var(--t-border)' }}
+          >
+            <div className="px-4 py-3 space-y-3" style={{ background: 'var(--t-bg-soft)' }}>
+              {/* 风格选择 */}
+              <div>
+                <div className="text-[10px] tracking-widest mb-1.5" style={{ color: 'var(--t-faint)' }}>
+                  解读风格
+                </div>
+                <div className="flex gap-1.5">
+                  {(['classic', 'clinical', 'poetic'] as const).map(s => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => updatePrefs({ style: s })}
+                      className="text-[10px] px-3 py-1 rounded-full transition-colors"
+                      style={{
+                        background: prefs.style === s ? 'rgba(212,168,67,0.15)' : 'transparent',
+                        color: prefs.style === s ? 'var(--t-gold)' : 'var(--t-faint)',
+                        border: `1px solid ${prefs.style === s ? 'rgba(212,168,67,0.3)' : 'var(--t-border)'}`,
+                      }}
+                    >
+                      {s === 'classic' ? '古朴' : s === 'clinical' ? '临床' : '诗意'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 多视角开关 */}
+              <div className="flex items-center justify-between">
+                <div className="text-[10px] tracking-widest" style={{ color: 'var(--t-faint)' }}>
+                  多视角分析（一次给 2-3 种解读）
+                </div>
+                <button
+                  type="button"
+                  onClick={() => updatePrefs({ multiPerspective: !prefs.multiPerspective })}
+                  className="relative w-9 h-5 rounded-full transition-colors"
+                  style={{
+                    background: prefs.multiPerspective ? 'rgba(212,168,67,0.5)' : 'var(--t-border)',
+                  }}
+                  aria-pressed={prefs.multiPerspective}
+                  aria-label="多视角开关"
+                >
+                  <div
+                    className="absolute top-0.5 w-4 h-4 rounded-full transition-transform"
+                    style={{
+                      background: prefs.multiPerspective ? 'var(--t-gold)' : 'var(--t-faint)',
+                      left: prefs.multiPerspective ? '18px' : '2px',
+                    }}
+                  />
+                </button>
+              </div>
+
+              {/* 当前 context key */}
+              <div className="text-[9px] tracking-widest flex items-center gap-2" style={{ color: 'var(--t-faint)' }}>
+                <span>对话存档：{key}</span>
+                <span>·</span>
+                <span>{messages.length} 条</span>
+                <span>·</span>
+                <span>本地存储</span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* 消息列表 */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
@@ -130,6 +305,9 @@ export default function TianjiChatPanel({
             <div className="text-4xl mb-3" style={{ color: 'var(--t-gold)', opacity: 0.15 }}>✦</div>
             <p className="text-xs leading-relaxed" style={{ color: 'var(--t-faint)' }}>
               可直接提问，或从下方选择常见问题
+            </p>
+            <p className="text-[10px] mt-2" style={{ color: 'var(--t-faint)', opacity: 0.6 }}>
+              对话将保留在本机浏览器（{messages.length}/30 条）
             </p>
           </motion.div>
         )}
@@ -155,7 +333,12 @@ export default function TianjiChatPanel({
                 }}
               >
                 {msg.role === 'assistant' && (
-                  <div className="text-[10px] mb-1" style={{ color: 'var(--t-faint)' }}>术数讲师 ·</div>
+                  <div className="text-[10px] mb-1 flex items-center gap-2" style={{ color: 'var(--t-faint)' }}>
+                    <span>术数讲师 ·</span>
+                    {msg.content.includes('视角') && (msg.content.match(/视角/g) ?? []).length >= 3 && (
+                      <span style={{ color: 'var(--t-gold)' }}>多视角模式</span>
+                    )}
+                  </div>
                 )}
                 <div className="whitespace-pre-wrap text-xs leading-relaxed">
                   {msg.content}
@@ -234,6 +417,7 @@ export default function TianjiChatPanel({
               border: '1px solid rgba(212,168,67,0.25)',
               color: 'var(--t-gold)',
             }}
+            aria-label="发送问题"
           >
             {loading ? '解读中' : '解读'}
           </button>
