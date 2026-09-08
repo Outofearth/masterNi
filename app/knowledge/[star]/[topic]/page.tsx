@@ -1,12 +1,13 @@
 /**
- * /knowledge/[star]/[topic] — SEO 落地页
+ * /knowledge/[star]/[topic] — SEO 落地页（B 方案 · 聚合渲染）
  *
- * 14 主星 × 13 topic = 182 个独立 URL
- * 每页含完整的 STAR_DB 4 段论断（一句话定调/核心论断/命盘依据/经典出处）
+ * 14 主星 × 13 topic = 182 个独立 URL。
+ * 内容来自项目已有真实资料（星曜档案 / 古籍原文 / 宫位论断 / 格局 / 倪师语录），
+ * 零编造；无专门论断的宫位诚实提示，不伪造。
  *
  * SEO 要点：
  *  - title 含主关键词（如"紫微入命宫·倪海夏体系详解"）
- *  - description 用 dingdiao（一句话定调）
+ *  - description 用星曜通性
  *  - JSON-LD Article 结构化数据
  *  - 内链：同主星其他 12 宫 + 同宫其他 13 主星
  *  - generateStaticParams 静态生成，零运行时开销
@@ -21,18 +22,14 @@ import {
   ALL_TOPICS,
   getKnowledge,
   getAllKnowledgeRoutes,
-  STAR_BRIEF_SEO,
   STAR_TO_SLUG,
   SLUG_TO_STAR,
 } from '@/lib/seo/knowledge';
 
-// 允许动态参数：如果某个 star/topic 组合不在 generateStaticParams 列表中
-// 也允许运行时按需渲染，避免中文 URL 编码问题导致 404
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const routes = getAllKnowledgeRoutes();
-  // URL 用拼音 slug 替代中文，避开 Vercel/CDN 中文路由边界问题
   return routes.map(r => ({ star: r.slug, topic: r.topic }));
 }
 
@@ -41,10 +38,9 @@ export async function generateMetadata({ params }: { params: Promise<{ star: str
   const star = SLUG_TO_STAR[slug];
   if (!star) return {};
   const data = getKnowledge(star, topic as TopicKey);
-  if (!data.exists) return {};
 
   const title = `${star}入${data.palaceName}宫 · ${data.topicLabel} · 倪海夏体系详解`;
-  const description = data.parsed.dingdiao
+  const description = data.profile.brief
     || `${star}入${data.palaceName}宫的紫微斗数解读 — 基于倪海夏《天纪》体系与古籍《紫微斗数全集》《骨髓赋》。`;
 
   return {
@@ -72,19 +68,20 @@ export default async function KnowledgePage({ params }: { params: Promise<{ star
   const star = SLUG_TO_STAR[slug];
   if (!star) notFound();
   const data = getKnowledge(star, topic as TopicKey);
-  if (!data.exists) notFound();
 
-  // 同主星其他 topic
-  const otherTopicsForStar = ALL_TOPICS.filter(t => t !== topic && getKnowledge(star, t).exists);
-  // 同 topic 其他主星
-  const otherStarsForTopic = ALL_STARS.filter(s => s !== star && getKnowledge(s, topic as TopicKey).exists);
+  const { profile, fuqi, classics, classicsInPalace, patterns, niQuotes } = data;
+  const isLove = topic === 'love';
+  const hasPalaceClassics = classicsInPalace.length > 0;
 
-  // JSON-LD
+  // 同主星其他 topic / 同 topic 其他主星（全量内链）
+  const otherTopicsForStar = ALL_TOPICS.filter(t => t !== topic);
+  const otherStarsForTopic = ALL_STARS.filter(s => s !== star);
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: `${star}入${data.palaceName}宫 · ${data.topicLabel}`,
-    description: data.parsed.dingdiao,
+    description: profile.brief,
     author: { '@type': 'Organization', name: '紫微研究 · 倪海夏正宗' },
     publisher: {
       '@type': 'Organization',
@@ -92,7 +89,7 @@ export default async function KnowledgePage({ params }: { params: Promise<{ star
       url: 'https://wdyziweidoushu666.com',
     },
     datePublished: '2026-04-28',
-    dateModified: '2026-04-28',
+    dateModified: '2026-09-07',
     mainEntityOfPage: `https://wdyziweidoushu666.com/knowledge/${slug}/${topic}`,
     articleSection: '紫微斗数 · 倪海夏体系',
     keywords: [`紫微斗数`, star, data.palaceName, data.topicLabel].join(', '),
@@ -129,49 +126,129 @@ export default async function KnowledgePage({ params }: { params: Promise<{ star
         </nav>
 
         {/* 标题区 */}
-        <header style={{ marginBottom: '36px' }}>
+        <header style={{ marginBottom: '28px' }}>
           <div style={{ fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.25em', marginBottom: '8px' }}>
             {data.topicLabel} · 倪海夏体系详解
           </div>
           <h1 style={{ fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: 700, color: 'var(--tx-0)', letterSpacing: '0.1em', lineHeight: 1.2 }}>
             {star}入{data.palaceName}宫
           </h1>
-          {STAR_BRIEF_SEO[star] && (
+          {profile.brief && (
             <p style={{ fontSize: '13px', color: 'var(--tx-2)', marginTop: '14px', lineHeight: 1.8 }}>
-              {STAR_BRIEF_SEO[star]}
+              {profile.brief}
             </p>
           )}
         </header>
 
-        {/* 内容 4 段 */}
-        {data.parsed.dingdiao && (
-          <Section title="一句话定调" gradient>
-            <p style={{ fontSize: '17px', color: 'var(--tx-0)', lineHeight: 1.9, fontWeight: 500, letterSpacing: '0.04em' }}>
-              {data.parsed.dingdiao}
+        {/* 星曜档案（五行 / 性质 / 关键词） */}
+        <Section title="星曜档案">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+            <ArchiveChip label="五行" value={profile.element || '—'} />
+            <ArchiveChip label="星性" value={profile.nature || '—'} />
+            <ArchiveChip label="关键词" value={profile.keywords || '—'} wide />
+          </div>
+        </Section>
+
+        {/* 宫位论断 */}
+        {isLove && fuqi ? (
+          <Section title="宫位论断 · 夫妻宫" gradient>
+            {fuqi.summary && (
+              <p style={{ fontSize: '16px', color: 'var(--tx-0)', lineHeight: 1.9, fontWeight: 500, marginBottom: '14px' }}>
+                {fuqi.summary}
+              </p>
+            )}
+            {fuqi.good && (
+              <InsightRow tone="good" label="吉象">{fuqi.good}</InsightRow>
+            )}
+            {fuqi.bad && (
+              <InsightRow tone="bad" label="凶象">{fuqi.bad}</InsightRow>
+            )}
+            {fuqi.spouse_traits && (
+              <InsightRow tone="plain" label="配偶特质">{fuqi.spouse_traits}</InsightRow>
+            )}
+            {fuqi.timing && (
+              <InsightRow tone="plain" label="婚期建议">{fuqi.timing}</InsightRow>
+            )}
+            {fuqi.ni_quote && (
+              <div style={{ marginTop: '14px', padding: '12px 14px', background: 'rgba(184,146,42,0.06)', borderRadius: '8px', borderLeft: '3px solid var(--ac)' }}>
+                <div style={{ fontSize: '11px', color: 'var(--ac)', letterSpacing: '0.2em', marginBottom: '6px' }}>倪师原话</div>
+                <p style={{ fontSize: '13px', color: 'var(--tx-1)', lineHeight: 1.8, margin: 0 }}>{fuqi.ni_quote}</p>
+              </div>
+            )}
+          </Section>
+        ) : hasPalaceClassics ? (
+          <Section title={`宫位原文 · ${data.palaceName}宫`} gradient>
+            <div style={{ fontSize: '12px', color: 'var(--tx-3)', marginBottom: '10px' }}>
+              古籍中「{star}」与「{data.palaceName}」共现的原文段落：
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {classicsInPalace.map((p, i) => (
+                <ClassicQuote key={i} ctx={p} />
+              ))}
+            </div>
+          </Section>
+        ) : (
+          <Section title={`宫位论断 · ${data.palaceName}宫`}>
+            <p style={{ fontSize: '13px', color: 'var(--tx-2)', lineHeight: 1.9, margin: 0 }}>
+              古籍原典中暂未收录「{star}入{data.palaceName}宫」的专门段落，此处不擅自编造论断。
+              可先参考本页的星曜通性与下方古籍原文，或前往
+              <Link href={`/library/search?q=${encodeURIComponent(star)}`} style={{ color: 'var(--ac)', textDecoration: 'none' }}>古籍全文检索「{star}」→</Link>。
             </p>
           </Section>
         )}
 
-        {data.parsed.lundian && (
-          <Section title="核心论断">
-            <div style={{ fontSize: '15px', color: 'var(--tx-0)', lineHeight: 2, letterSpacing: '0.02em', whiteSpace: 'pre-wrap' }}>
-              {data.parsed.lundian}
+        {/* 古籍原文（该星全部出处） */}
+        {classics.length > 0 && (
+          <Section title={`古籍原文 · 共 ${classics.length} 段`}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {classics.slice(0, 8).map((p, i) => (
+                <ClassicQuote key={i} ctx={p} />
+              ))}
             </div>
+            {classics.length > 8 && (
+              <div style={{ fontSize: '12px', color: 'var(--ac)', marginTop: '10px' }}>
+                <Link href={`/library/keyword/${encodeURIComponent(star)}`} style={{ color: 'var(--ac)', textDecoration: 'none' }}>
+                  查看全部 {classics.length} 段出处 →
+                </Link>
+              </div>
+            )}
           </Section>
         )}
 
-        {data.parsed.yiju && (
-          <Section title="命盘依据">
-            <div style={{ fontSize: '14px', color: 'var(--tx-0)', lineHeight: 2, letterSpacing: '0.02em', whiteSpace: 'pre-wrap' }}>
-              {data.parsed.yiju}
+        {/* 关联格局 */}
+        {patterns.length > 0 && (
+          <Section title={`关联格局 · ${patterns.length} 个`}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {patterns.slice(0, 6).map((p) => (
+                <div key={p.id} style={{ padding: '10px 0', borderBottom: '1px solid rgba(184,146,42,0.1)' }}>
+                  <Link href={`/knowledge/pattern/${p.id}`} style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ac)', textDecoration: 'none', letterSpacing: '0.05em' }}>
+                    {p.name}
+                  </Link>
+                  <span style={{ fontSize: '11px', color: 'var(--tx-3)', marginLeft: '8px' }}>{p.category} · {p.source}</span>
+                  <p style={{ fontSize: '12px', color: 'var(--tx-2)', lineHeight: 1.7, margin: '6px 0 0' }}>{p.summary}</p>
+                </div>
+              ))}
             </div>
+            {patterns.length > 6 && (
+              <div style={{ fontSize: '12px', color: 'var(--ac)', marginTop: '10px' }}>
+                <Link href="/knowledge/pattern" style={{ color: 'var(--ac)', textDecoration: 'none' }}>
+                  查看全部格局 →
+                </Link>
+              </div>
+            )}
           </Section>
         )}
 
-        {data.parsed.chuchu && (
-          <Section title="经典出处" minimal>
-            <div style={{ fontSize: '13px', color: 'var(--tx-2)', lineHeight: 2, letterSpacing: '0.02em', whiteSpace: 'pre-wrap' }}>
-              {data.parsed.chuchu}
+        {/* 倪师语录 */}
+        {niQuotes.length > 0 && (
+          <Section title="倪师语录">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {niQuotes.map((q, i) => (
+                <div key={i} style={{ fontSize: '13px', color: 'var(--tx-1)', lineHeight: 1.8, paddingLeft: '14px', borderLeft: '2px solid rgba(184,146,42,0.35)' }}>
+                  {q.text}
+                  <span style={{ fontSize: '11px', color: 'var(--tx-3)', marginLeft: '8px' }}>· {q.topic}</span>
+                </div>
+              ))}
             </div>
           </Section>
         )}
@@ -256,23 +333,6 @@ export default async function KnowledgePage({ params }: { params: Promise<{ star
           </div>
         </Section>
 
-        {/* 古籍库链接 */}
-        <div style={{
-          marginTop: '40px',
-          padding: '16px 20px',
-          background: 'rgba(184,146,42,0.04)',
-          border: '1px dashed rgba(184,146,42,0.25)',
-          borderRadius: '10px',
-          textAlign: 'center',
-        }}>
-          <div style={{ fontSize: '11px', color: 'var(--ac-dim)', letterSpacing: '0.15em', marginBottom: '6px' }}>
-            想读原典？
-          </div>
-          <Link href="/library" style={{ fontSize: '13px', color: 'var(--ac)', fontWeight: 500, letterSpacing: '0.1em', textDecoration: 'none' }}>
-            📜 查阅古籍原典库 — 紫微斗数全集 / 全书 / 骨髓赋 →
-          </Link>
-        </div>
-
         {/* A4-4 · 延伸阅读 */}
         <div style={{ marginTop: '20px' }}>
           <CrossLinks
@@ -291,6 +351,45 @@ export default async function KnowledgePage({ params }: { params: Promise<{ star
         <div style={{ marginBottom: '6px' }}>紫微研究 · 基于倪海夏正宗体系 · 仅供学习参考</div>
         <div style={{ opacity: 0.85 }}>本平台不构成任何医疗、投资、法律或重大决策建议</div>
       </footer>
+    </div>
+  );
+}
+
+function ArchiveChip({ label, value, wide }: { label: string; value: string; wide?: boolean }) {
+  return (
+    <div style={{
+      padding: '8px 14px',
+      background: 'rgba(184,146,42,0.05)',
+      border: '1px solid rgba(184,146,42,0.18)',
+      borderRadius: '8px',
+      flex: wide ? '1 1 100%' : '1 1 auto',
+    }}>
+      <div style={{ fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.15em', marginBottom: '4px' }}>{label}</div>
+      <div style={{ fontSize: '13px', color: 'var(--tx-0)', fontWeight: 500 }}>{value}</div>
+    </div>
+  );
+}
+
+function InsightRow({ tone, label, children }: { tone: 'good' | 'bad' | 'plain'; label: string; children: React.ReactNode }) {
+  const toneColor = tone === 'good' ? '#2e7d32' : tone === 'bad' ? '#c62828' : 'var(--tx-3)';
+  return (
+    <div style={{ marginBottom: '8px' }}>
+      <span style={{ fontSize: '11px', color: toneColor, letterSpacing: '0.15em', marginRight: '8px', fontWeight: 600 }}>{label}</span>
+      <span style={{ fontSize: '13px', color: 'var(--tx-0)', lineHeight: 1.8 }}>{children}</span>
+    </div>
+  );
+}
+
+function ClassicQuote({ ctx }: { ctx: { paragraphText: string; bookSlug: string; chapterIdx: number; paragraphId: string; chapterTitle: string; book: { title: string } } }) {
+  return (
+    <div style={{ padding: '10px 12px', background: 'var(--bg-card)', border: '1px solid rgba(184,146,42,0.12)', borderRadius: '8px' }}>
+      <p style={{ fontSize: '13px', color: 'var(--tx-1)', lineHeight: 1.9, margin: 0 }}>{ctx.paragraphText}</p>
+      <Link
+        href={`/library/${ctx.bookSlug}/${ctx.chapterIdx}#${ctx.paragraphId}`}
+        style={{ fontSize: '11px', color: 'var(--ac)', textDecoration: 'none', letterSpacing: '0.05em' }}
+      >
+        {ctx.book.title} · {ctx.chapterTitle} →
+      </Link>
     </div>
   );
 }

@@ -1,20 +1,28 @@
 /**
- * /knowledge — 知识库主页
+ * /knowledge — 知识库主页（B 方案 · 聚合版）
  *
- * 列出 14 主星，每星可检索其在古籍中的全部出处。
+ * 列出 14 主星，每星卡片直达 /knowledge/{slug}/overview 聚合详情页，
+ * 并展示该星在项目中的可用资料量（古籍原文段数 / 关联格局数 / 夫妻宫论断有无）。
  *
- * 注意：/knowledge/[star]/[topic] 详情页所依赖的论断内容库 STAR_DB
- * 被上游（原作者）有意置空，当前生成 0 条静态路由（全量 404）。
- * 因此本页链接统一指向确定有内容的「古籍关键词反查页」/library/keyword/{星名}。
- * 待 STAR_DB 补齐后，可再把链接切回知识库详情页。
+ * 数据来源：lib/ziwei/star-aggregate.ts（聚合真实资料，零编造）。
  */
 
 import Link from 'next/link';
-import { ALL_STARS, STAR_BRIEF_SEO } from '@/lib/seo/knowledge';
+import {
+  ALL_STARS,
+  STAR_BRIEF_SEO,
+  STAR_TO_SLUG,
+} from '@/lib/seo/knowledge';
+import {
+  getStarProfile,
+  getStarClassics,
+  getStarPatterns,
+  getStarFuqiInsight,
+} from '@/lib/ziwei/star-aggregate';
 
 export const metadata = {
   title: '紫微斗数知识库 · 十四主星 · 倪海夏正宗体系',
-  description: '基于倪海夏《天纪》体系与古籍《紫微斗数全集》《骨髓赋》编纂的紫微斗数知识库。逐星检索十四主星在古籍原文中的全部出处。',
+  description: '基于倪海夏《天纪》体系与古籍《紫微斗数全集》《骨髓赋》编纂的紫微斗数知识库。逐星查看十四主星的星曜档案、古籍原文、宫位论断与关联格局。',
   keywords: ['紫微斗数', '倪海夏', '倪海厦紫微斗数', '紫微斗数全集', '紫微斗数全书', '14 主星', '12 宫位'],
 };
 
@@ -29,8 +37,6 @@ const CHIP_STYLE = {
 } as const;
 
 export default function KnowledgeHomePage() {
-  const STAR_DESCRIPTIONS_QUICK = STAR_BRIEF_SEO;
-
   return (
     <div style={{ background: 'var(--bg-page)', minHeight: '100vh' }}>
       {/* 顶栏 */}
@@ -58,7 +64,7 @@ export default function KnowledgeHomePage() {
           紫微斗数知识库
         </h1>
         <p style={{ fontSize: '14px', color: 'var(--tx-2)', letterSpacing: '0.08em', maxWidth: '600px', margin: '0 auto', lineHeight: 1.7 }}>
-          十四主星 · 逐星检索古籍原文与全部出处<br />
+          十四主星 · 星曜档案 / 古籍原文 / 宫位论断 / 关联格局<br />
           基于倪海夏《天纪》体系整理 · 内容持续补充中
         </p>
       </div>
@@ -69,68 +75,105 @@ export default function KnowledgeHomePage() {
           十四主星
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
-          {ALL_STARS.map(star => (
-            <Link
-              key={star}
-              href={`/library/keyword/${encodeURIComponent(star)}`}
-              title={`查${star}星在古籍中的全部出处`}
-              style={{
-                display: 'block',
-                padding: '14px 10px',
-                background: 'var(--bg-card)',
-                border: '1px solid rgba(184,146,42,0.2)',
-                borderRadius: '10px',
-                textDecoration: 'none',
-                textAlign: 'center',
-                transition: 'all 0.2s',
-              }}
-              className="hover:shadow-md hover:border-amber-400"
-            >
-              <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--tx-0)', letterSpacing: '0.15em' }}>
-                {star}
-              </div>
-            </Link>
-          ))}
+          {ALL_STARS.map(star => {
+            const profile = getStarProfile(star);
+            return (
+              <Link
+                key={star}
+                href={`/knowledge/${STAR_TO_SLUG[star]}/overview`}
+                title={`查看${star}星星曜档案、古籍原文与宫位解读`}
+                style={{
+                  display: 'block',
+                  padding: '14px 10px',
+                  background: 'var(--bg-card)',
+                  border: '1px solid rgba(184,146,42,0.2)',
+                  borderRadius: '10px',
+                  textDecoration: 'none',
+                  textAlign: 'center',
+                  transition: 'all 0.2s',
+                }}
+                className="hover:shadow-md hover:border-amber-400"
+              >
+                <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--tx-0)', letterSpacing: '0.15em' }}>
+                  {star}
+                </div>
+                <div style={{ fontSize: '11px', color: 'var(--tx-3)', marginTop: '4px' }}>
+                  {profile.element} · {profile.nature}
+                </div>
+              </Link>
+            );
+          })}
         </div>
 
-        {/* 详细列表（每个主星 + 简介 + 古籍入口） */}
+        {/* 详细列表（每个主星 + 简介 + 资料量 + 入口） */}
         <div className="mt-14 space-y-4">
-          {ALL_STARS.map(star => (
-            <div key={star} style={{
-              background: 'var(--bg-card)',
-              border: '1px solid rgba(184,146,42,0.18)',
-              borderRadius: '12px',
-              padding: '18px 22px',
-            }}>
-              <div className="flex items-baseline gap-3 mb-2">
-                <span style={{ fontSize: '20px', fontWeight: 700, color: 'var(--tx-0)', letterSpacing: '0.1em' }}>
-                  {star}星
-                </span>
-                <span style={{ fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.15em' }}>
-                  ZI WEI · 14 STARS
-                </span>
+          {ALL_STARS.map(star => {
+            const profile = getStarProfile(star);
+            const classics = getStarClassics(star, 60);
+            const patterns = getStarPatterns(star);
+            const fuqi = getStarFuqiInsight(star);
+            return (
+              <div key={star} style={{
+                background: 'var(--bg-card)',
+                border: '1px solid rgba(184,146,42,0.18)',
+                borderRadius: '12px',
+                padding: '18px 22px',
+              }}>
+                <div className="flex items-baseline gap-3 mb-2">
+                  <span style={{ fontSize: '20px', fontWeight: 700, color: 'var(--tx-0)', letterSpacing: '0.1em' }}>
+                    {star}星
+                  </span>
+                  <span style={{ fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.15em' }}>
+                    {profile.element} · {profile.nature}
+                  </span>
+                </div>
+                <p style={{ fontSize: '12px', color: 'var(--tx-2)', lineHeight: 1.7, marginBottom: '12px' }}>
+                  {STAR_BRIEF_SEO[star] || ''}
+                </p>
+
+                {/* 资料量标签 */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '999px', background: 'rgba(184,146,42,0.08)', color: 'var(--tx-2)' }}>
+                    古籍原文 {classics.length} 段
+                  </span>
+                  <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '999px', background: 'rgba(184,146,42,0.08)', color: 'var(--tx-2)' }}>
+                    关联格局 {patterns.length} 个
+                  </span>
+                  <span style={{
+                    fontSize: '11px', padding: '2px 8px', borderRadius: '999px',
+                    background: fuqi ? 'rgba(46,125,50,0.1)' : 'rgba(120,120,120,0.08)',
+                    color: fuqi ? '#2e7d32' : 'var(--tx-3)',
+                  }}>
+                    夫妻宫论断 {fuqi ? '✓ 有' : '—'}
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href={`/knowledge/${STAR_TO_SLUG[star]}/overview`}
+                    style={{ ...CHIP_STYLE, background: 'rgba(184,146,42,0.14)', color: 'var(--ac)', fontWeight: 600 }}
+                    aria-label={`查看${star}星完整知识页`}
+                  >
+                    {star} · 星曜档案 →
+                  </Link>
+                  <Link
+                    href={`/knowledge/${STAR_TO_SLUG[star]}/love`}
+                    style={CHIP_STYLE}
+                    aria-label={`查看${star}星在夫妻宫的论断`}
+                  >
+                    {star}入夫妻 →
+                  </Link>
+                  <Link
+                    href={`/library/keyword/${encodeURIComponent(star)}`}
+                    style={CHIP_STYLE}
+                    aria-label={`查${star}星在古籍中的全部出处`}
+                  >
+                    古籍出处 →
+                  </Link>
+                </div>
               </div>
-              <p style={{ fontSize: '12px', color: 'var(--tx-2)', lineHeight: 1.7, marginBottom: '12px' }}>
-                {STAR_DESCRIPTIONS_QUICK[star] || ''}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <Link
-                  href={`/library/keyword/${encodeURIComponent(star)}`}
-                  style={CHIP_STYLE}
-                  aria-label={`查${star}星在古籍中的全部出处`}
-                >
-                  📜 {star} · 古籍出处 →
-                </Link>
-                <Link
-                  href={`/library/search?q=${encodeURIComponent(star)}`}
-                  style={CHIP_STYLE}
-                  aria-label={`在古籍库中全文检索${star}星`}
-                >
-                  全文检索「{star}」→
-                </Link>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
