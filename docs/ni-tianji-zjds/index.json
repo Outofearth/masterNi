@@ -1,0 +1,308 @@
+{
+  "source": {
+    "title": "倪海厦先生·天纪·紫微斗数讲义",
+    "original_file": "【文字记录PDF+补充案例图片】倪师紫微斗数案例资料.doc",
+    "format": "Microsoft Word 97-2003 Document (.doc, OLE2)",
+    "extracted_by": "tools/extract_doc_text.py",
+    "split_by": "tools/split_tianji_jiangyi.py",
+    "total_episodes": 15,
+    "total_chars": 22123
+  },
+  "chapters": [
+    {
+      "episode": 2,
+      "pinyin_index": "01",
+      "title": "紫微斗数1十二宫",
+      "filename": "ep02-quanji-01-紫微斗数1十二宫.md",
+      "char_count": 1490,
+      "line_count": 57,
+      "stars": [
+        "紫微"
+      ]
+    },
+    {
+      "episode": 3,
+      "pinyin_index": "02",
+      "title": "紫微斗数2星辰",
+      "filename": "ep03-quanji-02-紫微斗数2星辰.md",
+      "char_count": 1485,
+      "line_count": 40,
+      "stars": [
+        "紫微",
+        "天机",
+        "太阳",
+        "武曲",
+        "天同",
+        "廉贞",
+        "天府",
+        "太阴",
+        "贪狼",
+        "巨门",
+        "天相",
+        "天梁",
+        "七杀",
+        "破军"
+      ]
+    },
+    {
+      "episode": 4,
+      "pinyin_index": "03",
+      "title": "紫微斗数3星辰",
+      "filename": "ep04-quanji-03-紫微斗数3星辰.md",
+      "char_count": 1702,
+      "line_count": 54,
+      "stars": [
+        "紫微",
+        "太阳",
+        "天府",
+        "太阴",
+        "贪狼",
+        "巨门",
+        "七杀",
+        "破军"
+      ]
+    },
+    {
+      "episode": 5,
+      "pinyin_index": "04",
+      "title": "紫微斗数4十二命盘",
+      "filename": "ep05-quanji-04-紫微斗数4十二命盘.md",
+      "char_count": 1854,
+      "line_count": 44,
+      "stars": [
+        "紫微",
+        "天机",
+        "太阳",
+        "天同",
+        "廉贞",
+        "天府",
+        "太阴",
+        "贪狼",
+        "巨门",
+        "七杀",
+        "破军"
+      ]
+    },
+    {
+      "episode": 6,
+      "pinyin_index": "05",
+      "title": "紫微斗数5十二命盘",
+      "filename": "ep06-quanji-05-紫微斗数5十二命盘.md",
+      "char_count": 1605,
+      "line_count": 54,
+      "stars": [
+        "紫微",
+        "太阳",
+        "武曲",
+        "廉贞",
+        "天府",
+        "太阴",
+        "贪狼",
+        "巨门",
+        "天相",
+        "七杀",
+        "破军"
+      ]
+    },
+    {
+      "episode": 7,
+      "pinyin_index": "06",
+      "title": "紫微斗数6十二命盘",
+      "filename": "ep07-quanji-06-紫微斗数6十二命盘.md",
+      "char_count": 1494,
+      "line_count": 49,
+      "stars": [
+        "紫微",
+        "太阳",
+        "武曲",
+        "廉贞",
+        "太阴",
+        "贪狼",
+        "巨门",
+        "天梁",
+        "七杀",
+        "破军"
+      ]
+    },
+    {
+      "episode": 8,
+      "pinyin_index": "07",
+      "title": "紫微斗数7十二命盘（上）",
+      "filename": "ep08-quanji-07-上-紫微斗数7十二命盘.md",
+      "char_count": 353,
+      "line_count": 17,
+      "stars": [
+        "紫微",
+        "太阳",
+        "武曲",
+        "廉贞",
+        "贪狼",
+        "巨门",
+        "破军"
+      ]
+    },
+    {
+      "episode": 8,
+      "pinyin_index": "07",
+      "title": "紫微斗数7命例实批（下）",
+      "filename": "ep08-quanji-07-下-紫微斗数7命例实批.md",
+      "char_count": 1406,
+      "line_count": 42,
+      "stars": [
+        "紫微",
+        "太阳",
+        "武曲",
+        "天同",
+        "太阴",
+        "贪狼",
+        "巨门",
+        "天相",
+        "破军"
+      ]
+    },
+    {
+      "episode": 9,
+      "pinyin_index": "08",
+      "title": "紫微斗数8命例实批",
+      "filename": "ep09-quanji-08-紫微斗数8命例实批.md",
+      "char_count": 1826,
+      "line_count": 50,
+      "stars": [
+        "紫微",
+        "天机",
+        "太阳",
+        "武曲",
+        "天同",
+        "廉贞",
+        "天府",
+        "太阴",
+        "贪狼",
+        "巨门",
+        "天相",
+        "天梁",
+        "七杀",
+        "破军"
+      ]
+    },
+    {
+      "episode": 10,
+      "pinyin_index": "09",
+      "title": "紫微斗数9命例实批",
+      "filename": "ep10-quanji-09-紫微斗数9命例实批.md",
+      "char_count": 1742,
+      "line_count": 66,
+      "stars": [
+        "紫微",
+        "太阳",
+        "武曲",
+        "天同",
+        "廉贞",
+        "天府",
+        "太阴",
+        "贪狼",
+        "巨门",
+        "天相",
+        "七杀",
+        "破军"
+      ]
+    },
+    {
+      "episode": 11,
+      "pinyin_index": "10",
+      "title": "紫微斗数10命例实批",
+      "filename": "ep11-quanji-10-紫微斗数10命例实批.md",
+      "char_count": 1662,
+      "line_count": 55,
+      "stars": [
+        "紫微",
+        "太阳",
+        "天同",
+        "廉贞",
+        "天府",
+        "太阴",
+        "巨门",
+        "天相",
+        "七杀",
+        "破军"
+      ]
+    },
+    {
+      "episode": 12,
+      "pinyin_index": "11",
+      "title": "紫微斗数11命例实批",
+      "filename": "ep12-quanji-11-紫微斗数11命例实批.md",
+      "char_count": 1486,
+      "line_count": 49,
+      "stars": [
+        "紫微",
+        "太阳",
+        "廉贞",
+        "太阴",
+        "贪狼",
+        "巨门",
+        "天相",
+        "破军"
+      ]
+    },
+    {
+      "episode": 13,
+      "pinyin_index": "12",
+      "title": "紫微斗数12命例实批",
+      "filename": "ep13-quanji-12-紫微斗数12命例实批.md",
+      "char_count": 1389,
+      "line_count": 67,
+      "stars": [
+        "紫微",
+        "太阳",
+        "天同",
+        "廉贞",
+        "天府",
+        "太阴",
+        "贪狼",
+        "巨门",
+        "天相",
+        "七杀",
+        "破军"
+      ]
+    },
+    {
+      "episode": 14,
+      "pinyin_index": "13",
+      "title": "紫微斗数13命例实批",
+      "filename": "ep14-quanji-13-紫微斗数13命例实批.md",
+      "char_count": 1122,
+      "line_count": 45,
+      "stars": [
+        "紫微",
+        "天机",
+        "太阳",
+        "武曲",
+        "廉贞",
+        "天府",
+        "太阴",
+        "巨门",
+        "天相",
+        "破军"
+      ]
+    },
+    {
+      "episode": 15,
+      "pinyin_index": "14",
+      "title": "紫微斗数14命例实批",
+      "filename": "ep15-quanji-14-紫微斗数14命例实批.md",
+      "char_count": 1507,
+      "line_count": 67,
+      "stars": [
+        "紫微",
+        "太阳",
+        "武曲",
+        "廉贞",
+        "太阴",
+        "贪狼",
+        "巨门",
+        "天梁",
+        "七杀"
+      ]
+    }
+  ]
+}
