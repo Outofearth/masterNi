@@ -7,6 +7,8 @@ interface StarDetailPanelProps {
   star: Star | null;
   palaceName?: string;
   onClose: () => void;
+  /** 追问 AI：由父级接线到 InsightPanel（静态速查 → AI 深度解读） */
+  onAskAI?: () => void;
 }
 
 // 倪海夏体系各星详细解读（参考顾祥弘《飞星紫微斗数全书》及南北山人《紫微斗数全书》）
@@ -176,7 +178,7 @@ const siHuaColors: Record<string, string> = {
   '忌': 'sihua-ji',
 };
 
-export default function StarDetailPanel({ star, palaceName, onClose }: StarDetailPanelProps) {
+export default function StarDetailPanel({ star, palaceName, onClose, onAskAI }: StarDetailPanelProps) {
   const desc = star ? STAR_DESCRIPTIONS[star.name] : null;
   const detail = star ? STAR_DETAIL[star.name] : null;
   const typeConfig = star ? levelConfig[star.type] : null;
@@ -325,6 +327,28 @@ export default function StarDetailPanel({ star, palaceName, onClose }: StarDetai
               </div>
             )}
           </div>
+
+          {/* 追问 AI —— 静态速查看完还想深入，一键切到 AI 解读 */}
+          {onAskAI && (
+            <div
+              className="px-4 py-3 flex-shrink-0"
+              style={{ borderTop: '1px solid var(--t-border)' }}
+            >
+              <button
+                type="button"
+                onClick={onAskAI}
+                className="w-full py-2 rounded-lg text-[11px] transition-opacity hover:opacity-80"
+                style={{
+                  background: 'rgba(212,168,67,0.10)',
+                  border: '1px solid rgba(212,168,67,0.28)',
+                  color: 'var(--t-gold)',
+                }}
+                aria-label={`用 AI 深度解读${star?.name ?? ''}星`}
+              >
+                ✦ 让 AI 深度解读{star ? `「${star.name}」` : ''}此宫配置
+              </button>
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

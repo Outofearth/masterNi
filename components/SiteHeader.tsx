@@ -22,13 +22,17 @@ export default function SiteHeader() {
   const textMuted = isDark ? '#8b8275' : '#6b5d4f';
   const border = isDark ? 'rgba(212,168,67,0.15)' : 'rgba(184,146,42,0.25)';
 
+  // 三纪（天纪/地纪/人纪）此前只有「天纪」在导航里，地纪、人纪只能从首页进、
+  // 深层页面回不去。这里补全为平铺 8 项，保证任何页面都能直达。
   const links: { href: string; label: string }[] = [
     { href: '/', label: '首页' },
     { href: '/chart', label: '起命盘' },
+    { href: '/heming', label: '合婚' },
     { href: '/tianji', label: '天纪' },
+    { href: '/diji', label: '地纪' },
+    { href: '/renji', label: '人纪' },
     { href: '/knowledge', label: '紫微图谱' },
     { href: '/library', label: '古籍' },
-    { href: '/heming', label: '起名' },
   ];
 
   return (

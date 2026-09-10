@@ -228,7 +228,7 @@ export default function ChartSummary({ chart }: ChartSummaryProps) {
         </motion.div>
       )}
 
-      {/* ── 大限运程 ── */}
+      {/* ── 大限详解（C9：年龄 / 宫位 / 天干 / 大限四化 / 该宫主星，全部取自排盘结果）── */}
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
@@ -237,28 +237,106 @@ export default function ChartSummary({ chart }: ChartSummaryProps) {
       <div className="card-glass rounded-xl p-4">
         <div className="text-[10px] tracking-widest mb-3 flex items-center gap-2" style={{ color: 'var(--t-faint)' }}>
           <span style={{ color: 'var(--da-xian)', opacity: 0.6 }}>◎</span>
-          大限运程
+          大限详解
+          <span className="text-[9px] ml-auto" style={{ color: 'var(--t-faint)', opacity: 0.75 }}>
+            {chart.daXians.length} 段 · 当前第 {chart.currentDaXianIndex + 1} 段
+          </span>
         </div>
-        <div className="grid grid-cols-3 gap-2">
-          {chart.daXians.slice(0, 9).map((dx, i) => {
+        <div className="space-y-1.5">
+          {chart.daXians.map((dx, i) => {
             const isCurrent = i === chart.currentDaXianIndex;
+            const dxPalace = chart.palaces.find(p => p.branch === dx.palaceBranch);
+            const majorStars = dxPalace
+              ? dxPalace.stars.filter(s => s.type === 'major').map(s => s.name)
+              : [];
+            // 大限四化：宫干四化，标出这十年哪几颗星被激活
+            const siHuaChips = dx.siHua
+              ? (['lu', 'quan', 'ke', 'ji'] as const)
+                  .map(k => ({ k, star: dx.siHua![k] }))
+                  .filter(x => x.star)
+              : [];
+            const siHuaColor: Record<string, { text: string; bg: string; bdr: string }> = {
+              lu: { text: 'var(--lu)', bg: 'var(--lu-bg)', bdr: 'var(--lu-bdr)' },
+              quan: { text: 'var(--quan)', bg: 'var(--quan-bg)', bdr: 'var(--quan-bdr)' },
+              ke: { text: 'var(--ke)', bg: 'var(--ke-bg)', bdr: 'var(--ke-bdr)' },
+              ji: { text: 'var(--ji)', bg: 'var(--ji-bg)', bdr: 'var(--ji-bdr)' },
+            };
+            const siHuaLabel: Record<string, string> = { lu: '禄', quan: '权', ke: '科', ji: '忌' };
+
             return (
               <div
                 key={i}
-                className="text-[10px] px-2 py-2 rounded-lg text-center transition-colors"
+                className="rounded-lg px-3 py-2"
                 style={{
-                  border: isCurrent
-                    ? '1px solid var(--da-xian-bdr)'
-                    : '1px solid var(--t-border)',
+                  border: isCurrent ? '1px solid var(--da-xian-bdr)' : '1px solid var(--t-border)',
                   background: isCurrent ? 'var(--da-xian-bg)' : 'transparent',
-                  color: isCurrent ? 'var(--da-xian)' : 'var(--t-faint)',
                 }}
               >
-                <div className="font-mono tabular-nums">{dx.startAge}~{dx.endAge}</div>
-                <div className="text-[9px] mt-0.5" style={{ opacity: 0.7 }}>{dx.palaceName.replace('宫', '')}</div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {/* 年龄 */}
+                  <span
+                    className="text-[11px] font-mono tabular-nums shrink-0"
+                    style={{ color: isCurrent ? 'var(--da-xian)' : 'var(--t-text2)' }}
+                  >
+                    {dx.startAge}~{dx.endAge}岁
+                  </span>
+                  {/* 宫位 + 天干 */}
+                  <span
+                    className="text-[10px] shrink-0"
+                    style={{ color: isCurrent ? 'var(--da-xian)' : 'var(--t-text2)' }}
+                  >
+                    {dx.palaceName.replace('宫', '')}
+                    {dx.stemName ? <span style={{ opacity: 0.6 }}>·{dx.stemName}干</span> : null}
+                  </span>
+                  {isCurrent && (
+                    <span
+                      className="text-[8px] px-1.5 py-px rounded-full shrink-0"
+                      style={{
+                        color: 'var(--da-xian)',
+                        background: 'var(--da-xian-bg)',
+                        border: '1px solid var(--da-xian-bdr)',
+                      }}
+                    >
+                      当前
+                    </span>
+                  )}
+                  {/* 该宫主星 */}
+                  <div className="flex items-center gap-1 ml-auto">
+                    {majorStars.length > 0 ? (
+                      majorStars.map(s => (
+                        <span key={s} className="text-[10px]" style={{ color: 'var(--star-major)' }}>
+                          {s}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-[9px]" style={{ color: 'var(--t-faint)' }}>空宫（借对宫）</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* 大限四化 */}
+                {siHuaChips.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-1.5">
+                    {siHuaChips.map(({ k, star }) => {
+                      const c = siHuaColor[k];
+                      return (
+                        <span
+                          key={k}
+                          className="text-[9px] px-1.5 py-px rounded"
+                          style={{ color: c.text, background: c.bg, border: `1px solid ${c.bdr}` }}
+                        >
+                          {star}化{siHuaLabel[k]}
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             );
           })}
+        </div>
+        <div className="text-[9px] mt-3 pt-2" style={{ borderTop: '1px solid var(--t-border)', color: 'var(--t-faint)', opacity: 0.7, lineHeight: 1.6 }}>
+          大限四化依宫干而起，标出这十年被激活的星曜。此处只呈现排盘结果，不做吉凶断言 —— 具体论断请参照古籍原文或交由 AI 解读。
         </div>
       </div>
       </motion.div>

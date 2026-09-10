@@ -2,6 +2,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import BirthForm, { type BirthFormState } from '@/components/BirthForm';
+import HemingCompareTable from '@/components/HemingCompareTable';
 import { formToBirthInfo } from '@/lib/ziwei/share';
 import type { BirthInfo, ZiweiChart } from '@/lib/ziwei/types';
 import { useTheme } from '@/components/ThemeProvider';
@@ -246,6 +247,18 @@ export default function HemingPage() {
             />
           </div>
         </div>
+
+        {/* ═══ C10 关键宫位对比表（双方都起盘后显示，纯数据并排对比）═══ */}
+        {chartA && chartB && (
+          <div style={{ marginBottom: 20 }}>
+            <HemingCompareTable
+              chartA={chartA}
+              chartB={chartB}
+              nameA={formA?.name ? `甲方 ${formA.name}` : '甲方 A'}
+              nameB={formB?.name ? `乙方 ${formB.name}` : '乙方 B'}
+            />
+          </div>
+        )}
 
         {/* ═══ 大合盘分析框（视觉中心，始终显示）════════════════ */}
         <div ref={analysisRef} style={{

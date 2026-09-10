@@ -3,8 +3,36 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // 公告版本号——以后想再弹新公告，改这里就行（旧版 key 失效，新版重新弹一次）
-const ANNOUNCEMENT_VERSION = '2026-05-01';
+const ANNOUNCEMENT_VERSION = '2026-09-09';
 const STORAGE_KEY = `announcement_seen_${ANNOUNCEMENT_VERSION}`;
+
+/** 本次更新要点（改版本号时同步更新这里） */
+const UPDATES: { tag: string; text: string }[] = [
+  {
+    tag: '知识库',
+    text: '182 个「星曜 × 宫位」页面全部恢复，内容取自古籍原文与倪师讲义；暂无资料的宫位诚实标注，不编造。',
+  },
+  {
+    tag: '讲义入库',
+    text: '倪师《天纪》紫微斗数讲义整理入库：15 集切分、清洗、建索引，可作为研究与引用来源。',
+  },
+  {
+    tag: '命盘速览',
+    text: '命盘页新增「命盘速览」：命格总览 / 本命四化 / 格局识别 / 大限运程 / 相似名人比对。',
+  },
+  {
+    tag: '星曜速查',
+    text: '点主星先看静态解读（不消耗提问次数），想深入再一键交给 AI。',
+  },
+  {
+    tag: '分享与历史',
+    text: '支持一键分享命盘链接（打开即回填），并本地留存最近 10 条排盘记录。',
+  },
+  {
+    tag: '导航修正',
+    text: '补上「地纪 / 人纪」入口，「起名」更正为实际功能「合婚」。',
+  },
+];
 
 export default function AnnouncementModal() {
   // 默认不开，client 端 useEffect 检查 localStorage 后立即决定是否弹出。
@@ -21,7 +49,7 @@ export default function AnnouncementModal() {
     setDecided(true);
   }, []);
 
-  // 公告打开时锁住 body 滚动，防止背后首页可滚（仪式感更强）
+  // 公告打开时锁住 body 滚动，防止背后首页可滚
   useEffect(() => {
     if (typeof document === 'undefined') return;
     if (open) {
@@ -36,6 +64,15 @@ export default function AnnouncementModal() {
     try { localStorage.setItem(STORAGE_KEY, '1'); } catch { /* skip */ }
   };
 
+  // 用户控制与自由（Nielsen 可用性原则 #3）：ESC 也能关，不必非点按钮
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
   if (!decided) return null;
 
   return (
@@ -46,7 +83,8 @@ export default function AnnouncementModal() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
-          // 不点击外部关闭——强制用户按"我知道了"按钮才能进入首页
+          // 点击遮罩也可关闭（原实现强制点按钮，对回访用户过于强硬）
+          onClick={close}
           style={{
             position: 'fixed', inset: 0, zIndex: 9999,
             background: 'rgba(20,12,2,0.88)',
@@ -57,6 +95,9 @@ export default function AnnouncementModal() {
           }}
         >
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label="版本更新公告"
             initial={{ scale: 0.92, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0 }}
@@ -85,14 +126,14 @@ export default function AnnouncementModal() {
               position: 'relative',
             }}>
               <div style={{ fontSize: '10px', letterSpacing: '0.4em', color: '#b8922a', opacity: 0.7, marginBottom: '6px' }}>
-                A LETTER TO USERS
+                WHAT&apos;S NEW
               </div>
               <h2 style={{ fontSize: '19px', fontWeight: 700, color: '#3d2f10', letterSpacing: '0.08em', margin: 0 }}>
-                致正在使用这个平台的你
+                本次更新 · {ANNOUNCEMENT_VERSION}
               </h2>
               <button
                 onClick={close}
-                aria-label="关闭"
+                aria-label="关闭公告"
                 style={{
                   position: 'absolute', top: '14px', right: '16px',
                   width: '28px', height: '28px',
@@ -106,23 +147,21 @@ export default function AnnouncementModal() {
               >×</button>
             </div>
 
-            {/* 限时免费 banner（最关键信息，置顶强调）*/}
+            {/* 更新概要 banner */}
             <div style={{
               margin: '14px 22px 0',
               padding: '12px 16px',
               background: 'linear-gradient(135deg, #fff5e3 0%, #ffe1c0 100%)',
-              border: '1.5px dashed rgba(232,132,62,0.5)',
+              border: '1.5px dashed rgba(184,146,42,0.5)',
               borderRadius: '12px',
               flexShrink: 0,
               textAlign: 'center',
             }}>
               <div style={{ fontSize: '10px', letterSpacing: '0.3em', color: '#c45a2d', marginBottom: '4px', fontWeight: 600 }}>
-                LIMITED TIME · 限时回馈
+                UPDATE · 本次更新
               </div>
               <div style={{ fontSize: '14px', color: '#8b3a1a', fontWeight: 600, lineHeight: 1.6 }}>
-                <span style={{ fontSize: '16px', color: '#c45a2d', fontWeight: 700 }}>5 月 1 日 — 5 月 8 日</span>
-                <br />
-                平台全部功能 + AI 提问 全部免费开放
+                知识库空壳已修复 · 倪师讲义入库 · 命盘页新增三项能力
               </div>
             </div>
 
@@ -135,17 +174,33 @@ export default function AnnouncementModal() {
               color: '#5a4a30',
               flex: 1,
             }}>
-              <p style={{ margin: '0 0 12px' }}>
-                说实话，我真的没想到会有这么大的流量。
+              <p style={{ margin: '0 0 14px' }}>
+                这一版主要做了两件事：<strong>把空着的知识库补上</strong>，以及<strong>把写好却没接线的功能挂上去</strong>。
               </p>
-              <p style={{ margin: '0 0 12px' }}>
-                最开始做这个平台，我的初心其实很简单：在 AI 时代，把倪师这套原本复杂、门槛很高的体系，尽量做得更简单、更高效、更容易理解。
-              </p>
-              <p style={{ margin: '0 0 12px' }}>
-                不一定每个人都要先学很久、看很多书，才能接触这些内容。我们希望通过这个平台，让大家用更轻松的方式，获得一些对自我、人生阶段、选择方向的参考和启发。
-              </p>
+
+              <div style={{ display: 'grid', gap: 10 }}>
+                {UPDATES.map(u => (
+                  <div key={u.tag} style={{
+                    padding: '10px 14px',
+                    background: 'rgba(184,146,42,0.06)',
+                    borderLeft: '3px solid rgba(184,146,42,0.45)',
+                    borderRadius: '0 8px 8px 0',
+                  }}>
+                    <div style={{
+                      fontSize: '11px', letterSpacing: '0.15em', color: '#b8922a',
+                      fontWeight: 600, marginBottom: '3px',
+                    }}>
+                      {u.tag}
+                    </div>
+                    <div style={{ fontSize: '13px', lineHeight: 1.7, color: '#5a4a30' }}>
+                      {u.text}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
               <p style={{
-                margin: '0 0 12px',
+                margin: '16px 0 0',
                 padding: '10px 14px',
                 background: 'rgba(184,146,42,0.07)',
                 borderLeft: '3px solid rgba(184,146,42,0.45)',
@@ -153,22 +208,7 @@ export default function AnnouncementModal() {
                 fontStyle: 'italic',
                 color: '#7a5e2a',
               }}>
-                倪师曾说过一句话：人怎么可能发明出完全没有用的东西呢？
-              </p>
-              <p style={{ margin: '0 0 12px' }}>
-                我一直觉得，易经如此，紫微斗数也是如此。它们真正有价值的地方，不是让人被某个结果困住，而是让我们更早看见自己的性格惯性、人生课题和选择方向。看见之后，才有机会调整；理解之后，才有机会变得更好。
-              </p>
-              <p style={{ margin: '0 0 12px' }}>
-                至于那些说&ldquo;你当下在看这些，其实也是命运的一部分&rdquo;之类的话，我就不多评价了。
-              </p>
-              <p style={{ margin: '0 0 12px' }}>
-                这几天账号被小红书抬走了，<strong style={{ color: '#c45a2d' }}>5 月 3 号开始恢复正常更新。</strong>
-              </p>
-              <p style={{ margin: '0 0 16px', color: '#3d2f10', fontWeight: 500 }}>
-                最后，真心祝愿大家都能越来越了解自己，越来越爱自己，也越来越有能力爱身边的人。
-              </p>
-              <p style={{ margin: 0, textAlign: 'right', fontSize: '13px', color: '#7a5e2a' }}>
-                ——谢谢大家 🙏
+                内容取自项目已收录的古籍与讲义；暂无资料处一律标注，不做编造。
               </p>
             </div>
 
@@ -178,10 +218,14 @@ export default function AnnouncementModal() {
               borderTop: '1px solid rgba(184,146,42,0.15)',
               background: 'rgba(184,146,42,0.04)',
               display: 'flex',
-              justifyContent: 'flex-end',
+              alignItems: 'center',
+              justifyContent: 'space-between',
               gap: '10px',
               flexShrink: 0,
             }}>
+              <span style={{ fontSize: '11px', color: '#7a5e2a', opacity: 0.7 }}>
+                按 Esc 或点击外部也可关闭 · 仅此一次
+              </span>
               <button
                 onClick={close}
                 style={{
