@@ -7,6 +7,7 @@ import HomeTabs, { type TabKey, getTabByPath } from '@/components/HomeTabs';
 import AppToast from '@/components/AppToast';
 import { useTheme, type Theme } from '@/components/ThemeProvider';
 import ThemeToggle from '@/components/ThemeToggle';
+import { RENJI_STATS } from '@/lib/nihai/renji';
 
 // ─── 滚动入场 wrapper ────────────────────────────────────
 function FadeIn({
@@ -131,7 +132,8 @@ const SECTIONS = [
     key: 'renji',
     name: '人纪',
     en: 'Ren Ji',
-    desc: '针灸 215 条 · 内经 · 伤寒 · 金匮',
+    // 条数由数据实际长度决定（ACU_EXPERIENCES），不硬编码
+    desc: `针灸 ${RENJI_STATS.acuExperienceCount} 条 · 内经 · 伤寒 · 金匮`,
     status: 'ready' as const,
     when: '已上线',
     icon: '⊕',  // 圆+十字（医道/阴阳调和），与 ⊙/⊞ 同字宽

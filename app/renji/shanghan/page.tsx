@@ -35,8 +35,16 @@ export default function ShanghanPage() {
     if (jingluoFilter !== 'all') list = list.filter(f => f.jingluo === jingluoFilter);
     if (searchQ.trim()) {
       const q = searchQ.trim();
+      // 全字段召回：方名 / 主治 / 主症 / 君药 / 组成 / 倪师要点 / 现代应用
       list = list.filter(f =>
-        f.name.includes(q) || f.indication.includes(q) || f.symptoms.includes(q),
+        f.name.includes(q) ||
+        f.indication.includes(q) ||
+        f.symptoms.includes(q) ||
+        f.king.includes(q) ||
+        f.composition.includes(q) ||
+        f.niNote.includes(q) ||
+        (f.modern?.includes(q) ?? false) ||
+        f.preparation.includes(q),
       );
     }
     return list;

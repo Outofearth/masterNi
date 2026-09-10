@@ -1,41 +1,24 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/components/ThemeProvider';
 import { useTianjiColors } from '../tianji/_colors';
-import {
-  RENJI_MODULES,
-  RENJI_STATS,
-  ACU_EXPERIENCES,
-} from '@/lib/nihai/renji';
+import { RENJI_MODULES, RENJI_STATS } from '@/lib/nihai/renji';
 import { RENJI_QUOTES } from '@/lib/nihai/renji-quotes';
 import TianjiFadeIn from '../tianji/TianjiFadeIn';
 import GlobalSearch from '@/components/GlobalSearch';
+import SymptomSearch from '@/components/renji/SymptomSearch';
 
 /**
  * /renji 人纪总览
  *
- * 核心功能：症状 → 穴位 检索（基于 ACU_EXPERIENCES 215 条）
+ * 核心功能：症状 → 穴位 检索（数据 ACU_EXPERIENCES，条数取实际长度不硬编码）
  * 5 模块卡片 · 学习顺序提示 · 倪师人纪语录
  */
 export default function RenjiPage() {
   const { theme } = useTheme();
   const c = useTianjiColors(theme);
-
-  const [symptom, setSymptom] = useState('');
-
-  const symptomHits = useMemo(() => {
-    const q = symptom.trim();
-    if (!q) return [];
-    return ACU_EXPERIENCES.filter(
-      e =>
-        e.condition.includes(q) ||
-        e.acupoints.includes(q) ||
-        e.category.includes(q)
-    ).slice(0, 10);
-  }, [symptom]);
 
   return (
     <main className="min-h-screen">
@@ -109,98 +92,7 @@ export default function RenjiPage() {
       {/* 症状 → 穴位 检索 */}
       <section className="max-w-6xl mx-auto px-4 pb-12">
         <TianjiFadeIn delay={0.05}>
-          <div
-            className="rounded-2xl p-6 md:p-8"
-            style={{
-              background: c.featureBg,
-              border: `1px solid ${c.goldLine}`,
-            }}
-          >
-            <div className="text-[10px] tracking-[0.3em] mb-2" style={{ color: c.goldSolid }}>
-              B6 · 症状穴位检索
-            </div>
-            <h2 className="text-xl font-serif tracking-wider mb-1" style={{ color: c.textPrimary }}>
-              输入症状 / 穴位 / 部位，查倪师临床方案
-            </h2>
-            <p className="text-[11px] mb-4" style={{ color: c.textMuted }}>
-              数据源：ACU_EXPERIENCES 共 {RENJI_STATS.acuExperienceCount} 条
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 mb-4">
-              <input
-                type="text"
-                value={symptom}
-                onChange={e => setSymptom(e.target.value.slice(0, 20))}
-                placeholder="如：心脏病 · 失眠 · 头痛 · 合谷 · 足三里"
-                aria-label="输入症状或穴位"
-                className="flex-1 px-4 py-3 rounded-xl outline-none text-sm"
-                style={{
-                  background: c.cardBg,
-                  border: `1px solid ${c.featureBord}`,
-                  color: c.textPrimary,
-                  fontFamily: 'var(--font-serif)',
-                }}
-              />
-              {symptom && (
-                <button
-                  type="button"
-                  onClick={() => setSymptom('')}
-                  className="px-4 py-2 rounded-xl text-[11px] tracking-wider"
-                  style={{
-                    background: 'transparent',
-                    border: `1px solid ${c.featureBord}`,
-                    color: c.textMuted,
-                  }}
-                >
-                  清除
-                </button>
-              )}
-            </div>
-            {symptom && (
-              <div className="space-y-2">
-                {symptomHits.length === 0 ? (
-                  <p className="text-[11px] py-4" style={{ color: c.textFaint }}>
-                    未找到相关方案，试试更简短的关键词
-                  </p>
-                ) : (
-                  <>
-                    <p className="text-[10px] tracking-widest mb-2" style={{ color: c.textFaint }}>
-                      找到 {symptomHits.length} 条匹配
-                    </p>
-                    {symptomHits.map(hit => (
-                      <div
-                        key={hit.id}
-                        className="rounded-lg px-4 py-3"
-                        style={{
-                          background: c.cardBg,
-                          border: `1px solid ${c.featureBord}`,
-                        }}
-                      >
-                        <div className="flex items-baseline justify-between gap-3 mb-1.5">
-                          <span className="text-sm font-serif" style={{ color: c.textPrimary }}>
-                            {hit.condition}
-                          </span>
-                          <span
-                            className="text-[9px] tracking-widest px-2 py-0.5 rounded shrink-0"
-                            style={{
-                              background: c.featureBg,
-                              border: `1px solid ${c.featureBord}`,
-                              color: '#5b8c5a',
-                            }}
-                          >
-                            {hit.category}
-                          </span>
-                        </div>
-                        <div className="text-[11px]" style={{ color: c.textSecond }}>
-                          <span style={{ color: c.goldSolid }}>取穴：</span>
-                          {hit.acupoints}
-                        </div>
-                      </div>
-                    ))}
-                  </>
-                )}
-              </div>
-            )}
-          </div>
+          <SymptomSearch />
         </TianjiFadeIn>
       </section>
 

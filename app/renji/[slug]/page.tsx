@@ -7,15 +7,16 @@ import { useTianjiColors } from '../../tianji/_colors';
 import { RENJI_MODULES, ACU_EXPERIENCES, TRANS_NEEDLING, HANTANG_FORMULAS, CLASSIC_FORMULAS } from '@/lib/nihai/renji';
 import TianjiFadeIn from '../../tianji/TianjiFadeIn';
 import GlobalSearch from '@/components/GlobalSearch';
+import SymptomSearch from '@/components/renji/SymptomSearch';
 
 /**
  * /renji/[slug] 人纪子模块详情
  *
  * 5 个 slug：zhenjiu / neijing / bencao / shanghan / jingui
  * 按 slug 自动挂接关联数据集：
- * - zhenjiu → ACU_EXPERIENCES (215) + TRANS_NEEDLING (31)
- * - shanghan → HANTANG_FORMULAS (100)
- * - jingui → CLASSIC_FORMULAS (259)
+ * - zhenjiu → ACU_EXPERIENCES + TRANS_NEEDLING（条数取实际长度，不硬编码）
+ * - shanghan → HANTANG_FORMULAS
+ * - jingui → CLASSIC_FORMULAS
  * - neijing / bencao → 留章节为主
  */
 export default function RenjiDetailPage() {
@@ -172,6 +173,15 @@ export default function RenjiDetailPage() {
           </div>
         </TianjiFadeIn>
       </section>
+
+      {/* 针灸模块：症状 → 穴位 全量检索 */}
+      {slug === 'zhenjiu' && (
+        <section className="max-w-4xl mx-auto px-4 pb-8">
+          <TianjiFadeIn delay={0.06}>
+            <SymptomSearch pageSize={6} />
+          </TianjiFadeIn>
+        </section>
+      )}
 
       {/* 关联数据集 */}
       {relatedData.length > 0 && (

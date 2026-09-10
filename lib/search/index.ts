@@ -172,7 +172,8 @@ const INDEX: IndexedItem[] = (() => {
       cat: '针灸',
       title: `${a.condition}（${a.acupoints}）`,
       body: `${a.category ?? ''} ${a.note ?? ''}`,
-      href: '/renji',
+      // 深链：跳转后自动带入症状关键词并高亮命中
+      href: `/renji/zhenjiu?symptom=${encodeURIComponent(a.condition)}`,
       weight: 6,
     });
   }

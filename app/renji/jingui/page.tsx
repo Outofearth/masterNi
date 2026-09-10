@@ -23,15 +23,29 @@ export default function JinguiPage() {
   const { theme } = useTheme();
   const c = useTianjiColors(theme);
   const [chapterFilter, setChapterFilter] = useState<string>('all');
+  const [searchQ, setSearchQ] = useState('');
   const [selectedNo, setSelectedNo] = useState<number | null>(null);
 
   const grouped = jinguiGroupByChapter();
   const chapters = Object.keys(grouped);
 
   const filtered = useMemo(() => {
-    if (chapterFilter === 'all') return JINGUI_FORMULAS;
-    return JINGUI_FORMULAS.filter(f => f.chapter === chapterFilter);
-  }, [chapterFilter]);
+    let list = chapterFilter === 'all' ? JINGUI_FORMULAS : JINGUI_FORMULAS.filter(f => f.chapter === chapterFilter);
+    if (searchQ.trim()) {
+      const q = searchQ.trim();
+      // 全字段召回：方名 / 主治 / 主症 / 君药 / 组成 / 倪师要点 / 现代应用
+      list = list.filter(f =>
+        f.name.includes(q) ||
+        f.indication.includes(q) ||
+        f.symptoms.includes(q) ||
+        f.king.includes(q) ||
+        f.composition.includes(q) ||
+        f.niNote.includes(q) ||
+        (f.modern?.includes(q) ?? false),
+      );
+    }
+    return list;
+  }, [chapterFilter, searchQ]);
 
   const selected = JINGUI_FORMULAS.find(f => f.no === selectedNo) ?? null;
 
@@ -86,7 +100,8 @@ export default function JinguiPage() {
       {/* 篇章过滤 */}
       <section className="max-w-5xl mx-auto px-4 pb-4">
         <TianjiFadeIn delay={0.05}>
-          <div className="flex items-center justify-center gap-2 flex-wrap">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-3">
+            <div className="flex items-center gap-2 flex-wrap justify-center">
             <button
               type="button"
               onClick={() => setChapterFilter('all')}
@@ -114,6 +129,20 @@ export default function JinguiPage() {
                 {ch}
               </button>
             ))}
+            </div>
+            <input
+              type="text"
+              placeholder="搜索方名 / 主治 / 症状…"
+              value={searchQ}
+              onChange={e => setSearchQ(e.target.value)}
+              className="text-[11px] px-3 py-1.5 rounded-full outline-none"
+              style={{
+                background: c.featureBg,
+                border: `1px solid ${c.featureBord}`,
+                color: c.textPrimary,
+                minWidth: '200px',
+              }}
+            />
           </div>
         </TianjiFadeIn>
       </section>

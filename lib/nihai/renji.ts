@@ -645,15 +645,15 @@ export const CLASSIC_FORMULAS: ClassicFormula[] = [
   { id: 'cf-25', name: '小建中汤', source: '伤寒论', composition: '桂枝9g、芍药18g、甘草6g、生姜9g、大枣12枚、饴糖30g', indication: '中焦虚寒腹痛', niUsage: '腹中急痛、虚劳' },
 ];
 
-// ─── 统计 ────────────────────────────────────────────────
+// ─── 统计（一律取实际长度，禁止硬编码虚标） ─────────────────
 export const RENJI_STATS = {
   totalModules: RENJI_MODULES.length,
   totalChapters: RENJI_MODULES.reduce((sum, m) => sum + m.chapters.length, 0),
   totalLessons: '150+集',
   completionYear: '2004-2005',
   learningOrder: ['针灸大成', '黄帝内经', '神农本草经', '伤寒论', '金匮要略'],
-  acuExperienceCount: 215,
-  transNeedlingCount: 31,
-  hantangFormulaCount: 100,
-  classicFormulaCount: 259,
+  acuExperienceCount: ACU_EXPERIENCES.length,
+  transNeedlingCount: TRANS_NEEDLING.length,
+  hantangFormulaCount: HANTANG_FORMULAS.length,
+  classicFormulaCount: CLASSIC_FORMULAS.length,
 };
