@@ -38,9 +38,9 @@ const REASON_LABEL: Record<MatchReason, string> = {
 const REASON_COLOR: Record<MatchReason, string> = {
   exact: '#b8922a',
   contains: '#b8922a',
-  alias: '#5b8c5a',
-  category: '#5b8c5a',
-  acupoint: '#5b8c5a',
+  alias: 'var(--cat-renji)',
+  category: 'var(--cat-renji)',
+  acupoint: 'var(--cat-renji)',
   partial: '#8b8275',
   fuzzy: '#8b8275',
 };
@@ -91,13 +91,13 @@ function SymptomSearchInner({ defaultQuery = '', pageSize = 8 }: Props) {
         border: `1px solid ${c.goldLine}`,
       }}
     >
-      <div className="text-[10px] tracking-[0.3em] mb-2" style={{ color: c.goldSolid }}>
+      <div className="text-[12px] tracking-[0.3em] mb-2" style={{ color: c.goldSolid }}>
         症状 · 穴位 检索
       </div>
       <h2 className="text-xl font-serif tracking-wider mb-1" style={{ color: c.textPrimary }}>
         输入症状 / 穴位 / 部位，查倪师临床取穴
       </h2>
-      <p className="text-[11px] mb-4" style={{ color: c.textMuted }}>
+      <p className="text-[13px] mb-4" style={{ color: c.textMuted }}>
         数据源：ACU_EXPERIENCES 共 {SYMPTOM_TOTAL} 条 · 支持口语说法（如「睡不着」「拉肚子」「肩膀痛」）
       </p>
 
@@ -127,7 +127,7 @@ function SymptomSearchInner({ defaultQuery = '', pageSize = 8 }: Props) {
               setSymptom('');
               setExpanded(false);
             }}
-            className="px-4 py-2 rounded-xl text-[11px] tracking-wider"
+            className="px-4 py-2 rounded-xl text-[13px] tracking-wider"
             style={{
               background: 'transparent',
               border: `1px solid ${c.featureBord}`,
@@ -142,7 +142,7 @@ function SymptomSearchInner({ defaultQuery = '', pageSize = 8 }: Props) {
       {/* 快捷入口 */}
       <div className="mb-5 space-y-2">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[10px] tracking-widest shrink-0" style={{ color: c.textFaint }}>
+          <span className="text-[12px] tracking-widest shrink-0" style={{ color: c.textFaint }}>
             常见
           </span>
           {HOT_SYMPTOMS.map(s => (
@@ -150,7 +150,7 @@ function SymptomSearchInner({ defaultQuery = '', pageSize = 8 }: Props) {
               key={s}
               type="button"
               onClick={() => pick(s)}
-              className="px-2.5 py-1 rounded-full text-[10px] tracking-wider transition-colors"
+              className="px-2.5 py-1 rounded-full text-[12px] tracking-wider transition-colors"
               style={{
                 background: symptom === s ? c.goldSolid : c.cardBg,
                 border: `1px solid ${symptom === s ? c.goldSolid : c.featureBord}`,
@@ -162,7 +162,7 @@ function SymptomSearchInner({ defaultQuery = '', pageSize = 8 }: Props) {
           ))}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[10px] tracking-widest shrink-0" style={{ color: c.textFaint }}>
+          <span className="text-[12px] tracking-widest shrink-0" style={{ color: c.textFaint }}>
             分科
           </span>
           {SYMPTOM_CATEGORIES.map(cat => (
@@ -170,10 +170,10 @@ function SymptomSearchInner({ defaultQuery = '', pageSize = 8 }: Props) {
               key={cat}
               type="button"
               onClick={() => pick(cat)}
-              className="px-2.5 py-1 rounded-full text-[10px] tracking-wider transition-colors"
+              className="px-2.5 py-1 rounded-full text-[12px] tracking-wider transition-colors"
               style={{
-                background: symptom === cat ? '#5b8c5a' : c.cardBg,
-                border: `1px solid ${symptom === cat ? '#5b8c5a' : c.featureBord}`,
+                background: symptom === cat ? 'var(--cat-renji)' : c.cardBg,
+                border: `1px solid ${symptom === cat ? 'var(--cat-renji)' : c.featureBord}`,
                 color: symptom === cat ? '#fff' : c.textMuted,
               }}
             >
@@ -188,27 +188,27 @@ function SymptomSearchInner({ defaultQuery = '', pageSize = 8 }: Props) {
         <div className="space-y-2">
           {result.total === 0 ? (
             <div className="rounded-lg px-4 py-5 text-center" style={{ background: c.cardBg, border: `1px solid ${c.featureBord}` }}>
-              <p className="text-[11px] leading-relaxed" style={{ color: c.textSecond }}>
+              <p className="text-[13px] leading-relaxed" style={{ color: c.textSecond }}>
                 库内暂未收录「{symptom}」的取穴方案。
               </p>
-              <p className="text-[10px] mt-1.5" style={{ color: c.textFaint }}>
+              <p className="text-[12px] mt-1.5" style={{ color: c.textFaint }}>
                 当前收录 {SYMPTOM_TOTAL} 条倪师临床经验，试试上面的常见症状或分科浏览。
               </p>
             </div>
           ) : (
             <>
               <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
-                <p className="text-[10px] tracking-widest" style={{ color: c.textFaint }}>
+                <p className="text-[12px] tracking-widest" style={{ color: c.textFaint }}>
                   找到 {result.total} 条
                   {result.fuzzy && '（库内无精确匹配，以下为字面最接近）'}
                 </p>
                 {result.aliasNote && (
                   <span
-                    className="text-[10px] px-2 py-0.5 rounded"
+                    className="text-[12px] px-2 py-0.5 rounded"
                     style={{
                       background: c.cardBg,
                       border: `1px solid ${c.featureBord}`,
-                      color: '#5b8c5a',
+                      color: 'var(--cat-renji)',
                     }}
                   >
                     {result.aliasNote}
@@ -231,17 +231,17 @@ function SymptomSearchInner({ defaultQuery = '', pageSize = 8 }: Props) {
                     </span>
                     <span className="flex items-center gap-1.5 shrink-0">
                       <span
-                        className="text-[9px] tracking-widest px-2 py-0.5 rounded"
+                        className="text-[12px] tracking-widest px-2 py-0.5 rounded"
                         style={{
                           background: c.featureBg,
                           border: `1px solid ${c.featureBord}`,
-                          color: '#5b8c5a',
+                          color: 'var(--cat-renji)',
                         }}
                       >
                         {hit.item.category}
                       </span>
                       <span
-                        className="text-[9px] tracking-widest px-1.5 py-0.5 rounded"
+                        className="text-[12px] tracking-widest px-1.5 py-0.5 rounded"
                         style={{ color: REASON_COLOR[hit.reason] }}
                         title={`匹配方式：${REASON_LABEL[hit.reason]}`}
                       >
@@ -249,12 +249,12 @@ function SymptomSearchInner({ defaultQuery = '', pageSize = 8 }: Props) {
                       </span>
                     </span>
                   </div>
-                  <div className="text-[11px]" style={{ color: c.textSecond }}>
+                  <div className="text-[13px]" style={{ color: c.textSecond }}>
                     <span style={{ color: c.goldSolid }}>取穴：</span>
                     {hit.item.acupoints}
                   </div>
                   {hit.item.note && (
-                    <div className="text-[10px] mt-1.5 leading-relaxed" style={{ color: '#5b8c5a' }}>
+                    <div className="text-[12px] mt-1.5 leading-relaxed" style={{ color: 'var(--cat-renji)' }}>
                       ※ {hit.item.note}
                     </div>
                   )}
@@ -265,7 +265,7 @@ function SymptomSearchInner({ defaultQuery = '', pageSize = 8 }: Props) {
                 <button
                   type="button"
                   onClick={() => setExpanded(true)}
-                  className="w-full py-2 rounded-lg text-[11px] tracking-wider"
+                  className="w-full py-2 rounded-lg text-[13px] tracking-wider"
                   style={{
                     background: 'transparent',
                     border: `1px dashed ${c.featureBord}`,

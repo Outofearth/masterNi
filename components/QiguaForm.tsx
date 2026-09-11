@@ -77,7 +77,7 @@ export default function QiguaForm({ mode, onResult }: Props) {
               { key: 'hour', label: '时', max: 23 },
             ].map((f) => (
               <div key={f.key} className="flex flex-col gap-1">
-                <label className="text-[10px] tracking-wider" style={labelBase}>
+                <label className="text-[12px] tracking-wider" style={labelBase}>
                   {f.label}
                 </label>
                 <input
@@ -109,7 +109,7 @@ export default function QiguaForm({ mode, onResult }: Props) {
             <button
               type="button"
               onClick={() => setTime(nowInputs())}
-              className="px-4 py-2.5 rounded-lg text-[11px]"
+              className="px-4 py-2.5 rounded-lg text-[13px]"
               style={{ border: `1px solid ${c.cardBorder}`, color: c.textMuted }}
             >
               重置为现在
@@ -127,7 +127,7 @@ export default function QiguaForm({ mode, onResult }: Props) {
               { key: 'b', label: '下卦数' },
             ].map((f) => (
               <div key={f.key} className="flex flex-col gap-1">
-                <label className="text-[10px] tracking-wider" style={labelBase}>
+                <label className="text-[12px] tracking-wider" style={labelBase}>
                   {f.label}
                 </label>
                 <input
@@ -161,8 +161,8 @@ export default function QiguaForm({ mode, onResult }: Props) {
         <motion.p
           initial={{ opacity: 0, y: 4 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-3 text-center text-[11px]"
-          style={{ color: '#c45c48' }}
+          className="mt-3 text-center text-[13px]"
+          style={{ color: 'var(--state-bad)' }}
         >
           {error}
         </motion.p>

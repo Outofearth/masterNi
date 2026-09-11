@@ -13,6 +13,7 @@ import { generateChart } from '@/lib/ziwei/algorithm';
 import { formToSearchParams, searchParamsToForm } from '@/lib/ziwei/share';
 import { useHistory } from '@/lib/ziwei/history';
 import type { BirthInfo, ZiweiChart, Palace, Star } from '@/lib/ziwei/types';
+import SiteFooter from '@/components/SiteFooter';
 
 /**
  * 命盘页 —— 开源版「排盘引擎 Demo」
@@ -94,10 +95,8 @@ export default function ChartPage() {
     return (
       <main style={{ maxWidth: 720, margin: '0 auto', padding: '48px 20px' }}>
         <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>紫微斗数排盘</h1>
-        <p style={{ color: '#888', marginBottom: 32, fontSize: 14, lineHeight: 1.7 }}>
+        <p style={{ color: 'var(--tx-3)', marginBottom: 32, fontSize: 16, lineHeight: 1.7 }}>
           输入出生年月日时，开源排盘引擎即时生成命盘。
-          <br />
-          （本页为引擎 Demo，完整商业版界面不在开源范围；排盘内核完全开放。）
         </p>
         <BirthForm
           onSubmit={handleSubmit}
@@ -109,8 +108,8 @@ export default function ChartPage() {
         {history.length > 0 && (
           <section style={{ marginTop: 40 }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: 12 }}>
-              <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--t-text1)' }}>最近排盘</span>
-              <span style={{ fontSize: 11, color: 'var(--t-faint)', marginLeft: 8 }}>
+              <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--t-text1)' }}>最近排盘</span>
+              <span style={{ fontSize: 13, color: 'var(--t-faint)', marginLeft: 8 }}>
                 本地留存 {history.length} / 10 条
               </span>
             </div>
@@ -132,7 +131,7 @@ export default function ChartPage() {
                     }}
                     style={{
                       flex: 1, textAlign: 'left', background: 'none', border: 'none',
-                      cursor: 'pointer', color: 'var(--t-text1)', fontSize: 13, padding: 0,
+                      cursor: 'pointer', color: 'var(--t-text1)', fontSize: 15, padding: 0,
                     }}
                     aria-label={`重新排盘：${h.label}`}
                   >
@@ -154,6 +153,7 @@ export default function ChartPage() {
             </ul>
           </section>
         )}
+        <SiteFooter />
       </main>
     );
   }
@@ -175,14 +175,14 @@ export default function ChartPage() {
             setDetailStar(null);
           }}
           style={{
-            padding: '6px 14px', cursor: 'pointer', fontSize: 13,
+            padding: '6px 14px', cursor: 'pointer', fontSize: 15,
             border: '1px solid var(--t-border)', borderRadius: 8,
             background: 'transparent', color: 'var(--t-text)',
           }}
         >
           ← 重新起盘
         </button>
-        <span className="hidden sm:block" style={{ fontSize: 12, color: 'var(--t-faint)' }}>
+        <span className="hidden sm:block" style={{ fontSize: 14, color: 'var(--t-faint)' }}>
           倪海厦体系排盘 · 点宫位看三方四正、点主星看星曜速查、点四化看飞化
         </span>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
@@ -191,7 +191,7 @@ export default function ChartPage() {
             type="button"
             onClick={openShare}
             style={{
-              padding: '6px 14px', cursor: 'pointer', fontSize: 13,
+              padding: '6px 14px', cursor: 'pointer', fontSize: 15,
               border: '1px solid rgba(212,168,67,0.35)', borderRadius: 8,
               background: 'rgba(212,168,67,0.10)', color: 'var(--t-gold)',
             }}
@@ -231,6 +231,7 @@ export default function ChartPage() {
               />
             </div>
           )}
+          <SiteFooter compact />
         </div>
 
         {/* B7 右栏：Tab 切换，两块都保持挂载以保留滚动位置与对话历史 */}
@@ -256,7 +257,7 @@ export default function ChartPage() {
                   aria-selected={active}
                   onClick={() => setRightTab(t.key)}
                   style={{
-                    flex: 1, padding: '6px 0', fontSize: 12, cursor: 'pointer',
+                    flex: 1, padding: '6px 0', fontSize: 14, cursor: 'pointer',
                     borderRadius: 7, border: 'none',
                     background: active ? 'rgba(212,168,67,0.14)' : 'transparent',
                     color: active ? 'var(--t-gold)' : 'var(--t-faint)',

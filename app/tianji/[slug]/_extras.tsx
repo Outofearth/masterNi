@@ -41,11 +41,11 @@ function Block({
             style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }}
           />
           <div className="text-center">
-            <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
+            <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
               {title}
             </span>
             {subtitle && (
-              <div className="text-[10px] mt-1" style={{ color: c.textFaint }}>
+              <div className="text-[12px] mt-1" style={{ color: c.textFaint }}>
                 {subtitle}
               </div>
             )}
@@ -77,7 +77,7 @@ function NineGrid({
 
   const toneColor = (t?: string) => {
     if (t === 'good') return c.goldSolid;
-    if (t === 'bad') return '#c0554d';
+    if (t === 'bad') return 'var(--state-bad)';
     return c.textMuted;
   };
 
@@ -100,7 +100,7 @@ function NineGrid({
               {cell.label}
             </span>
             {cell.sub && (
-              <span className="text-[8px] mt-0.5" style={{ color: c.textFaint }}>
+              <span className="text-[11px] mt-0.5" style={{ color: c.textFaint }}>
                 {cell.sub}
               </span>
             )}
@@ -108,7 +108,7 @@ function NineGrid({
         ))}
       </div>
       {center && (
-        <p className="text-[10px] text-center mt-3" style={{ color: c.textFaint }}>
+        <p className="text-[12px] text-center mt-3" style={{ color: c.textFaint }}>
           {center}
         </p>
       )}
@@ -171,7 +171,7 @@ function ZiweiExtra() {
               <div className="text-base font-serif mb-1" style={{ color: c.goldSolid }}>
                 {name}
               </div>
-              <div className="text-[9px]" style={{ color: c.textFaint }}>
+              <div className="text-[12px]" style={{ color: c.textFaint }}>
                 {info.keywords}
               </div>
             </Link>
@@ -242,7 +242,7 @@ function KanyuExtra() {
               <span className="text-xs" style={{ fontFamily: 'var(--font-serif)' }}>
                 {s.num}·{s.name}
               </span>
-              <span className="text-[9px]">
+              <span className="text-[12px]">
                 {s.trigram}宫 · {s.element}
               </span>
             </div>
@@ -267,7 +267,7 @@ function KanyuExtra() {
                 type="button"
                 onClick={() => setActiveFilter(t.k)}
                 aria-pressed={on}
-                className="px-3 py-1 rounded-full text-[11px] tracking-wider transition-colors"
+                className="px-3 py-1 rounded-full text-[13px] tracking-wider transition-colors"
                 style={{
                   background: on ? c.goldSolid : c.featureBg,
                   border: `1px solid ${on ? c.goldLine : c.featureBord}`,
@@ -275,7 +275,7 @@ function KanyuExtra() {
                 }}
               >
                 {t.label}
-                <span className="ml-1.5 text-[9px]" style={{ color: on ? c.goldSolid : c.textFaint }}>
+                <span className="ml-1.5 text-[12px]" style={{ color: on ? c.goldSolid : c.textFaint }}>
                   {counts[t.k]}
                 </span>
               </button>
@@ -301,7 +301,7 @@ function KanyuExtra() {
                 >
                   <div className="flex items-center gap-3 min-1">
                     <span
-                      className="text-[9px] tracking-[0.15em] px-2 py-0.5 rounded"
+                      className="text-[12px] tracking-[0.15em] px-2 py-0.5 rounded"
                       style={{
                         background: c.cardBg,
                         border: `1px solid ${c.featureBord}`,
@@ -319,7 +319,7 @@ function KanyuExtra() {
                     </span>
                   </div>
                   <span
-                    className="text-[10px] transition-transform shrink-0"
+                    className="text-[12px] transition-transform shrink-0"
                     style={{
                       color: c.textFaint,
                       transform: on ? 'rotate(90deg)' : 'rotate(0deg)',
@@ -333,16 +333,16 @@ function KanyuExtra() {
                     className="px-4 pb-4 pt-1 space-y-2"
                     style={{ borderTop: `1px solid ${c.featureBord}` }}
                   >
-                    <p className="text-[11px] leading-relaxed" style={{ color: c.textSecond }}>
+                    <p className="text-[13px] leading-relaxed" style={{ color: c.textSecond }}>
                       {e.description}
                     </p>
                     <div>
-                      <div className="text-[9px] tracking-[0.15em] mb-1.5" style={{ color: c.tagText }}>
+                      <div className="text-[12px] tracking-[0.15em] mb-1.5" style={{ color: c.tagText }}>
                         要点
                       </div>
                       <ul className="space-y-1">
                         {e.keyPoints.map((kp, j) => (
-                          <li key={j} className="text-[11px] flex gap-2" style={{ color: c.textSecond }}>
+                          <li key={j} className="text-[13px] flex gap-2" style={{ color: c.textSecond }}>
                             <span style={{ color: c.goldSolid }}>·</span>
                             <span>{kp}</span>
                           </li>
@@ -355,7 +355,7 @@ function KanyuExtra() {
             );
           })}
           {filtered.length === 0 && (
-            <p className="text-center text-[11px] py-6" style={{ color: c.textFaint }}>
+            <p className="text-center text-[13px] py-6" style={{ color: c.textFaint }}>
               该分类暂无条目
             </p>
           )}
@@ -369,16 +369,16 @@ function KanyuExtra() {
 function c_cardStyle(theme: 'light' | 'dark', tone: 'good' | 'bad' | 'mid'): React.CSSProperties {
   if (tone === 'good') {
     return theme === 'dark'
-      ? { background: 'rgba(212,168,67,0.12)', border: '1px solid rgba(212,168,67,0.30)', color: '#d4a843' }
-      : { background: 'rgba(184,146,42,0.08)', border: '1px solid rgba(184,146,42,0.30)', color: '#b8922a' };
+      ? { background: 'rgba(212,168,67,0.12)', border: '1px solid rgba(212,168,67,0.30)', color: 'var(--ac-text)' }
+      : { background: 'rgba(184,146,42,0.08)', border: '1px solid rgba(184,146,42,0.30)', color: 'var(--ac-text)' };
   }
   if (tone === 'bad') {
     return theme === 'dark'
-      ? { background: 'rgba(192,85,77,0.10)', border: '1px solid rgba(192,85,77,0.25)', color: '#c0554d' }
-      : { background: 'rgba(168,60,52,0.06)', border: '1px solid rgba(168,60,52,0.20)', color: '#a83c34' };
+      ? { background: 'rgba(192,85,77,0.10)', border: '1px solid rgba(192,85,77,0.25)', color: 'var(--state-bad)' }
+      : { background: 'rgba(168,60,52,0.06)', border: '1px solid rgba(168,60,52,0.20)', color: 'var(--state-bad)' };
   }
   return theme === 'dark'
-    ? { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', color: '#9db0d0' }
+    ? { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', color: 'var(--tx-2)' }
     : { background: 'rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.08)', color: '#5a4a35' };
 }
 
@@ -403,7 +403,7 @@ function TuimingExtra() {
         className="max-w-2xl mx-auto mt-6 rounded-xl p-5"
         style={{ background: c.featureBg, border: `1px solid ${c.featureBord}` }}
       >
-        <div className="text-[10px] tracking-[0.25em] mb-3" style={{ color: c.tagText }}>
+        <div className="text-[12px] tracking-[0.25em] mb-3" style={{ color: c.tagText }}>
           数理要点
         </div>
         <ul className="space-y-1.5">
@@ -515,10 +515,10 @@ function MianxiangExtra() {
                   >
                     <div className="flex items-baseline gap-2">
                       <span className="text-xs font-serif" style={{ color: c.goldSolid }}>{z.name}</span>
-                      <span className="text-[9px]" style={{ color: c.textFaint }}>{z.range}</span>
+                      <span className="text-[12px]" style={{ color: c.textFaint }}>{z.range}</span>
                     </div>
                     {on && (
-                      <p className="text-[10px] mt-1 leading-relaxed" style={{ color: c.textSecond }}>{z.desc}</p>
+                      <p className="text-[12px] mt-1 leading-relaxed" style={{ color: c.textSecond }}>{z.desc}</p>
                     )}
                   </button>
                 );
@@ -534,7 +534,7 @@ function MianxiangExtra() {
             >
               开始 21 题面相自测 →
             </button>
-            <p className="text-[10px] mt-2" style={{ color: c.textFaint }}>
+            <p className="text-[12px] mt-2" style={{ color: c.textFaint }}>
               根据倪师《神相》要诀，从神气形色四维度自评，得面相报告。
             </p>
           </div>
@@ -573,7 +573,7 @@ function MianxiangExtra() {
                   color: c.textSecond,
                 }}
               >
-                <span className="text-[11px] leading-relaxed">{opt.text}</span>
+                <span className="text-[13px] leading-relaxed">{opt.text}</span>
               </button>
             ))}
           </div>
@@ -581,7 +581,7 @@ function MianxiangExtra() {
             <button
               type="button"
               onClick={restart}
-              className="text-[10px] tracking-wider"
+              className="text-[12px] tracking-wider"
               style={{ color: c.textFaint }}
             >
               放弃返回
@@ -595,9 +595,9 @@ function MianxiangExtra() {
   // 报告模式
   if (step === 'report' && report) {
     const levelColor = (lvl: string) => {
-      if (lvl.includes('上')) return '#5b8c5a';
+      if (lvl.includes('上')) return 'var(--cat-renji)';
       if (lvl.includes('中')) return '#d4a843';
-      return '#c0554d';
+      return 'var(--state-bad)';
     };
     return (
       <>
@@ -611,12 +611,12 @@ function MianxiangExtra() {
                   className="rounded-lg px-3 py-3 text-center"
                   style={{
                     background: c.cardBg,
-                    border: `1px solid ${levelColor(d.level) === '#5b8c5a' ? c.goldLine : c.cardBorder}`,
+                    border: `1px solid ${levelColor(d.level) === 'var(--cat-renji)' ? c.goldLine : c.cardBorder}`,
                   }}
                 >
-                  <div className="text-[10px] mb-1" style={{ color: c.textFaint }}>{d.dim}</div>
+                  <div className="text-[12px] mb-1" style={{ color: c.textFaint }}>{d.dim}</div>
                   <div className="text-xl font-serif" style={{ color: levelColor(d.level) }}>{d.score}</div>
-                  <div className="text-[10px] mt-1" style={{ color: levelColor(d.level) }}>{d.level}</div>
+                  <div className="text-[12px] mt-1" style={{ color: levelColor(d.level) }}>{d.level}</div>
                 </div>
               ))}
             </div>
@@ -626,7 +626,7 @@ function MianxiangExtra() {
               className="rounded-xl p-5"
               style={{ background: c.featureBg, border: `1px solid ${c.goldLine}` }}
             >
-              <div className="text-[10px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>综合解读</div>
+              <div className="text-[12px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>综合解读</div>
               <p className="text-sm leading-loose" style={{ color: c.textPrimary, fontFamily: 'var(--font-serif)' }}>
                 {report.summary}
               </p>
@@ -634,7 +634,7 @@ function MianxiangExtra() {
 
             {/* 各维度详细解读 */}
             <div className="space-y-2">
-              <div className="text-[10px] tracking-[0.2em]" style={{ color: c.tagText }}>维度解读</div>
+              <div className="text-[12px] tracking-[0.2em]" style={{ color: c.tagText }}>维度解读</div>
               {report.dimScores.map((d, i) => (
                 <details
                   key={i}
@@ -643,9 +643,9 @@ function MianxiangExtra() {
                 >
                   <summary className="cursor-pointer flex items-center justify-between" style={{ color: c.textPrimary }}>
                     <span className="text-xs font-serif">{d.dim}</span>
-                    <span className="text-[10px]" style={{ color: levelColor(d.level) }}>{d.score} 分 · {d.level}</span>
+                    <span className="text-[12px]" style={{ color: levelColor(d.level) }}>{d.score} 分 · {d.level}</span>
                   </summary>
-                  <p className="text-[11px] mt-2 leading-loose" style={{ color: c.textSecond }}>
+                  <p className="text-[13px] mt-2 leading-loose" style={{ color: c.textSecond }}>
                     {d.detail}
                   </p>
                 </details>
@@ -657,8 +657,8 @@ function MianxiangExtra() {
               className="rounded-xl p-4"
               style={{ background: c.featureBg, border: `1px solid ${c.goldLine}` }}
             >
-              <div className="text-[10px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>倪师《神相》精要</div>
-              <p className="text-[11px] leading-loose" style={{ color: c.textSecond, fontFamily: 'var(--font-serif)' }}>
+              <div className="text-[12px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>倪师《神相》精要</div>
+              <p className="text-[13px] leading-loose" style={{ color: c.textSecond, fontFamily: 'var(--font-serif)' }}>
                 {report.niNote}
               </p>
             </div>
@@ -983,18 +983,18 @@ function CeziExtra() {
   const wxColor = (wx: '金' | '木' | '水' | '火' | '土') => {
     const map = {
       金: '#d4a843',
-      木: '#5b8c5a',
+      木: 'var(--cat-renji)',
       水: '#3a6b8c',
-      火: '#c0554d',
+      火: 'var(--state-bad)',
       土: '#a0826d',
     };
     return map[wx];
   };
   const tendencyColor = (t: '吉' | '平' | '凶' | '随境') => {
     const map = {
-      吉: '#5b8c5a',
+      吉: 'var(--cat-renji)',
       平: '#9db0d0',
-      凶: '#c0554d',
+      凶: 'var(--state-bad)',
       随境: '#d4a843',
     };
     return map[t];
@@ -1022,7 +1022,7 @@ function CeziExtra() {
 
           {/* 五行统计 */}
           {chars.length > 0 && (
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[10px]">
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[12px]">
               {(['金', '木', '水', '火', '土'] as const).map(wx => {
                 const n = analysis.wuxingCount[wx];
                 if (n === 0) return null;
@@ -1041,12 +1041,12 @@ function CeziExtra() {
                 );
               })}
               {analysis.tendencyCount.吉 > 0 && (
-                <span className="px-2 py-1 rounded-md" style={{ background: '#5b8c5a22', color: '#5b8c5a', border: '1px solid #5b8c5a55' }}>
+                <span className="px-2 py-1 rounded-md" style={{ background: 'var(--cat-renji)22', color: 'var(--cat-renji)', border: '1px solid var(--cat-renji)55' }}>
                   吉·{analysis.tendencyCount.吉}
                 </span>
               )}
               {analysis.tendencyCount.凶 > 0 && (
-                <span className="px-2 py-1 rounded-md" style={{ background: '#c0554d22', color: '#c0554d', border: '1px solid #c0554d55' }}>
+                <span className="px-2 py-1 rounded-md" style={{ background: '#c0554d22', color: 'var(--state-bad)', border: '1px solid #c0554d55' }}>
                   凶·{analysis.tendencyCount.凶}
                 </span>
               )}
@@ -1082,14 +1082,14 @@ function CeziExtra() {
                   </div>
                   <div className="flex-1 min-w-0">
                     {!item.inDict ? (
-                      <p className="text-[11px] leading-relaxed" style={{ color: c.textFaint }}>
+                      <p className="text-[13px] leading-relaxed" style={{ color: c.textFaint }}>
                         「{item.ch}」暂未收录。可按偏旁+笔画自行断之，或作部首拆解取象。
                       </p>
                     ) : (
                       <>
                         <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                           <span
-                            className="text-[10px] px-1.5 py-0.5 rounded tracking-wider"
+                            className="text-[12px] px-1.5 py-0.5 rounded tracking-wider"
                             style={{
                               background: `${wxColor(item.wuxing!)}22`,
                               color: wxColor(item.wuxing!),
@@ -1099,7 +1099,7 @@ function CeziExtra() {
                             五行·{item.wuxing}
                           </span>
                           <span
-                            className="text-[10px] px-1.5 py-0.5 rounded tracking-wider"
+                            className="text-[12px] px-1.5 py-0.5 rounded tracking-wider"
                             style={{
                               background: `${tendencyColor(item.char!.tendency)}22`,
                               color: tendencyColor(item.char!.tendency),
@@ -1108,14 +1108,14 @@ function CeziExtra() {
                           >
                             {item.char!.tendency}
                           </span>
-                          <span className="text-[10px]" style={{ color: c.textFaint }}>
+                          <span className="text-[12px]" style={{ color: c.textFaint }}>
                             笔画 {item.char!.strokes}
                           </span>
                         </div>
-                        <div className="text-[11px] leading-relaxed mb-1" style={{ color: c.textPrimary }}>
+                        <div className="text-[13px] leading-relaxed mb-1" style={{ color: c.textPrimary }}>
                           {item.char!.meaning}
                         </div>
-                        <div className="flex items-center gap-2 text-[10px]" style={{ color: c.textMuted }}>
+                        <div className="flex items-center gap-2 text-[12px]" style={{ color: c.textMuted }}>
                           <span>部首 {item.radical}</span>
                           {lookupRadicalWuxing(item.radical) && (
                             <span style={{ color: wxColor(lookupRadicalWuxing(item.radical)!.wx) }}>
@@ -1136,14 +1136,14 @@ function CeziExtra() {
           {/* 倪师注解集 */}
           {analysis.niNotes.length > 0 && (
             <div className="max-w-3xl mx-auto mt-6">
-              <div className="text-[10px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>
+              <div className="text-[12px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>
                 倪师字理精要
               </div>
               <div className="space-y-2">
                 {analysis.niNotes.map((n, i) => (
                   <div
                     key={i}
-                    className="rounded-lg px-4 py-3 text-[11px] leading-relaxed"
+                    className="rounded-lg px-4 py-3 text-[13px] leading-relaxed"
                     style={{
                       background: c.featureBg,
                       border: `1px solid ${c.goldLine}`,
@@ -1163,7 +1163,7 @@ function CeziExtra() {
           {/* 总断 */}
           {analysis.charCount > 0 && (
             <div className="max-w-3xl mx-auto mt-6 pt-4" style={{ borderTop: `1px solid ${c.featureBord}` }}>
-              <p className="text-[11px] leading-loose" style={{ color: c.textSecond }}>
+              <p className="text-[13px] leading-loose" style={{ color: c.textSecond }}>
                 共 <span style={{ color: c.goldSolid }}>{analysis.charCount}</span> 字，
                 总笔画 <span style={{ color: c.goldSolid }}>{analysis.totalStrokes}</span>。
                 {analysis.charCount % 2 === 1 ? '奇数为阳，事态主动、宜进。' : '偶数为阴，事态主静、宜守。'}
@@ -1200,7 +1200,7 @@ function CeziExtra() {
               >
                 {x.r}
               </span>
-              <span className="text-[11px] leading-relaxed" style={{ color: c.textSecond }}>
+              <span className="text-[13px] leading-relaxed" style={{ color: c.textSecond }}>
                 {x.m}
               </span>
             </div>
@@ -1220,7 +1220,7 @@ function CeziExtra() {
               <span className="text-xs font-serif w-8 shrink-0" style={{ color: c.goldSolid }}>
                 {f.t}
               </span>
-              <span className="text-[11px] leading-relaxed" style={{ color: c.textSecond }}>
+              <span className="text-[13px] leading-relaxed" style={{ color: c.textSecond }}>
                 {f.d}
               </span>
             </div>
