@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { BRAND } from '@/lib/brand';
 
 // 公告版本号——以后想再弹新公告，改这里就行（旧版 key 失效，新版重新弹一次）
 const ANNOUNCEMENT_VERSION = '2026-09-09';
@@ -125,10 +126,10 @@ export default function AnnouncementModal() {
               flexShrink: 0,
               position: 'relative',
             }}>
-              <div style={{ fontSize: '10px', letterSpacing: '0.4em', color: '#b8922a', opacity: 0.7, marginBottom: '6px' }}>
+              <div style={{ fontSize: '12px', letterSpacing: '0.4em', color: BRAND.goldText, marginBottom: '6px' }}>
                 WHAT&apos;S NEW
               </div>
-              <h2 style={{ fontSize: '19px', fontWeight: 700, color: '#3d2f10', letterSpacing: '0.08em', margin: 0 }}>
+              <h2 style={{ fontSize: '19px', fontWeight: 700, color: BRAND.ink, letterSpacing: '0.08em', margin: 0 }}>
                 本次更新 · {ANNOUNCEMENT_VERSION}
               </h2>
               <button
@@ -140,7 +141,7 @@ export default function AnnouncementModal() {
                   background: 'rgba(184,146,42,0.08)',
                   border: '1px solid rgba(184,146,42,0.2)',
                   borderRadius: '50%',
-                  color: '#7a5e2a', fontSize: '14px',
+                  color: '#7a5e2a', fontSize: '16px',
                   cursor: 'pointer', lineHeight: 1,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}
@@ -157,10 +158,10 @@ export default function AnnouncementModal() {
               flexShrink: 0,
               textAlign: 'center',
             }}>
-              <div style={{ fontSize: '10px', letterSpacing: '0.3em', color: '#c45a2d', marginBottom: '4px', fontWeight: 600 }}>
+              <div style={{ fontSize: '12px', letterSpacing: '0.3em', color: BRAND.cinnabarText, marginBottom: '4px', fontWeight: 600 }}>
                 UPDATE · 本次更新
               </div>
-              <div style={{ fontSize: '14px', color: '#8b3a1a', fontWeight: 600, lineHeight: 1.6 }}>
+              <div style={{ fontSize: '16px', color: '#8b3a1a', fontWeight: 600, lineHeight: 1.6 }}>
                 知识库空壳已修复 · 倪师讲义入库 · 命盘页新增三项能力
               </div>
             </div>
@@ -169,7 +170,7 @@ export default function AnnouncementModal() {
             <div style={{
               padding: '18px 28px 24px',
               overflowY: 'auto',
-              fontSize: '14px',
+              fontSize: '16px',
               lineHeight: 1.85,
               color: '#5a4a30',
               flex: 1,
@@ -187,12 +188,12 @@ export default function AnnouncementModal() {
                     borderRadius: '0 8px 8px 0',
                   }}>
                     <div style={{
-                      fontSize: '11px', letterSpacing: '0.15em', color: '#b8922a',
+                      fontSize: '13px', letterSpacing: '0.15em', color: BRAND.goldText,
                       fontWeight: 600, marginBottom: '3px',
                     }}>
                       {u.tag}
                     </div>
-                    <div style={{ fontSize: '13px', lineHeight: 1.7, color: '#5a4a30' }}>
+                    <div style={{ fontSize: '15px', lineHeight: 1.7, color: '#5a4a30' }}>
                       {u.text}
                     </div>
                   </div>
@@ -223,18 +224,18 @@ export default function AnnouncementModal() {
               gap: '10px',
               flexShrink: 0,
             }}>
-              <span style={{ fontSize: '11px', color: '#7a5e2a', opacity: 0.7 }}>
+              <span style={{ fontSize: '13px', color: '#7a5e2a' }}>
                 按 Esc 或点击外部也可关闭 · 仅此一次
               </span>
               <button
                 onClick={close}
                 style={{
                   padding: '10px 24px',
-                  background: 'linear-gradient(135deg, #b8922a 0%, #9a7a20 100%)',
-                  color: '#fff',
+                  background: `linear-gradient(135deg, ${BRAND.goldLight} 0%, ${BRAND.gold} 100%)`,
+                  color: BRAND.onGold,
                   border: 'none',
                   borderRadius: '10px',
-                  fontSize: '13px',
+                  fontSize: '15px',
                   letterSpacing: '0.1em',
                   fontWeight: 500,
                   cursor: 'pointer',

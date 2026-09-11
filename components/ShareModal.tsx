@@ -82,7 +82,7 @@ export default function ShareModal({ open, onClose, shareUrl, chart, birth, high
               borderBottom: `1px solid ${goldTint(0.15)}`,
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             }}>
-              <div style={{ fontSize: '14px', fontWeight: 600, color: BRAND.ink, letterSpacing: '0.12em' }}>
+              <div style={{ fontSize: '16px', fontWeight: 600, color: BRAND.ink, letterSpacing: '0.12em' }}>
                 ✦ 分享命盘
               </div>
               <button onClick={onClose}
@@ -101,7 +101,7 @@ export default function ShareModal({ open, onClose, shareUrl, chart, birth, high
               )}
             </div>
 
-            <div style={{ padding: '0 20px 12px', textAlign: 'center', fontSize: '11px', color: BRAND.goldSoft, letterSpacing: '0.05em' }}>
+            <div style={{ padding: '0 20px 12px', textAlign: 'center', fontSize: '13px', color: BRAND.inkSoft, letterSpacing: '0.05em' }}>
               ↑ 朋友圈 / 微信 / 抖音 / 小红书 都能用
             </div>
 
@@ -111,7 +111,7 @@ export default function ShareModal({ open, onClose, shareUrl, chart, birth, high
                 style={{
                   padding: '14px', borderRadius: '10px', border: 'none',
                   background: `linear-gradient(135deg, ${BRAND.goldLight} 0%, ${BRAND.gold} 100%)`,
-                  color: 'white', fontSize: '14px', fontWeight: 600, letterSpacing: '0.15em',
+                  color: BRAND.onGold, fontSize: '16px', fontWeight: 600, letterSpacing: '0.15em',
                   cursor: downloading ? 'not-allowed' : 'pointer',
                   boxShadow: `0 4px 12px ${goldTint(0.3)}`,
                   opacity: downloading ? 0.7 : 1,
@@ -124,7 +124,7 @@ export default function ShareModal({ open, onClose, shareUrl, chart, birth, high
                 style={{
                   padding: '14px', borderRadius: '10px',
                   border: `1px solid ${goldTint(0.4)}`, background: 'white',
-                  color: BRAND.gold, fontSize: '14px', fontWeight: 500, letterSpacing: '0.12em',
+                  color: BRAND.goldText, fontSize: '16px', fontWeight: 500, letterSpacing: '0.12em',
                   cursor: 'pointer',
                 }}
               >
@@ -132,7 +132,7 @@ export default function ShareModal({ open, onClose, shareUrl, chart, birth, high
               </button>
 
               <div style={{
-                fontSize: '11px', color: BRAND.goldSoft, lineHeight: 1.7,
+                fontSize: '13px', color: BRAND.inkSoft, lineHeight: 1.7,
                 padding: '10px 12px', background: goldTint(0.05),
                 borderRadius: '8px', marginTop: '4px',
               }}>
