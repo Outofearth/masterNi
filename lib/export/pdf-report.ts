@@ -14,6 +14,7 @@
  */
 
 import html2canvas from 'html2canvas';
+import { BRAND } from '@/lib/brand';
 
 /** html2canvas 抓图后转 PNG 并触发下载 */
 export async function downloadAsPng(
@@ -24,7 +25,7 @@ export async function downloadAsPng(
     bgColor?: string;
   } = {},
 ): Promise<void> {
-  const { scale = 2, bgColor = '#f5efe0' } = options;
+  const { scale = 2, bgColor = BRAND.cream } = options;
   const canvas = await html2canvas(node, {
     scale,
     backgroundColor: bgColor,

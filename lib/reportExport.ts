@@ -141,12 +141,12 @@ body {
   background: #fff;
   /* 打印/阅读用中文宋体系，避免细体字 */
   font-family: 'Source Han Serif SC', 'Noto Serif CJK SC', 'Noto Serif SC', 'Songti SC', 'SimSun', '宋体', Georgia, serif;
-  font-size: 15px; font-weight: 400; line-height: 1.95;
+  font-size: 16px; font-weight: 400; line-height: 1.95;
   -webkit-print-color-adjust: exact; print-color-adjust: exact;
 }
 .report { max-width: 860px; margin: 0 auto; padding: 40px 44px 64px; }
 .report h1 { font-size: 26px; font-weight: 700; letter-spacing: .08em; margin: 0 0 6px; text-align: center; }
-.report .subtitle { text-align: center; color: #777; font-size: 13px; margin: 0 0 26px; }
+.report .subtitle { text-align: center; color: #777; font-size: 15px; margin: 0 0 26px; }
 h2 { font-size: 19px; font-weight: 600; color: #6b4a10; margin: 0 0 10px; }
 h3.sec { font-size: 17px; font-weight: 600; color: #6b4a10; margin: 18px 0 8px; }
 p { margin: 8px 0; }
@@ -154,24 +154,24 @@ p.meta { color: #444; }
 p.li { margin: 4px 0 4px 18px; position: relative; }
 p.li::before { content: '·'; position: absolute; left: -14px; }
 strong { font-weight: 600; color: #111; }
-table { width: 100%; border-collapse: collapse; margin: 10px 0 18px; font-size: 14px; line-height: 1.7; }
+table { width: 100%; border-collapse: collapse; margin: 10px 0 18px; font-size: 16px; line-height: 1.7; }
 th, td { border: 1px solid #cfc4ac; padding: 7px 10px; vertical-align: top; text-align: left; }
 th { background: #f4ecdc; font-weight: 600; }
 td.c { text-align: center; }
-td .gz { color: #8a6d3b; font-size: 12px; margin-left: 4px; white-space: nowrap; }
-td .minor { color: #5a5a5a; font-size: 12px; margin-top: 2px; }
+td .gz { color: #8a6d3b; font-size: 14px; margin-left: 4px; white-space: nowrap; }
+td .minor { color: #5a5a5a; font-size: 14px; margin-top: 2px; }
 .sec-box { margin-bottom: 26px; }
 .qa { display: flex; gap: 12px; margin: 14px 0; }
-.qa .who { flex: 0 0 64px; text-align: center; font-size: 14px; font-weight: 600; padding-top: 10px; }
+.qa .who { flex: 0 0 64px; text-align: center; font-size: 16px; font-weight: 600; padding-top: 10px; }
 .qa.q .who { color: #9a6210; }
 .qa.a .who { color: #6b4a10; }
 .qa .body { flex: 1; min-width: 0; }
 .qa.q .body { background: #faf3e3; border: 1px solid #e7d9bd; border-radius: 8px; padding: 10px 14px; }
 .qa.a .body { border-left: 3px solid #b8922a; padding-left: 14px; }
 .muted { color: #999; }
-.footer { margin-top: 40px; padding-top: 14px; border-top: 1px solid #ddd; color: #888; font-size: 12px; text-align: center; }
+.footer { margin-top: 40px; padding-top: 14px; border-top: 1px solid #ddd; color: #888; font-size: 14px; text-align: center; }
 @page { margin: 16mm 15mm; }
-@media print { body { font-size: 15px; } .report { padding: 0; } }
+@media print { body { font-size: 16px; } .report { padding: 0; } }
 `;
 
 export interface ExportPdfOptions {

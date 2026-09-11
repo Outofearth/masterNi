@@ -50,7 +50,7 @@ export default function CrossLinks({
         marginBottom: '12px',
       }}>
         <div style={{ height: '1px', width: '20px', background: 'rgba(184,146,42,0.5)' }} />
-        <span style={{ fontSize: '10px', color: 'var(--tx-3)', letterSpacing: '0.25em' }}>
+        <span style={{ fontSize: '12px', color: 'var(--tx-3)', letterSpacing: '0.25em' }}>
           {title}
         </span>
       </div>
@@ -73,16 +73,16 @@ export default function CrossLinks({
             }}
           >
             <div style={{
-              fontSize: '12px',
+              fontSize: '14px',
               fontWeight: 600,
-              color: 'var(--ac)',
+              color: 'var(--ac-text)',
               letterSpacing: '0.08em',
             }}>
               {l.label}
             </div>
             {l.desc && (
               <div style={{
-                fontSize: '10px',
+                fontSize: '12px',
                 color: 'var(--tx-3)',
                 marginTop: '2px',
                 letterSpacing: '0.04em',

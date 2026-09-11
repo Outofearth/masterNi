@@ -197,7 +197,7 @@ export default function HomeTabs({ variant, active, onActive, onSoon }: Props) {
             <span
               className={isHero
                 ? 'text-xs sm:text-sm tracking-wider font-medium'
-                : 'text-[11px] sm:text-xs tracking-wide'
+                : 'text-[13px] sm:text-xs tracking-wide'
               }
             >
               {tab.name}
@@ -205,7 +205,7 @@ export default function HomeTabs({ variant, active, onActive, onSoon }: Props) {
 
             {isHero && (
               <span
-                className="hidden sm:inline text-[9px] tracking-[0.2em] uppercase"
+                className="hidden sm:inline text-[12px] tracking-[0.2em] uppercase"
                 style={{
                   color: isActive ? c.goldSoft : c.textFaint,
                 }}
@@ -218,7 +218,7 @@ export default function HomeTabs({ variant, active, onActive, onSoon }: Props) {
               <motion.span
                 initial={{ opacity: 0, scale: 0.85 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="ml-0.5 hidden lg:inline-block text-[9px] px-1.5 py-0.5 rounded-full"
+                className="ml-0.5 hidden lg:inline-block text-[12px] px-1.5 py-0.5 rounded-full"
                 style={{
                   background: c.goldFaint,
                   color: c.goldSolid,
@@ -231,7 +231,7 @@ export default function HomeTabs({ variant, active, onActive, onSoon }: Props) {
 
             {isHero && isSoon && (
               <span
-                className="ml-0.5 hidden lg:inline-block text-[9px] px-1.5 py-0.5 rounded-full"
+                className="ml-0.5 hidden lg:inline-block text-[12px] px-1.5 py-0.5 rounded-full"
                 style={{
                   background: 'transparent',
                   color: c.textFaint,

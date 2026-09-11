@@ -67,7 +67,7 @@ export default function AppToast({ message, onClose, duration = 3000 }: Props) {
             {/* 顶部行：标题 + 关闭按钮 */}
             <div className="flex items-start justify-between gap-3 mb-1">
               <div
-                className="text-[10px] tracking-[0.3em] font-medium"
+                className="text-[12px] tracking-[0.3em] font-medium"
                 style={{ color: d ? '#d4a843' : '#8b6410' }}
               >
                 筹备中 · Coming Soon
@@ -86,7 +86,7 @@ export default function AppToast({ message, onClose, duration = 3000 }: Props) {
 
             {/* 正文 */}
             <div
-              className="text-[12px] sm:text-[13px] leading-relaxed pl-0"
+              className="text-[14px] sm:text-[15px] leading-relaxed pl-0"
               style={{
                 color: d ? '#b8c6df' : '#3a3f4a',
                 transition: 'color 0.35s ease',

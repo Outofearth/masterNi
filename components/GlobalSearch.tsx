@@ -25,21 +25,22 @@ const CAT_ORDER: HitCategory[] = [
   'DVD', '语录', '名人', '古籍',
 ];
 
+// 分类色走语义 token（自动双主题；浅色下均 ≥4.5:1，此前静态 hex 在浅色下拉里对比不足）
 const CAT_COLOR: Record<HitCategory, string> = {
-  '主星': '#d4a843',
-  '卦象': '#d4a843',
-  '天纪模块': '#d4a843',
-  '人纪模块': '#5b8c5a',
-  '地纪模块': '#a0826d',
-  '堪舆': '#a0826d',
-  '汉唐方剂': '#5b8c5a',
-  '经方': '#5b8c5a',
-  '针灸': '#5b8c5a',
-  '阴阳九针': '#5b8c5a',
-  'DVD': '#9db0d0',
-  '语录': '#9db0d0',
-  '名人': '#9db0d0',
-  '古籍': '#9db0d0',
+  '主星': 'var(--ac-text)',
+  '卦象': 'var(--ac-text)',
+  '天纪模块': 'var(--ac-text)',
+  '人纪模块': 'var(--state-good)',
+  '地纪模块': 'var(--cat-earth)',
+  '堪舆': 'var(--cat-earth)',
+  '汉唐方剂': 'var(--state-good)',
+  '经方': 'var(--state-good)',
+  '针灸': 'var(--state-good)',
+  '阴阳九针': 'var(--state-good)',
+  'DVD': 'var(--cat-muted)',
+  '语录': 'var(--cat-muted)',
+  '名人': 'var(--cat-muted)',
+  '古籍': 'var(--cat-muted)',
 };
 
 export default function GlobalSearch({ variant = 'icon' }: Props) {
@@ -59,8 +60,8 @@ export default function GlobalSearch({ variant = 'icon' }: Props) {
   const textMuted = isDark ? '#8b8275' : '#6b5d4f';
   const cardBg = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.6)';
   const cardBorder = isDark ? 'rgba(212,168,67,0.18)' : 'rgba(184,146,42,0.25)';
-  const goldSolid = isDark ? '#d4a843' : '#b8922a';
-  const accent = '#d4a843';
+  const goldSolid = isDark ? '#d4a843' : '#8b6410';
+  const accent = 'var(--ac-text)';
 
   /* ─── 快捷键 Cmd+K / Ctrl+K ─── */
   useEffect(() => {
@@ -98,7 +99,7 @@ export default function GlobalSearch({ variant = 'icon' }: Props) {
                 background: cardBg,
                 border: `1px solid ${cardBorder}`,
                 color: textMuted,
-                fontSize: 12,
+                fontSize: 14,
                 minWidth: 200,
               }
             : {
@@ -151,7 +152,7 @@ export default function GlobalSearch({ variant = 'icon' }: Props) {
                 className="flex-1 bg-transparent text-sm outline-none"
                 style={{ color: text, fontFamily: 'var(--font-serif)' }}
               />
-              <kbd className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: cardBg, color: textMuted, border: `1px solid ${cardBorder}` }}>
+              <kbd className="text-[12px] px-1.5 py-0.5 rounded" style={{ background: cardBg, color: textMuted, border: `1px solid ${cardBorder}` }}>
                 Esc
               </kbd>
             </div>
@@ -169,7 +170,7 @@ export default function GlobalSearch({ variant = 'icon' }: Props) {
                         key={s}
                         type="button"
                         onClick={() => setQuery(s)}
-                        className="px-3 py-1 rounded-full text-[10px]"
+                        className="px-3 py-1 rounded-full text-[12px]"
                         style={{
                           background: cardBg,
                           border: `1px solid ${cardBorder}`,
@@ -188,7 +189,7 @@ export default function GlobalSearch({ variant = 'icon' }: Props) {
                   <p className="text-xs" style={{ color: textMuted }}>
                     没有命中「<span style={{ color: accent }}>{query}</span>」的资料。
                   </p>
-                  <p className="text-[10px] mt-2" style={{ color: textMuted }}>
+                  <p className="text-[12px] mt-2" style={{ color: textMuted }}>
                     试试：卦名（乾/履/谦）、主星（紫微/贪狼/七杀）、穴位（合谷/足三里）、方剂（桂枝汤/白带丸）
                   </p>
                 </div>
@@ -198,7 +199,7 @@ export default function GlobalSearch({ variant = 'icon' }: Props) {
                 <div className="py-2">
                   {CAT_ORDER.filter(cat => grouped[cat] && grouped[cat]!.length > 0).map(cat => (
                     <div key={cat} className="mb-3">
-                      <div className="px-5 py-1.5 text-[10px] tracking-[0.2em] flex items-center justify-between"
+                      <div className="px-5 py-1.5 text-[12px] tracking-[0.2em] flex items-center justify-between"
                         style={{ color: CAT_COLOR[cat] }}>
                         <span>{cat}</span>
                         <span style={{ color: textMuted }}>{grouped[cat]!.length} 条</span>
@@ -213,7 +214,7 @@ export default function GlobalSearch({ variant = 'icon' }: Props) {
             </div>
 
             {/* 底部 */}
-            <div className="px-5 py-2 flex items-center justify-between text-[10px]" style={{ color: textMuted, borderTop: `1px solid ${cardBorder}` }}>
+            <div className="px-5 py-2 flex items-center justify-between text-[12px]" style={{ color: textMuted, borderTop: `1px solid ${cardBorder}` }}>
               <span>共 {hits.length} 条结果</span>
               <span>Cmd/Ctrl+K · Esc 关闭</span>
             </div>
@@ -240,16 +241,16 @@ function HitRow({ hit, onClick, cardBg, cardBorder, text, textMuted, accent }: {
       className="w-full text-left flex items-start gap-3 px-5 py-2 transition-colors hover:opacity-80"
       style={{ background: 'transparent' }}
     >
-      <span className="text-[9px] mt-0.5 px-1.5 py-0.5 rounded shrink-0" style={{
+      <span className="text-[12px] mt-0.5 px-1.5 py-0.5 rounded shrink-0" style={{
         background: cardBg, color: textMuted, border: `1px solid ${cardBorder}`,
       }}>
         {hit.category}
       </span>
       <div className="flex-1 min-w-0">
         <div className="text-sm font-serif truncate" style={{ color: text }}>{hit.title}</div>
-        <div className="text-[10px] truncate mt-0.5" style={{ color: textMuted }}>{hit.snippet}</div>
+        <div className="text-[12px] truncate mt-0.5" style={{ color: textMuted }}>{hit.snippet}</div>
       </div>
-      <span className="text-[9px] mt-1" style={{ color: textMuted }}>→</span>
+      <span className="text-[12px] mt-1" style={{ color: textMuted }}>→</span>
     </button>
   );
 }

@@ -56,7 +56,7 @@ export default function QiguaCoin({ onResult }: Props) {
           return (
             <div key={label} className="flex flex-col items-center gap-1.5 flex-1">
               <div
-                className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium transition-colors duration-300"
+                className="w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-medium transition-colors duration-300"
                 style={{
                   background: state === 'done' ? c.goldSolid : state === 'active' ? 'transparent' : c.featureBg,
                   color: state === 'done' ? '#08080a' : state === 'active' ? c.goldSolid : c.textFaint,
@@ -66,7 +66,7 @@ export default function QiguaCoin({ onResult }: Props) {
                 {state === 'done' ? '✓' : i + 1}
               </div>
               <span
-                className="text-[9px] tracking-wider"
+                className="text-[12px] tracking-wider"
                 style={{ color: state === 'active' ? c.goldSolid : c.textMuted }}
               >
                 {label}
@@ -119,12 +119,12 @@ export default function QiguaCoin({ onResult }: Props) {
             >
               {'●'.repeat(n) + '○'.repeat(3 - n)}
             </span>
-            <span className="text-[11px]" style={{ color: c.textMuted }}>
+            <span className="text-[13px]" style={{ color: c.textMuted }}>
               {COIN_LABELS[n]}
             </span>
             {n === 3 && (
               <span
-                className="absolute -top-2 -right-2 text-[9px] px-1.5 py-0.5 rounded-full"
+                className="absolute -top-2 -right-2 text-[12px] px-1.5 py-0.5 rounded-full"
                 style={{ background: c.goldSolid, color: '#08080a' }}
               >
                 老阳
@@ -132,7 +132,7 @@ export default function QiguaCoin({ onResult }: Props) {
             )}
             {n === 0 && (
               <span
-                className="absolute -top-2 -right-2 text-[9px] px-1.5 py-0.5 rounded-full"
+                className="absolute -top-2 -right-2 text-[12px] px-1.5 py-0.5 rounded-full"
                 style={{ background: c.textSecond, color: c.bgBase }}
               >
                 老阴
@@ -173,7 +173,7 @@ export default function QiguaCoin({ onResult }: Props) {
             {counts.map((n, i) => (
               <span
                 key={i}
-                className="text-[11px] px-2 py-1 rounded-md"
+                className="text-[13px] px-2 py-1 rounded-md"
                 style={{ background: c.cardBg, color: c.goldSolid, border: `1px solid ${c.cardBorder}` }}
               >
                 {YAO_LABELS[i]}：{n} 背
@@ -187,7 +187,7 @@ export default function QiguaCoin({ onResult }: Props) {
       {counts.length > 0 && !done && (
         <button
           onClick={reset}
-          className="w-full text-[11px] py-2 rounded-lg transition-colors"
+          className="w-full text-[13px] py-2 rounded-lg transition-colors"
           style={{ color: c.textMuted, border: `1px dashed ${c.featureBord}` }}
         >
           重新起卦

@@ -20,6 +20,7 @@ import {
   type PatternCategory,
   type PatternLevel,
 } from '@/lib/ziwei/pattern-catalog';
+import SiteFooter from '@/components/SiteFooter';
 
 export default function PatternKnowledgePage() {
   const [query, setQuery] = useState('');
@@ -41,13 +42,13 @@ export default function PatternKnowledgePage() {
       {/* Top bar */}
       <div className="px-6 py-4 flex items-center justify-between"
         style={{ borderBottom: '1px solid rgba(184,146,42,0.15)', background: 'var(--bg-page)' }}>
-        <Link href="/knowledge" style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.3em', textDecoration: 'none' }}>
+        <Link href="/knowledge" style={{ fontSize: '14px', color: 'var(--ac-text)', letterSpacing: '0.3em', textDecoration: 'none' }}>
           ← 知识库
         </Link>
-        <div style={{ fontSize: '12px', color: 'var(--tx-3)', letterSpacing: '0.2em' }}>
+        <div style={{ fontSize: '14px', color: 'var(--tx-3)', letterSpacing: '0.2em' }}>
           紫微斗数格局词典
         </div>
-        <Link href="/library" style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.2em', textDecoration: 'none' }}>
+        <Link href="/library" style={{ fontSize: '14px', color: 'var(--ac-text)', letterSpacing: '0.2em', textDecoration: 'none' }}>
           古籍 →
         </Link>
       </div>
@@ -56,14 +57,14 @@ export default function PatternKnowledgePage() {
       <section className="text-center px-6 py-12">
         <div className="flex items-center justify-center gap-3 mb-3">
           <div style={{ height: '1px', width: '48px', background: 'linear-gradient(to right, transparent, rgba(184,146,42,0.4))' }} />
-          <span style={{ fontSize: '11px', color: 'var(--ac)', letterSpacing: '0.4em' }}>PATTERN LIBRARY</span>
+          <span style={{ fontSize: '13px', color: 'var(--ac-text)', letterSpacing: '0.4em' }}>PATTERN LIBRARY</span>
           <div style={{ height: '1px', width: '48px', background: 'linear-gradient(to left, transparent, rgba(184,146,42,0.4))' }} />
         </div>
         <h1 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 700, color: 'var(--tx-0)', letterSpacing: '0.15em', marginBottom: '10px' }}>
           紫微格局词典
         </h1>
-        <p style={{ fontSize: '14px', color: 'var(--tx-2)', letterSpacing: '0.06em', maxWidth: 660, margin: '0 auto', lineHeight: 1.7 }}>
-          收录 <strong style={{ color: 'var(--ac)' }}>{PATTERN_CATALOG.length}</strong> 条经典格局，分上/中/助力/基础/凶 五大类<br />
+        <p style={{ fontSize: '16px', color: 'var(--tx-2)', letterSpacing: '0.06em', maxWidth: 660, margin: '0 auto', lineHeight: 1.7 }}>
+          收录 <strong style={{ color: 'var(--ac-text)' }}>{PATTERN_CATALOG.length}</strong> 条经典格局，分上/中/助力/基础/凶 五大类<br />
           每条注明触发条件、影响、吉凶出处；含倪师《天纪》立场
         </p>
       </section>
@@ -73,7 +74,7 @@ export default function PatternKnowledgePage() {
         <div className="grid gap-3 sm:grid-cols-3 mb-4">
           {/* Search */}
           <div className="sm:col-span-1">
-            <label style={{ fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.2em', display: 'block', marginBottom: 4 }}>
+            <label style={{ fontSize: '13px', color: 'var(--tx-3)', letterSpacing: '0.2em', display: 'block', marginBottom: 4 }}>
               关键词检索
             </label>
             <input
@@ -88,7 +89,7 @@ export default function PatternKnowledgePage() {
                 border: '1px solid rgba(184,146,42,0.3)',
                 borderRadius: 8,
                 padding: '8px 12px',
-                fontSize: 12,
+                fontSize: 14,
                 outline: 'none',
               }}
             />
@@ -96,7 +97,7 @@ export default function PatternKnowledgePage() {
 
           {/* Category filter */}
           <div>
-            <label style={{ fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.2em', display: 'block', marginBottom: 4 }}>
+            <label style={{ fontSize: '13px', color: 'var(--tx-3)', letterSpacing: '0.2em', display: 'block', marginBottom: 4 }}>
               分类
             </label>
             <div className="flex flex-wrap gap-1">
@@ -113,7 +114,7 @@ export default function PatternKnowledgePage() {
 
           {/* Level filter */}
           <div>
-            <label style={{ fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.2em', display: 'block', marginBottom: 4 }}>
+            <label style={{ fontSize: '13px', color: 'var(--tx-3)', letterSpacing: '0.2em', display: 'block', marginBottom: 4 }}>
               吉凶
             </label>
             <div className="flex flex-wrap gap-1">
@@ -130,15 +131,15 @@ export default function PatternKnowledgePage() {
         </div>
 
         {/* count */}
-        <div style={{ fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.2em' }}>
-          命中 <span style={{ color: 'var(--ac)', fontWeight: 600 }}>{total}</span> / {PATTERN_CATALOG.length} 条
+        <div style={{ fontSize: '13px', color: 'var(--tx-3)', letterSpacing: '0.2em' }}>
+          命中 <span style={{ color: 'var(--ac-text)', fontWeight: 600 }}>{total}</span> / {PATTERN_CATALOG.length} 条
         </div>
       </section>
 
       {/* Cards grouped */}
       <section className="max-w-5xl mx-auto px-6 pb-20 space-y-10">
         {total === 0 && (
-          <div className="text-center py-20" style={{ fontSize: 14, color: 'var(--tx-3)' }}>
+          <div className="text-center py-20" style={{ fontSize: 16, color: 'var(--tx-3)' }}>
             未匹配到任何格局 — 试试其他关键词或分类。
           </div>
         )}
@@ -149,10 +150,10 @@ export default function PatternKnowledgePage() {
           return (
             <div key={cat}>
               <div className="flex items-baseline gap-3 mb-4">
-                <h2 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--tx-0)', letterSpacing: '0.1em' }}>
+                <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--tx-0)', letterSpacing: '0.1em' }}>
                   {CATEGORY_LABEL[cat]}
                 </h2>
-                <span style={{ fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.15em' }}>
+                <span style={{ fontSize: '13px', color: 'var(--tx-3)', letterSpacing: '0.15em' }}>
                   共 {list.length} 条
                 </span>
                 <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, rgba(184,146,42,0.35), transparent)' }} />
@@ -163,6 +164,7 @@ export default function PatternKnowledgePage() {
             </div>
           );
         })}
+      <SiteFooter />
       </section>
     </div>
   );
@@ -175,12 +177,12 @@ function PillBtn({
     <button
       onClick={onClick}
       style={{
-        fontSize: 10,
+        fontSize: 12,
         padding: '4px 10px',
         borderRadius: 999,
         border: `1px solid ${active ? 'rgba(184,146,42,0.6)' : 'rgba(184,146,42,0.18)'}`,
         background: active ? 'rgba(184,146,42,0.12)' : 'transparent',
-        color: active ? 'var(--ac)' : 'var(--tx-2)',
+        color: active ? 'var(--ac-text)' : 'var(--tx-2)',
         cursor: 'pointer',
         letterSpacing: '0.1em',
       }}
@@ -211,7 +213,7 @@ function PatternCard({ p }: { p: PatternEntry }) {
         </div>
         <div
           style={{
-            fontSize: 9,
+            fontSize: 11,
             padding: '2px 6px',
             borderRadius: 4,
             border: `1px solid ${LEVEL_COLOR[p.level]}55`,
@@ -224,13 +226,13 @@ function PatternCard({ p }: { p: PatternEntry }) {
           {LEVEL_LABEL[p.level]}
         </div>
       </div>
-      <div style={{ fontSize: 12, color: 'var(--tx-2)', lineHeight: 1.65, marginBottom: 8 }}>
+      <div style={{ fontSize: 14, color: 'var(--tx-2)', lineHeight: 1.65, marginBottom: 8 }}>
         {p.summary}
       </div>
       <div className="flex flex-wrap gap-1">
         {p.tags.slice(0, 4).map(t => (
           <span key={t} style={{
-            fontSize: 9,
+            fontSize: 11,
             padding: '2px 6px',
             borderRadius: 4,
             border: '1px solid rgba(184,146,42,0.18)',
@@ -239,7 +241,7 @@ function PatternCard({ p }: { p: PatternEntry }) {
           }}>{t}</span>
         ))}
       </div>
-      <div style={{ fontSize: 10, color: 'var(--tx-3)', letterSpacing: '0.08em', marginTop: 8, fontStyle: 'italic' }}>
+      <div style={{ fontSize: 12, color: 'var(--tx-3)', letterSpacing: '0.08em', marginTop: 8, fontStyle: 'italic' }}>
         {p.source}
       </div>
     </Link>

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ScrollIntro from '@/components/ScrollIntro';
+import SiteFooter from '@/components/SiteFooter';
 
 export default function PreviewPage() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function PreviewPage() {
           fontFamily: '"STSong", "Songti SC", serif',
           textAlign: 'center',
         }}>
-          <div style={{ fontSize: '11px', letterSpacing: '0.4em', color: '#c89647', marginBottom: '16px' }}>
+          <div style={{ fontSize: '13px', letterSpacing: '0.4em', color: '#c89647', marginBottom: '16px' }}>
             SCROLL · INTRO · PREVIEW
           </div>
           <h1 style={{
@@ -40,7 +41,7 @@ export default function PreviewPage() {
             紫微卷轴 · 开场预览
           </h1>
           <p style={{
-            fontSize: '14px', color: '#a89878',
+            fontSize: '16px', color: '#a89878',
             maxWidth: '500px', lineHeight: 1.9,
             letterSpacing: '0.1em',
             marginBottom: '40px',
@@ -57,7 +58,7 @@ export default function PreviewPage() {
                 background: '#a8302a',
                 color: '#f5ecd7',
                 padding: '14px 28px',
-                fontSize: '14px',
+                fontSize: '16px',
                 fontFamily: '"STSong", serif',
                 letterSpacing: '0.3em',
                 border: 'none',
@@ -73,7 +74,7 @@ export default function PreviewPage() {
                 background: 'transparent',
                 color: '#e8dcc4',
                 padding: '14px 28px',
-                fontSize: '14px',
+                fontSize: '16px',
                 fontFamily: '"STSong", serif',
                 letterSpacing: '0.3em',
                 border: '1px solid rgba(232,220,196,0.25)',
@@ -85,7 +86,7 @@ export default function PreviewPage() {
           </div>
 
           <div style={{
-            marginTop: '40px', fontSize: '12px', color: '#6e6048',
+            marginTop: '40px', fontSize: '14px', color: '#a89878',
             letterSpacing: '0.15em',
             display: 'flex', gap: '20px',
           }}>
@@ -93,7 +94,7 @@ export default function PreviewPage() {
             <span>·</span>
             <Link href="/chart" style={{ color: 'inherit', textDecoration: 'none' }}>命盘</Link>
             <span>·</span>
-            <Link href="/heming" style={{ color: 'inherit', textDecoration: 'none' }}>合盘</Link>
+            <Link href="/heming" style={{ color: 'inherit', textDecoration: 'none' }}>合婚</Link>
           </div>
 
           {/* 时间轴说明 */}
@@ -102,24 +103,25 @@ export default function PreviewPage() {
             padding: '24px 32px',
             border: '1px solid rgba(232,220,196,0.12)',
             maxWidth: '500px',
-            fontSize: '12px',
+            fontSize: '14px',
             color: '#a89878',
             lineHeight: 1.9,
             letterSpacing: '0.1em',
             fontFamily: '"STKaiti", serif',
             textAlign: 'left',
           }}>
-            <div style={{ color: '#c89647', marginBottom: '12px', letterSpacing: '0.2em', fontSize: '11px' }}>动画时间轴</div>
+            <div style={{ color: '#c89647', marginBottom: '12px', letterSpacing: '0.2em', fontSize: '13px' }}>动画时间轴</div>
             <div>· 0.0 ~ 1.7 s &nbsp;&nbsp;卷轴从中央向两侧展开</div>
             <div>· 1.9 ~ 2.7 s &nbsp;&nbsp;宣纸内容浮现（标题 + 副标 + 朱砂印）</div>
             <div>· 2.7 ~ 3.5 s &nbsp;&nbsp;停留欣赏</div>
             <div>· 3.5 ~ 4.2 s &nbsp;&nbsp;整体淡出，进入主页</div>
-            <div style={{ marginTop: '12px', color: '#6e6048', fontSize: '11px' }}>
+            <div style={{ marginTop: '12px', color: '#a89878', fontSize: '13px' }}>
               用户随时可点右下「跳过」直接进入主页。
             </div>
           </div>
         </main>
       )}
+      <SiteFooter />
     </>
   );
 }

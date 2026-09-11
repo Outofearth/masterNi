@@ -40,7 +40,7 @@ export default function StarText({ text }: { text: string }) {
             title={`查「${part}」在古籍中的全部出处`}
             aria-label={`查「${part}」在古籍中的全部出处`}
             style={{
-              color: 'var(--ac)',
+              color: 'var(--ac-text)',
               textDecoration: 'none',
               borderBottom: '1px dashed rgba(184,146,42,0.55)',
               fontWeight: 600,

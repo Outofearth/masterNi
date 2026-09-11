@@ -11,31 +11,41 @@
   /* 标题/古风衬线（打印友好的宋体系同源字族） */
   --font-serif: 'Source Han Serif SC', 'Noto Serif CJK SC', 'Songti SC', 'SimSun', Georgia, serif;
 
-  /* 背景层级 */
-  --bg-0: #FAFAF9;
-  --bg-1: #F4F3EF;
-  --bg-2: #ECEAE4;
-  --bg-inv: #0D0D0B;
+  /* 背景层级（暖米阶梯 —— 全站唯一浅色底体系）
+     来源统一：--bg-0 = brand.ts cream；--bg-1 = 天纪 _colors.ts bgBase（浅）。
+     此前冷灰(#FAFAF9) / 暖米(#f5efe0) / 米色(#fbf6e8) 三套并存，此处收敛为一条阶梯。 */
+  --bg-0: #fbf6e8;   /* 页面底 */
+  --bg-1: #f5efe0;   /* 次级面 / 内嵌块 */
+  --bg-2: #ece4d0;   /* 三级面 / hover 底 */
+  --bg-inv: #0D0D0B; /* 深色区块（反转） */
 
   /* 文字层级 */
   --tx-0: #0D0D0B;
   --tx-1: #1A1A18;
   --tx-2: #4A4A45;
-  --tx-3: #8A8A82;
+  /* 辅助文字：原 #8A8A82 在米底上仅 3.03:1（不达 WCAG AA），
+     加深到 #66665F → 三种底最差 5.04:1。这是全站用量最大的小字色（辅助说明 / 标签）。 */
+  --tx-3: #66665F;
   --tx-inv: #F0EDE8;
   --tx-inv2: rgba(240,237,232,0.65);
 
-  /* 唯一强调色：墨金 */
-  --ac:     #B8922A;
-  --ac-dim: #7A5F1A;
-  --ac-bg:  rgba(184,146,42,0.07);
-  --ac-bdr: rgba(184,146,42,0.22);
+  /* 唯一强调色：墨金
+     分工：--ac / --ac-dim / --ac-bg / --ac-bdr 用于「装饰」（边框、底纹、渐变、按钮底）；
+           --ac-text / --ac-strong 用于「文字」，是金色文字的唯一来源（浅色 #8b6410 达 WCAG AA）。
+     此前浅色下存在 3 种金：--ac #B8922A / _colors.ts goldSolid #8b6410 / SiteHeader 硬编 #d4a843，
+     其中 #d4a843 在米底上仅约 2.0:1，已全部改为引用 --ac-text。 */
+  --ac:        #B8922A;
+  --ac-dim:    #7A5F1A;
+  --ac-bg:     rgba(184,146,42,0.07);
+  --ac-bdr:    rgba(184,146,42,0.22);
+  --ac-text:   #805c0e;  /* 金色文字（浅色）—— 最差 5.30:1（原 #8b6410 仅 4.66，余量太薄） */
+  --ac-strong: #6a4206;  /* 金色文字 hover / 强强调 —— 最差 7.64:1 */
 
   /* 四化语义色（仅用于命盘数据，不用于UI装饰）——主题感知：命盘表面跟随主题，
      浅色主题用深版保证对比度，暗色主题用亮版（保持既有观感）。 */
   --lu:   #1f7a3f;  --lu-bg:   rgba(31,122,63,0.08);   --lu-bdr:   rgba(31,122,63,0.22);
   --quan: #1d4ed8;  --quan-bg: rgba(29,78,216,0.08);   --quan-bdr: rgba(29,78,216,0.22);
-  --ke:   #9a7b11;  --ke-bg:   rgba(154,123,17,0.08);  --ke-bdr:   rgba(154,123,17,0.22);
+  --ke:   #7a600c;  --ke-bg:   rgba(122,96,12,0.08);   --ke-bdr:   rgba(122,96,12,0.22);
   --ji:   #c0392b;  --ji-bg:   rgba(192,57,43,0.08);   --ji-bdr:   rgba(192,57,43,0.22);
 
   /* 吉/凶状态色（庙旺·最佳宫位 / 落陷·注意宫位） */
@@ -48,12 +58,17 @@
 
   /* 命盘星曜语义色（主题感知：浅色用深版保证对比度，暗色用亮版）——统一替代散落的 amber/sky/red 硬编色 */
   --star-major:        #8a5a0e;  /* 主星·普通（金） */
-  --star-major-bright: #9a6a08;  /* 主星·庙旺（更饱和金） */
+  --star-major-bright: #8f5f05;  /* 主星·庙旺（更饱和金）—— 原 #9a6a08 仅 4.12，调整至 4.81 */
   --star-major-dim:    #6f4a16;  /* 主星·落陷（暗金，仍达 WCAG AA） */
-  --ming:              #b45309;  /* 命宫标（朱） */
-  --shen:              #0e7490;  /* 身宫标（青） */
-  --lucky:             #0e7490;  /* 吉星（青，与身宫同族） */
+  --ming:              #a84b07;  /* 命宫标（朱）—— 原 #b45309 仅 4.38，加深至 4.98 */
+  --shen:              #0c6a84;  /* 身宫标（青）—— 原 #0e7490 仅 4.67，加深至 5.37 */
+  --lucky:             #0c6a84;  /* 吉星（青，与身宫同族） */
   --sha:               #9f2d23;  /* 煞星（砖红，去饱和以区别于化忌亮红） */
+
+  /* 搜索分类色（GlobalSearch 用，浅色下保证 ≥4.5:1） */
+  --cat-earth:         #7d5f40;  /* 地纪 / 堪舆（棕）—— 原 #8a6a4a 仅 4.32 */
+  --cat-muted:         #5f6b7a;  /* DVD / 语录 / 名人 / 古籍（蓝灰） */
+  --cat-renji:         #3f6b3c;  /* 人纪（绿，中医模块主色）—— 原硬编 #5b8c5a 仅 3.64 */
 
   /* 命盘工作台语义 token（接入双主题；原代码大量引用但从未定义，此处补齐别名） */
   --t-bg:         var(--bg-0);
@@ -61,11 +76,11 @@
   --t-card:       var(--bg-card);
   --t-border:     var(--bdr);
   --t-border-acc: var(--ac-bdr);
-  --t-faint:      #6b6b63;            /* 浅色下由 #8A8A82 降级到 #6b6b63，9px 小字也可达 WCAG AA 4.5:1 */
+  --t-faint:      #63635b;            /* 浅色下由 #8A8A82 降级到 #63635b，11px 小字也可达 WCAG AA ≈5.2:1 */
   --t-text:       var(--tx-1);
   --t-text1:      var(--tx-0);
   --t-text2:      var(--tx-2);
-  --t-gold:       var(--ac-dim);      /* 浅色下金用更深 ac-dim，保证金字可读（原 --ac 仅 2.9:1 不合格） */
+  --t-gold:       var(--ac-text);    /* 文字金统一走 --ac-text（原 --ac-dim / #d4a843 分散定义已收敛） */
 
   /* 边框 */
   --bdr:      rgba(0,0,0,0.07);
@@ -78,9 +93,10 @@
   --sh-md: 0 4px 20px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
   --sh-lg: 0 12px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06);
 
-  /* 卡片/内容块背景 */
-  --bg-card: #FFFFFF;
-  --bg-page: #fbf6e8;
+  /* 卡片/内容块背景：卡片为暖白（比页底亮一档，形成纸感层次）；
+     --bg-page 收敛为 --bg-0 别名，不再独立维护第三套米色。 */
+  --bg-card: #fffdf6;
+  --bg-page: var(--bg-0);
 
   /* 圆角 */
   --r-xs:  4px;
@@ -98,17 +114,22 @@
   --bg-2: #141e30;
   --bg-inv: #f0ede8;
 
-  --tx-0: #e8eef6;
-  --tx-1: #dce4f0;
+  /* 暗色文字：原 #e8eef6 / #dce4f0 在近黑底上达 17.2:1 / 15.7:1，长时间阅读偏刺眼
+     （halation）。降到 15.4:1 / 14.1:1，仍属 AAA，观感更柔和；
+     辅助文字 #6a7a96 在卡片上仅 3.84:1（不达 AA）→ #8496b4 抬到 5.57:1。 */
+  --tx-0: #dbe2ec;
+  --tx-1: #d0d9e5;
   --tx-2: #9db0d0;
-  --tx-3: #6a7a96;
+  --tx-3: #8496b4;
   --tx-inv: #0d0d0b;
   --tx-inv2: rgba(13,13,11,0.65);
 
-  --ac:     #d4a843;
-  --ac-dim: #e8c060;
-  --ac-bg:  rgba(212,168,67,0.10);
-  --ac-bdr: rgba(212,168,67,0.25);
+  --ac:        #d4a843;
+  --ac-dim:    #e8c060;
+  --ac-bg:     rgba(212,168,67,0.10);
+  --ac-bdr:    rgba(212,168,67,0.25);
+  --ac-text:   #e8c060;  /* 金色文字（暗色）—— 对比度 ≈ 8.4:1 on #020810 */
+  --ac-strong: #f5d77a;  /* 金色文字 hover / 强强调 */
 
   --bdr:      rgba(255,255,255,0.07);
   --bdr-med:  rgba(255,255,255,0.12);
@@ -128,11 +149,11 @@
   --t-card:       rgba(255,255,255,0.04);
   --t-border:     rgba(255,255,255,0.07);
   --t-border-acc: rgba(212,168,67,0.25);
-  --t-faint:      #6a7a96;
-  --t-text:       #dce4f0;
-  --t-text1:      #e8eef6;
+  --t-faint:      #8496b4;
+  --t-text:       #d0d9e5;
+  --t-text1:      #dbe2ec;
   --t-text2:      #9db0d0;
-  --t-gold:       #d4a843;
+  --t-gold:       var(--ac-text);   /* 与浅色同源：文字金唯一来源 --ac-text */
 
   /* 四化 / 状态 / 强调色 暗色覆盖（命盘表面为暗底，用亮版保证对比度） */
   --lu:   #4ade80;  --lu-bg:   rgba(74,222,128,0.08);  --lu-bdr:   rgba(74,222,128,0.22);
@@ -152,6 +173,10 @@
   --shen:              #22d3ee;
   --lucky:             #22d3ee;
   --sha:               #f08a7e;
+
+  --cat-earth:         #d0ab86;
+  --cat-muted:         #9db0d0;
+  --cat-renji:         #8fc48a;
 }
 
 /* ─── 全局基础 ───────────────────────────────────────────── */
@@ -167,7 +192,7 @@ body {
   color: var(--tx-1);
   font-family: var(--font);
   /* 阅读字号基准 15px；无细体（≥400）保证清晰易读 */
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -184,6 +209,26 @@ body {
   background: rgba(184,146,42,0.15);
   color: var(--ac-dim);
 }
+
+/* ─── 字号阶梯（可读性改造后）───────────────────────────
+   全站 711 处显式字号已统一映射到本阶梯（原 10px 占 45%，对视力不佳读者
+   不可读）。硬底线抬到 11px，正文 16px。
+
+     · --fs-badge   12px —— 徽章 / 角标 / 命盘宫格内极密标注
+     · --fs-caption 14px —— 辅助说明 / 标签 / 次要信息（导航、卡片副文本）
+     · --fs-body    16px —— 正文
+
+   映射规则（一次到位，勿再引入中间档）：
+     ≤9 → 11 · 10 → 12 · 11 → 13 · 12 → 14 · 13 → 15 · 14 → 16 · 15 → 16 · ≥16 不变
+   例外：ShareCardCanvas（680×420 固定尺寸导出画布）字号独立，不套用本阶梯。 */
+:root {
+  --fs-badge:   12px;
+  --fs-caption: 14px;
+  --fs-body:    16px;
+}
+.fs-badge   { font-size: var(--fs-badge); }
+.fs-caption { font-size: var(--fs-caption); }
+.fs-body    { font-size: var(--fs-body); }
 
 /* ─── 工具类 ─────────────────────────────────────────────── */
 
@@ -248,7 +293,7 @@ body {
   border-radius: var(--r-pill);
   background: var(--tx-0);
   color: var(--bg-0);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   letter-spacing: 0.02em;
   border: none;
@@ -266,16 +311,19 @@ body {
   padding: 12px 28px;
   border-radius: var(--r-pill);
   background: var(--ac);
-  color: white;
-  font-size: 14px;
-  font-weight: 500;
+  /* 深字压金底：浅色 5.96:1 / 暗色 8.78:1。
+     原为白字，浅色仅 2.92:1、暗色仅 2.21:1，两个主题都不达 AA。
+     金在双主题下都是中间亮度色，故「深色文字」是唯一两边都成立的方案。 */
+  color: #1A1A18;
+  font-size: 16px;
+  font-weight: 600;
   letter-spacing: 0.02em;
   border: none;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.12s ease;
+  transition: filter 0.15s ease, transform 0.12s ease;
   text-decoration: none;
 }
-.btn-accent:hover { background: var(--ac-dim); }
+.btn-accent:hover { filter: brightness(0.93); }
 .btn-accent:active { transform: scale(0.98); }
 
 .btn-ghost {
@@ -286,7 +334,7 @@ body {
   border-radius: var(--r-pill);
   background: transparent;
   color: var(--tx-1);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
   border: 1px solid var(--bdr-heavy);
   cursor: pointer;
@@ -307,7 +355,7 @@ body {
 .tab-item {
   padding: 7px 16px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 400;
   color: var(--tx-3);
   cursor: pointer;
@@ -332,7 +380,7 @@ body {
 .sihua-badge {
   display: inline-flex;
   align-items: center;
-  font-size: 10px;
+  font-size: 12px;
   font-family: var(--font-mono);
   padding: 1px 5px;
   border-radius: var(--r-xs);
@@ -348,7 +396,7 @@ body {
   border: 1px solid var(--bdr-med);
   border-radius: var(--r-sm);
   padding: 10px 14px;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--tx-1);
   font-family: var(--font);
   outline: none;
@@ -366,7 +414,7 @@ body {
 
 /* 标签 */
 .label-section {
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--tx-3);
@@ -386,18 +434,25 @@ body {
 .animate-fade-in { animation: fade-in 0.4s ease forwards; }
 
 /* ─── 渐变文字（3.0 主标题用） ──────────────────────────── */
+/* 自带主题感知渐变的兜底：此前只有 .grad-text-dark / .grad-text-light 携带 background-image，
+   漏挂伴随类的主标题（/tianji、/tianji/yijing、/tianji/[slug] …）会得到
+   「background-image: none + 文字全透明」→ 标题占位但完全不可见。此处由 .grad-text 自身兜住。 */
 .grad-text {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
   display: inline-block;
+  background-image: linear-gradient(160deg, #6a4206 0%, #855410 40%, #6a4206 70%, #7d4d08 100%);
+}
+[data-theme="dark"] .grad-text {
+  background-image: linear-gradient(160deg, #c8993a 0%, #f0d070 40%, #c8993a 70%, #f0c755 100%);
 }
 .grad-text-dark {
   background-image: linear-gradient(160deg, #c8993a 0%, #f0d070 40%, #c8993a 70%, #f0c755 100%);
 }
 .grad-text-light {
-  background-image: linear-gradient(160deg, #6a4206 0%, #9a6a10 40%, #6a4206 70%, #885010 100%);
+  background-image: linear-gradient(160deg, #6a4206 0%, #855410 40%, #6a4206 70%, #7d4d08 100%);
 }
 
 /* ─── 命盘工作台响应式 ─────────────────────────────────── */
@@ -489,9 +544,9 @@ body {
   .chart-topbar button,
   .chart-topbar span { white-space: nowrap; }
 
-  /* 命盘宫格：紧凑 */
+  /* 命盘宫格：移动端紧凑（字号阶梯提升后底线上调到 96，仍低于桌面 118） */
   .palace-cell {
-    min-height: 74px !important;
+    min-height: 96px !important;
     padding: 6px 5px 5px !important;
   }
   .palace-cell-name { padding-right: 22px !important; }
@@ -503,7 +558,7 @@ body {
 
 /* 极小屏（<360）进一步收紧 */
 @media (max-width: 359px) {
-  .palace-cell { min-height: 68px !important; padding: 5px 4px !important; }
+  .palace-cell { min-height: 90px !important; padding: 5px 4px !important; }
   .chart-workspace-left { padding: 10px 8px 16px; }
   .chart-topbar { padding: 0 8px; gap: 6px; }
 }
@@ -519,6 +574,28 @@ body {
 h1, h2, h3 {
   font-family: var(--font-serif);
   font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ─── 标题三档（P1-6 统一）─────────────────────────────
+   全站只用这三档，禁止再局部硬编 font-family：
+     · .title-section 章节大标题 —— 衬线 + 渐变（配合 .grad-text 使用）
+     · .title-card    卡片标题   —— 纯色衬线，不用渐变
+     · .title-sub     页内小标题 —— 无衬线（sans），与正文同族以弱化层级
+   注：h1/h2/h3 已默认衬线，下面三个类只补语义与字距，不重复声明字体族以外的东西。 */
+.title-section {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.title-card {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.title-sub {
+  font-family: var(--font);
+  font-weight: 600;
   letter-spacing: 0.02em;
 }
 button, input, select, textarea {

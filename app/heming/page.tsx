@@ -7,6 +7,7 @@ import { formToBirthInfo } from '@/lib/ziwei/share';
 import type { BirthInfo, ZiweiChart } from '@/lib/ziwei/types';
 import { useTheme } from '@/components/ThemeProvider';
 import { exportPdfReport, chartSectionHtml, mdToHtml } from '@/lib/reportExport';
+import SiteFooter from '@/components/SiteFooter';
 
 function escHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -22,7 +23,7 @@ function AiContent({ text, streaming }: { text: string; streaming?: boolean }) {
         if (sectionMatch) {
           return (
             <div key={i} style={{ paddingTop: i === 0 ? 0 : '14px', paddingBottom: '4px' }}>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ac)', letterSpacing: '0.04em' }}>
+              <span style={{ fontSize: '15px', fontWeight: 600, color: 'var(--ac-text)', letterSpacing: '0.04em' }}>
                 【{sectionMatch[1]}】
               </span>
             </div>
@@ -31,7 +32,7 @@ function AiContent({ text, streaming }: { text: string; streaming?: boolean }) {
         if (line.trim() === '') return <div key={i} style={{ height: '4px' }} />;
         const parts = line.split(/\*\*(.+?)\*\*/);
         return (
-          <div key={i} style={{ fontSize: '14px', lineHeight: 1.8, color: 'var(--tx-2)' }}>
+          <div key={i} style={{ fontSize: '16px', lineHeight: 1.8, color: 'var(--tx-2)' }}>
             {parts.map((part, j) =>
               j % 2 === 0
                 ? part
@@ -64,7 +65,7 @@ export default function HemingPage() {
   const [formA, setFormA] = useState<BirthFormState | null>(null);
   const [formB, setFormB] = useState<BirthFormState | null>(null);
 
-  // ─── AI 合盘分析状态 ─────────────────────────────────────
+  // ─── AI 合婚分析状态 ─────────────────────────────────────
   const [analysis, setAnalysis] = useState('');
   const [analyzing, setAnalyzing] = useState(false);
   const [question, setQuestion] = useState('');
@@ -91,7 +92,7 @@ export default function HemingPage() {
   const isFormReady = (f: BirthFormState | null): boolean =>
     !!(f && f.year && f.month && f.day && f.gender && (f.unknownTime || (f.clockHour !== '' && f.clockMinute !== '')));
 
-  // ─── 统一入口：起盘 + 合盘分析 ─────────────────────────────
+  // ─── 统一入口：起盘 + 合婚分析 ─────────────────────────────
   const runAnalysis = useCallback(async (q?: string) => {
     setFormError(null);
     if (!isFormReady(formA) || !isFormReady(formB)) {
@@ -155,17 +156,17 @@ export default function HemingPage() {
     }
   }, [chartA, chartB, formA, formB, generateChart]);
 
-  // ─── 导出 PDF：双方命盘 + 合盘分析 ─────────────────────────
+  // ─── 导出 PDF：双方命盘 + 合婚分析 ─────────────────────────
   const exportAnalysis = useCallback(() => {
     if (!chartA || !chartB || !analysis.trim()) return;
     exportPdfReport({
-      reportTitle: '紫微合盘分析报告',
+      reportTitle: '紫微合婚分析报告',
       subtitle: `甲方 ${formA ? `${formA.year}-${formA.month}-${formA.day}` : ''} ／ 乙方 ${formB ? `${formB.year}-${formB.month}-${formB.day}` : ''}`,
       sections: [
         { html: chartSectionHtml(chartA, '甲方 A · 命盘详情') },
         { html: chartSectionHtml(chartB, '乙方 B · 命盘详情') },
         {
-          html: `<div class="sec-box"><h2>AI 合盘分析${question ? ` · ${escHtml(question)}` : ''}</h2>${mdToHtml(analysis)}</div>`,
+          html: `<div class="sec-box"><h2>AI 合婚分析${question ? ` · ${escHtml(question)}` : ''}</h2>${mdToHtml(analysis)}</div>`,
         },
       ],
       footer: '数据口径：倪海厦《天纪》体系 · 仅供传统文化研究参考',
@@ -180,47 +181,29 @@ export default function HemingPage() {
   };
 
   const labelStyle = {
-    fontSize: '10px', letterSpacing: '0.4em', color: 'var(--ac)', opacity: 0.7,
+    fontSize: '12px', letterSpacing: '0.4em', color: 'var(--ac-text)', opacity: 0.7,
     marginBottom: '16px', display: 'block',
   };
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-0)' }}>
-      {/* 顶栏 */}
-      <header style={{
-        position: 'sticky', top: 0, zIndex: 50,
-        background: isDark ? 'rgba(2,8,16,0.88)' : 'rgba(250,245,235,0.92)',
-        backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid var(--bdr)',
-        display: 'flex', alignItems: 'center', padding: '0 24px', height: '52px', gap: '16px',
-      }}>
-        <button
-          onClick={() => router.push('/')}
-          style={{
-            display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px',
-            color: 'var(--tx-3)', background: 'none', border: 'none', cursor: 'pointer',
-          }}
-        >
-          <span style={{ fontSize: '16px' }}>‹</span>
-          <span>返回</span>
-        </button>
-        <div style={{ width: '1px', height: '20px', background: 'var(--bdr-med)' }} />
-        <span style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.2em' }}>合盘分析</span>
-        <div style={{ flex: 1 }} />
-        <span style={{ fontSize: '11px', color: 'var(--tx-3)' }}>感情 · 合伙 · 亲子 · 朋友</span>
-      </header>
+      {/* 顶栏已移除：全站导航统一由 SiteHeader 提供（原此处 sticky 顶栏与 SiteHeader 双层叠压）。
+          「‹ 返回」由 SiteHeader 的「首页」承担；「合婚分析 / 感情·合伙·亲子·朋友」已并入下方标题区。 */}
 
       {/* 主体 */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px 24px 80px' }}>
 
         {/* 标题 */}
         <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-          <div style={{ fontSize: '28px', color: 'var(--ac)', opacity: 0.15, marginBottom: '12px' }}>☯</div>
+          <div style={{ fontSize: '28px', color: 'var(--ac-text)', opacity: 0.15, marginBottom: '12px' }}>☯</div>
           <h1 style={{ fontSize: '22px', fontWeight: 600, letterSpacing: '0.15em', color: 'var(--tx-0)', marginBottom: '8px' }}>
-            紫微合盘
+            紫微合婚
           </h1>
-          <p style={{ fontSize: '13px', color: 'var(--tx-3)', lineHeight: 1.6 }}>
+          <p style={{ fontSize: '15px', color: 'var(--tx-3)', lineHeight: 1.6 }}>
             输入两个人的出生信息，AI 基于倪海夏体系分析双方命盘的缘分匹配度、感情走向与相处建议
+          </p>
+          <p style={{ fontSize: '14px', color: 'var(--tx-3)', letterSpacing: '0.15em', marginTop: '10px' }}>
+            感情 · 合伙 · 亲子 · 朋友
           </p>
         </div>
 
@@ -260,7 +243,7 @@ export default function HemingPage() {
           </div>
         )}
 
-        {/* ═══ 大合盘分析框（视觉中心，始终显示）════════════════ */}
+        {/* ═══ 大合婚分析框（视觉中心，始终显示）════════════════ */}
         <div ref={analysisRef} style={{
           ...cardStyle,
           minHeight: '320px',
@@ -271,19 +254,19 @@ export default function HemingPage() {
         }}>
           {/* 区块标题 */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: (analysis || analyzing) ? '20px' : '24px' }}>
-            <span style={{ color: 'var(--ac)', opacity: 0.6 }}>◉</span>
-            <span style={{ fontSize: '11px', letterSpacing: '0.3em', color: 'var(--tx-3)' }}>合盘分析 · HEMING</span>
+            <span style={{ color: 'var(--ac-text)', opacity: 0.6 }}>◉</span>
+            <span style={{ fontSize: '13px', letterSpacing: '0.3em', color: 'var(--tx-3)' }}>合婚分析 · HEMING</span>
             <button
               type="button"
               onClick={exportAnalysis}
               disabled={analyzing || !analysis}
               style={{
                 marginLeft: 'auto',
-                fontSize: '12px', fontWeight: 500,
+                fontSize: '14px', fontWeight: 500,
                 padding: '6px 14px', borderRadius: 'var(--r-pill)',
                 border: '1px solid rgba(184,146,42,0.35)',
                 background: 'rgba(184,146,42,0.10)',
-                color: 'var(--ac)',
+                color: 'var(--ac-text)',
                 cursor: analyzing || !analysis ? 'not-allowed' : 'pointer',
                 opacity: analysis ? 1 : 0.45,
                 transition: 'opacity 0.2s',
@@ -296,7 +279,7 @@ export default function HemingPage() {
           {/* 状态分支 */}
           {!analysis && !analyzing && (
             <div style={{ textAlign: 'center', padding: '32px 0' }}>
-              <div style={{ fontSize: '13px', color: 'var(--tx-3)', marginBottom: '24px', lineHeight: 1.7 }}>
+              <div style={{ fontSize: '15px', color: 'var(--tx-3)', marginBottom: '24px', lineHeight: 1.7 }}>
                 填好双方出生信息后，点击下方按钮<br />
                 AI 将基于倪海夏体系深度分析两人缘分匹配度
               </div>
@@ -305,7 +288,7 @@ export default function HemingPage() {
                 style={{
                   padding: '14px 40px', borderRadius: 'var(--r-pill)', border: 'none',
                   background: 'linear-gradient(135deg, #9a6210, #c88020)',
-                  color: '#fff8e8', fontSize: '14px', fontWeight: 600,
+                  color: '#fff8e8', fontSize: '16px', fontWeight: 600,
                   letterSpacing: '0.15em', cursor: 'pointer',
                   boxShadow: '0 4px 16px rgba(140,100,20,0.25)',
                   transition: 'transform 0.15s',
@@ -313,10 +296,10 @@ export default function HemingPage() {
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; }}
               >
-                开始合盘分析
+                开始合婚分析
               </button>
               {formError && (
-                <div style={{ marginTop: '20px', fontSize: '13px', color: '#dc2626' }}>
+                <div style={{ marginTop: '20px', fontSize: '15px', color: 'var(--state-bad)' }}>
                   {formError}
                 </div>
               )}
@@ -324,7 +307,7 @@ export default function HemingPage() {
           )}
 
           {analyzing && !analysis && (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', padding: '40px 0', color: 'var(--tx-3)', fontSize: '13px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', padding: '40px 0', color: 'var(--tx-3)', fontSize: '15px' }}>
               <div style={{
                 width: '14px', height: '14px',
                 border: '2px solid var(--bdr-med)', borderTopColor: 'var(--ac)',
@@ -337,17 +320,17 @@ export default function HemingPage() {
           {analysis && <AiContent text={analysis} streaming={analyzing} />}
 
           {analysisError && (
-            <div style={{ padding: '12px 16px', borderRadius: '10px', border: '1px solid var(--bdr)', background: 'var(--bg-card)', fontSize: '13px', color: 'var(--tx-2)', marginTop: '12px' }}>
+            <div style={{ padding: '12px 16px', borderRadius: '10px', border: '1px solid var(--bdr)', background: 'var(--bg-card)', fontSize: '15px', color: 'var(--tx-2)', marginTop: '12px' }}>
               分析暂时不可用，请重试。
             </div>
           )}
         </div>
 
-        {/* ═══ 针对合盘的追问聊天框（仅分析完成后显示）═══════════ */}
+        {/* ═══ 针对合婚的追问聊天框（仅分析完成后显示）═══════════ */}
         {analysis && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '16px' }}>
-            <div style={{ fontSize: '11px', letterSpacing: '0.2em', color: 'var(--tx-3)', marginBottom: '4px' }}>
-              针对此次合盘继续追问
+            <div style={{ fontSize: '13px', letterSpacing: '0.2em', color: 'var(--tx-3)', marginBottom: '4px' }}>
+              针对此次合婚继续追问
             </div>
 
             {/* 快捷问题 */}
@@ -364,7 +347,7 @@ export default function HemingPage() {
                   onClick={() => { setQuestion(q); runAnalysis(q); }}
                   disabled={analyzing}
                   style={{
-                    fontSize: '12px', padding: '6px 14px',
+                    fontSize: '14px', padding: '6px 14px',
                     borderRadius: 'var(--r-pill)',
                     border: '1px solid var(--bdr-med)',
                     background: 'transparent', color: 'var(--tx-2)',
@@ -390,7 +373,7 @@ export default function HemingPage() {
                 placeholder="继续追问，如：哪几年是两人感情关键期？"
                 disabled={analyzing}
                 className="input-base"
-                style={{ fontSize: '13px', flex: 1 }}
+                style={{ fontSize: '15px', flex: 1 }}
               />
               <button
                 onClick={() => runAnalysis(question || undefined)}
@@ -399,7 +382,7 @@ export default function HemingPage() {
                   padding: '10px 20px', borderRadius: 'var(--r-sm)', border: 'none',
                   background: analyzing ? 'var(--bg-2)' : 'var(--tx-0)',
                   color: analyzing ? 'var(--tx-3)' : 'white',
-                  fontSize: '13px', fontWeight: 500,
+                  fontSize: '15px', fontWeight: 500,
                   cursor: analyzing ? 'not-allowed' : 'pointer',
                   transition: 'all 0.15s', whiteSpace: 'nowrap',
                 }}
@@ -410,6 +393,9 @@ export default function HemingPage() {
           </div>
         )}
       </div>
+
+      {/* 全站统一页脚（免责声明 + 条款）—— 与其余页面口径一致 */}
+      <SiteFooter />
 
       <style>{`
         @media (max-width: 680px) {

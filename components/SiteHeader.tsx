@@ -1,49 +1,60 @@
 'use client';
 
 /**
- * 全站顶栏
+ * 全站顶栏（唯一导航实现）
  *
- * 包含：Logo / 主导航 / 搜索按钮 / 主题切换
+ * 包含：Logo / 主导航（8 项）/ 搜索 / 主题切换 / 移动端汉堡菜单
  * 在 app/layout.tsx 集成到所有页面。
+ *
+ * 设计约定（P0/P1 统一后）：
+ * - 所有颜色走 globals.css 语义 token，不再内联硬编 hex → 自动双主题、无金色漂移
+ * - 导航文字用 --tx-2（≈8:1），hover / active 用 --ac-text，均达 WCAG AA
+ * - 导航字号 13px（辅助文字下限，不用 12px 以下）
  */
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { useTheme } from '@/components/ThemeProvider';
 import GlobalSearch from './GlobalSearch';
+
+// 三纪（天纪/地纪/人纪）此前只有「天纪」在导航里，地纪、人纪只能从首页进、
+// 深层页面回不去。这里补全为平铺 8 项，保证任何页面都能直达。
+const LINKS: { href: string; label: string }[] = [
+  { href: '/', label: '首页' },
+  { href: '/chart', label: '起命盘' },
+  { href: '/heming', label: '合婚' },
+  { href: '/tianji', label: '天纪' },
+  { href: '/diji', label: '地纪' },
+  { href: '/renji', label: '人纪' },
+  { href: '/knowledge', label: '紫微图谱' },
+  { href: '/library', label: '古籍' },
+];
 
 export default function SiteHeader() {
   const { theme, toggle } = useTheme();
   const isDark = theme === 'dark';
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const bg = isDark ? 'rgba(10,12,18,0.85)' : 'rgba(248,243,232,0.92)';
-  const text = isDark ? '#e7d8b8' : '#2a2014';
-  const textMuted = isDark ? '#8b8275' : '#6b5d4f';
-  const border = isDark ? 'rgba(212,168,67,0.15)' : 'rgba(184,146,42,0.25)';
+  // 全部引用语义 token：浅暖米 / 暗墨蓝由 CSS 变量自动切换
+  const bg = 'color-mix(in srgb, var(--bg-0) 88%, transparent)';
+  const text = 'var(--tx-1)';
+  const textMuted = 'var(--tx-2)';
+  const border = 'var(--bdr-med)';
 
-  // 三纪（天纪/地纪/人纪）此前只有「天纪」在导航里，地纪、人纪只能从首页进、
-  // 深层页面回不去。这里补全为平铺 8 项，保证任何页面都能直达。
-  const links: { href: string; label: string }[] = [
-    { href: '/', label: '首页' },
-    { href: '/chart', label: '起命盘' },
-    { href: '/heming', label: '合婚' },
-    { href: '/tianji', label: '天纪' },
-    { href: '/diji', label: '地纪' },
-    { href: '/renji', label: '人纪' },
-    { href: '/knowledge', label: '紫微图谱' },
-    { href: '/library', label: '古籍' },
-  ];
+  const isActive = (href: string) =>
+    href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(href + '/');
 
   return (
     <header
-      className="sticky top-0 z-40 backdrop-blur-md"
+      className="site-header sticky top-0 z-40 backdrop-blur-md"
       style={{
         background: bg,
         borderBottom: `1px solid ${border}`,
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center gap-3 sm:gap-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 h-14 flex items-center gap-2 sm:gap-6">
         {/* Logo */}
         <Link
           href="/"
@@ -51,33 +62,53 @@ export default function SiteHeader() {
           style={{ color: text }}
           aria-label="返回首页"
         >
-          <span className="text-base font-serif tracking-widest" style={{ color: '#d4a843' }}>
+          <span
+            className="text-base font-serif tracking-widest"
+            style={{ color: 'var(--ac-text)' }}
+          >
             紫微
           </span>
-          <span className="text-[10px] hidden sm:inline tracking-[0.2em]" style={{ color: textMuted }}>
+          <span
+            className="text-[13px] hidden sm:inline tracking-[0.2em]"
+            style={{ color: 'var(--tx-3)' }}
+          >
             倪海夏正宗
           </span>
         </Link>
 
         {/* 桌面导航 */}
-        <nav className="hidden md:flex items-center gap-1 flex-1">
-          {links.map(l => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="px-3 py-1.5 rounded-full text-xs tracking-wider transition-colors hover:opacity-80"
-              style={{ color: textMuted }}
-            >
-              {l.label}
-            </Link>
-          ))}
+        <nav className="hidden md:flex items-center gap-1 flex-1" aria-label="主导航">
+          {LINKS.map(l => {
+            const active = isActive(l.href);
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                aria-current={active ? 'page' : undefined}
+                className="px-3 py-1.5 rounded-full text-[15px] tracking-wider transition-colors"
+                style={{
+                  color: active ? 'var(--ac-text)' : textMuted,
+                  fontWeight: active ? 500 : 400,
+                  background: active ? 'var(--ac-bg)' : 'transparent',
+                }}
+                onMouseEnter={e => {
+                  if (!active) e.currentTarget.style.color = 'var(--ac-strong)';
+                }}
+                onMouseLeave={e => {
+                  if (!active) e.currentTarget.style.color = textMuted;
+                }}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* 移动端菜单按钮 */}
         <button
           type="button"
           onClick={() => setMenuOpen(o => !o)}
-          className="md:hidden p-2"
+          className="md:hidden p-2 -ml-1"
           aria-expanded={menuOpen}
           aria-label="菜单"
           style={{ color: textMuted }}
@@ -99,7 +130,7 @@ export default function SiteHeader() {
         </button>
 
         {/* 搜索 + 主题切换 */}
-        <div className="flex items-center gap-2 ml-auto md:ml-0">
+        <div className="flex items-center gap-1.5 ml-auto md:ml-0">
           <div className="hidden sm:block">
             <GlobalSearch variant="full" />
           </div>
@@ -109,7 +140,7 @@ export default function SiteHeader() {
           <button
             type="button"
             onClick={toggle}
-            aria-label="切换主题"
+            aria-label={isDark ? '切换到浅色主题' : '切换到深色主题'}
             className="p-2 rounded-full"
             style={{ color: textMuted }}
           >
@@ -131,20 +162,29 @@ export default function SiteHeader() {
       {menuOpen && (
         <nav
           className="md:hidden border-t"
-          style={{ borderColor: border, background: bg }}
+          style={{ borderColor: border, background: 'var(--bg-0)' }}
+          aria-label="移动端导航"
         >
-          <div className="max-w-7xl mx-auto px-4 py-2 flex flex-col gap-1">
-            {links.map(l => (
-              <Link
-                key={l.href}
-                href={l.href}
-                onClick={() => setMenuOpen(false)}
-                className="py-2 px-2 text-sm rounded"
-                style={{ color: text }}
-              >
-                {l.label}
-              </Link>
-            ))}
+          <div className="max-w-7xl mx-auto px-3 py-2 grid grid-cols-2 gap-1">
+            {LINKS.map(l => {
+              const active = isActive(l.href);
+              return (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setMenuOpen(false)}
+                  aria-current={active ? 'page' : undefined}
+                  className="py-2.5 px-2 text-[15px] rounded-lg"
+                  style={{
+                    color: active ? 'var(--ac-text)' : text,
+                    background: active ? 'var(--ac-bg)' : 'transparent',
+                    fontWeight: active ? 500 : 400,
+                  }}
+                >
+                  {l.label}
+                </Link>
+              );
+            })}
           </div>
         </nav>
       )}

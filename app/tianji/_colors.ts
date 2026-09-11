@@ -16,8 +16,9 @@ export function useTianjiColors(theme: Theme) {
   const d = theme === 'dark';
   return {
     isDark: d,
-    // 背景
-    bgBase:        d ? '#020810'                                : '#f5efe0',
+    // 背景：统一走全站页面底 token（浅 #fbf6e8 / 暗 #020810），
+    // 不再单独维护天纪米色 #f5efe0 —— 此前使天纪页底比其它模块深一档，是 P0-1 残留。
+    bgBase:        'var(--bg-0)',
     bgAlt:         d ? 'rgba(255,255,255,0.02)'                : 'rgba(255,255,255,0.4)',
     // 导航/边框
     navBorder:     d ? 'rgba(255,255,255,0.05)'                : 'rgba(160,120,30,0.15)',

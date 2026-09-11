@@ -12,6 +12,7 @@ import {
   LEVEL_COLOR,
   CATEGORY_LABEL,
 } from '@/lib/ziwei/pattern-catalog';
+import SiteFooter from '@/components/SiteFooter';
 
 export async function generateStaticParams() {
   return PATTERN_CATALOG.map(p => ({ id: p.id }));
@@ -43,13 +44,13 @@ export default async function PatternDetailPage({ params }: { params: Promise<{ 
       {/* Top bar */}
       <div className="px-6 py-4 flex items-center justify-between"
         style={{ borderBottom: '1px solid rgba(184,146,42,0.15)', background: 'var(--bg-page)' }}>
-        <Link href="/knowledge/pattern" style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.3em', textDecoration: 'none' }}>
+        <Link href="/knowledge/pattern" style={{ fontSize: '14px', color: 'var(--ac-text)', letterSpacing: '0.3em', textDecoration: 'none' }}>
           ← 全部格局
         </Link>
-        <div style={{ fontSize: '12px', color: 'var(--tx-3)', letterSpacing: '0.2em' }}>
+        <div style={{ fontSize: '14px', color: 'var(--tx-3)', letterSpacing: '0.2em' }}>
           {pattern.category}
         </div>
-        <Link href="/chart" style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.2em', textDecoration: 'none' }}>
+        <Link href="/chart" style={{ fontSize: '14px', color: 'var(--ac-text)', letterSpacing: '0.2em', textDecoration: 'none' }}>
           起盘 →
         </Link>
       </div>
@@ -58,7 +59,7 @@ export default async function PatternDetailPage({ params }: { params: Promise<{ 
       <section className="max-w-3xl mx-auto px-6 py-10 text-center">
         <div className="flex items-center justify-center gap-2 mb-3">
           <span style={{
-            fontSize: 10,
+            fontSize: 12,
             padding: '2px 8px',
             borderRadius: 999,
             border: `1px solid ${LEVEL_COLOR[pattern.level]}55`,
@@ -67,7 +68,7 @@ export default async function PatternDetailPage({ params }: { params: Promise<{ 
             letterSpacing: '0.15em',
           }}>{LEVEL_LABEL[pattern.level]}</span>
           <span style={{
-            fontSize: 10,
+            fontSize: 12,
             padding: '2px 8px',
             borderRadius: 999,
             border: '1px solid rgba(184,146,42,0.25)',
@@ -78,7 +79,7 @@ export default async function PatternDetailPage({ params }: { params: Promise<{ 
         <h1 style={{ fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 700, color: 'var(--tx-0)', letterSpacing: '0.15em', marginBottom: 8 }}>
           {pattern.name}
         </h1>
-        <p style={{ fontSize: 14, color: 'var(--tx-2)', lineHeight: 1.7, maxWidth: 600, margin: '0 auto' }}>
+        <p style={{ fontSize: 16, color: 'var(--tx-2)', lineHeight: 1.7, maxWidth: 600, margin: '0 auto' }}>
           {pattern.summary}
         </p>
       </section>
@@ -87,16 +88,16 @@ export default async function PatternDetailPage({ params }: { params: Promise<{ 
       <section className="max-w-3xl mx-auto px-6 pb-10 space-y-4">
         {/* 触发条件 */}
         <Block title="触发条件" icon="⚙">
-          <p style={{ fontSize: 13, color: 'var(--tx-1)', lineHeight: 1.8 }}>{pattern.condition}</p>
+          <p style={{ fontSize: 15, color: 'var(--tx-1)', lineHeight: 1.8 }}>{pattern.condition}</p>
           {pattern.palaces && pattern.palaces.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-3">
               {pattern.palaces.map(p => (
                 <span key={p} style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   padding: '3px 8px',
                   borderRadius: 6,
                   border: '1px solid rgba(184,146,42,0.3)',
-                  color: 'var(--ac)',
+                  color: 'var(--ac-text)',
                   background: 'rgba(184,146,42,0.06)',
                   letterSpacing: '0.1em',
                 }}>{p}</span>
@@ -107,14 +108,14 @@ export default async function PatternDetailPage({ params }: { params: Promise<{ 
 
         {/* 完整释义 */}
         <Block title="格局释义" icon="📜">
-          <p style={{ fontSize: 13, color: 'var(--tx-1)', lineHeight: 1.85 }}>
+          <p style={{ fontSize: 15, color: 'var(--tx-1)', lineHeight: 1.85 }}>
             {pattern.description}
           </p>
         </Block>
 
         {/* 古籍出处 */}
         <Block title="古籍出处" icon="📖">
-          <p style={{ fontSize: 13, color: 'var(--tx-1)', lineHeight: 1.8, fontStyle: 'italic' }}>
+          <p style={{ fontSize: 15, color: 'var(--tx-1)', lineHeight: 1.8, fontStyle: 'italic' }}>
             {pattern.source}
           </p>
         </Block>
@@ -124,7 +125,7 @@ export default async function PatternDetailPage({ params }: { params: Promise<{ 
           <div className="flex flex-wrap gap-2">
             {pattern.tags.map(t => (
               <span key={t} style={{
-                fontSize: 11,
+                fontSize: 13,
                 padding: '3px 10px',
                 borderRadius: 999,
                 border: '1px solid rgba(184,146,42,0.25)',
@@ -154,7 +155,7 @@ export default async function PatternDetailPage({ params }: { params: Promise<{ 
       {sameCategory.length > 0 && (
         <section className="max-w-3xl mx-auto px-6 pb-20">
           <div className="flex items-baseline gap-3 mb-3">
-            <h2 style={{ fontSize: 14, fontWeight: 600, color: 'var(--tx-0)', letterSpacing: '0.15em' }}>
+            <h2 style={{ fontSize: 16, fontWeight: 600, color: 'var(--tx-0)', letterSpacing: '0.15em' }}>
               同类格局
             </h2>
             <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, rgba(184,146,42,0.35), transparent)' }} />
@@ -174,11 +175,12 @@ export default async function PatternDetailPage({ params }: { params: Promise<{ 
                 }}
                 className="hover:border-amber-400"
               >
-                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--tx-0)', marginBottom: 4 }}>{p.name}</div>
-                <div style={{ fontSize: 11, color: 'var(--tx-2)', lineHeight: 1.5 }}>{p.summary}</div>
+                <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--tx-0)', marginBottom: 4 }}>{p.name}</div>
+                <div style={{ fontSize: 13, color: 'var(--tx-2)', lineHeight: 1.5 }}>{p.summary}</div>
               </Link>
             ))}
           </div>
+      <SiteFooter />
         </section>
       )}
     </div>
@@ -194,8 +196,8 @@ function Block({ title, icon, children }: { title: string; icon: string; childre
       padding: '16px 20px',
     }}>
       <div className="flex items-center gap-2 mb-2">
-        <span style={{ fontSize: 14 }}>{icon}</span>
-        <span style={{ fontSize: 11, color: 'var(--tx-3)', letterSpacing: '0.25em' }}>{title.toUpperCase()}</span>
+        <span style={{ fontSize: 16 }}>{icon}</span>
+        <span style={{ fontSize: 13, color: 'var(--tx-3)', letterSpacing: '0.25em' }}>{title.toUpperCase()}</span>
       </div>
       {children}
     </div>
@@ -217,8 +219,8 @@ function ActionLink({ href, title, desc }: { href: string; title: string; desc: 
       }}
       className="hover:border-amber-400 hover:shadow-sm"
     >
-      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ac)', letterSpacing: '0.15em', marginBottom: 4 }}>{title}</div>
-      <div style={{ fontSize: 11, color: 'var(--tx-2)', lineHeight: 1.6 }}>{desc}</div>
+      <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--ac-text)', letterSpacing: '0.15em', marginBottom: 4 }}>{title}</div>
+      <div style={{ fontSize: 13, color: 'var(--tx-2)', lineHeight: 1.6 }}>{desc}</div>
     </Link>
   );
 }

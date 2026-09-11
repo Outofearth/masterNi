@@ -42,7 +42,7 @@ const SiHuaBadge = ({
   return (
     <span
       className={clsx(
-        'inline-flex items-center text-[9px] px-1.5 rounded-full border leading-none py-0.5 font-bold ml-1 flex-shrink-0',
+        'inline-flex items-center text-[11px] px-1.5 rounded-full border leading-none py-0.5 font-bold ml-1 flex-shrink-0',
         SIHUA_STYLES[siHua],
         overlay && 'border-dashed opacity-80',
         onClick && 'cursor-pointer hover:opacity-100',
@@ -88,9 +88,11 @@ export default function PalaceCell({
       aria-label={cellLabel}
       onKeyDown={handleKeyDown}
       onClick={onClick}
-      className="relative flex flex-col p-2 cursor-pointer transition-all duration-200 h-full"
+      className="palace-cell relative flex flex-col p-2 cursor-pointer transition-all duration-200 h-full"
       style={{
-        minHeight: '104px',
+        // 字号阶梯提升后（宫名14/主星16/干支12/吉煞12），宫格需要更多高度，
+        // 由 104 提到 118；移动端由 globals.css .palace-cell 覆盖为更紧凑值。
+        minHeight: '118px',
         background: isCurrentDaXian
           ? 'var(--da-xian-bg)'
           : isSelected
@@ -112,7 +114,7 @@ export default function PalaceCell({
       {/* 大限年龄 */}
       {daXianAge && (
         <div
-          className="absolute top-1.5 right-1.5 text-[10px] font-mono tabular-nums"
+          className="absolute top-1.5 right-1.5 text-[12px] font-mono tabular-nums"
           style={{ color: isCurrentDaXian ? 'var(--da-xian)' : 'var(--t-faint)' }}
         >
           {daXianAge[0]}–{daXianAge[1]}
@@ -122,26 +124,26 @@ export default function PalaceCell({
       {/* 宫名行 */}
       <div className="flex items-center gap-1 mb-1 pr-10">
         <span
-          className="text-[12px] font-medium tracking-wide"
+          className="text-[14px] font-medium tracking-wide"
           style={{ color: isMingGong ? 'var(--ming)' : isShenGong ? 'var(--shen)' : 'var(--t-faint)' }}
         >
           {name}
         </span>
         {isMingGong && (
-          <span className="text-[9px] font-medium border px-0.5 rounded leading-tight" style={{ color: 'var(--ming)', borderColor: 'var(--bdr-med)' }}>命</span>
+          <span className="text-[11px] font-medium border px-0.5 rounded leading-tight" style={{ color: 'var(--ming)', borderColor: 'var(--bdr-med)' }}>命</span>
         )}
         {isShenGong && (
-          <span className="text-[9px] font-medium border px-0.5 rounded leading-tight" style={{ color: 'var(--shen)', borderColor: 'var(--bdr-med)' }}>身</span>
+          <span className="text-[11px] font-medium border px-0.5 rounded leading-tight" style={{ color: 'var(--shen)', borderColor: 'var(--bdr-med)' }}>身</span>
         )}
       </div>
 
       {/* 干支 */}
-      <div className="text-[10px] font-mono mb-1.5" style={{ color: 'var(--t-faint)' }}>{ganzhi}</div>
+      <div className="text-[12px] font-mono mb-1.5" style={{ color: 'var(--t-faint)' }}>{ganzhi}</div>
 
       {/* 主星 */}
       <div className="flex flex-col gap-1 flex-1">
         {majorStars.length === 0 && (
-          <span className="text-[11px] italic" style={{ color: 'var(--t-faint)' }}>空宫</span>
+          <span className="text-[13px] italic" style={{ color: 'var(--t-faint)' }}>空宫</span>
         )}
         {majorStars.map((star) => {
           const overlaySiHua = overlayStarSiHua?.[star.name];
@@ -162,7 +164,7 @@ export default function PalaceCell({
                 onClick={e => { e.stopPropagation(); onStarClick?.(star); }}
               >
               <span
-                className="text-[15px] leading-tight font-bold tracking-tight cursor-pointer hover:brightness-125 transition-all"
+                className="text-[16px] leading-tight font-bold tracking-tight cursor-pointer hover:brightness-125 transition-all"
                 style={{ color: star.brightness === 'bright' ? 'var(--star-major-bright)' : star.brightness === 'dim' ? 'var(--star-major-dim)' : 'var(--star-major)' }}
               >
                 {star.name}
@@ -187,7 +189,7 @@ export default function PalaceCell({
                   title={`查${star.name}星在古籍中的全部出处`}
                   aria-label={`查${star.name}星在古籍中的全部出处（新窗口打开）`}
                   className="ml-0.5 flex-shrink-0 no-underline leading-none opacity-0 group-hover:opacity-70 hover:!opacity-100 transition-opacity"
-                  style={{ color: 'var(--t-gold)', fontSize: '10px' }}
+                  style={{ color: 'var(--t-gold)', fontSize: '12px' }}
                   onClick={e => e.stopPropagation()}
                   onKeyDown={e => e.stopPropagation()}
                 >
@@ -205,7 +207,7 @@ export default function PalaceCell({
           {luckyStars.map(s => {
             const overlaySiHua = overlayStarSiHua?.[s.name];
             return (
-              <span key={s.name} className="inline-flex items-center text-[10px] leading-tight" style={{ color: 'var(--lucky)' }}>
+              <span key={s.name} className="inline-flex items-center text-[12px] leading-tight" style={{ color: 'var(--lucky)' }}>
                 {s.name}
                 {s.siHua && <SiHuaBadge siHua={s.siHua} />}
                 {overlaySiHua && (
@@ -229,7 +231,7 @@ export default function PalaceCell({
       {shaStars.length > 0 && (
         <div className="flex flex-wrap gap-x-1.5">
           {shaStars.map(s => (
-            <span key={s.name} className="text-[10px] leading-tight" style={{ color: 'var(--sha)' }}>
+            <span key={s.name} className="text-[12px] leading-tight" style={{ color: 'var(--sha)' }}>
               {s.name}{s.siHua && <SiHuaBadge siHua={s.siHua} />}
             </span>
           ))}

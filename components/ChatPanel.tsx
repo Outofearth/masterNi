@@ -93,7 +93,7 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
       {/* 标题 */}
       <div className="px-4 py-3 flex-shrink-0" style={{ borderBottom: '1px solid var(--t-border)' }}>
         <h3 className="text-xs font-medium tracking-widest" style={{ color: 'var(--t-gold)' }}>AI 命盘解读</h3>
-        <p className="text-[10px] mt-0.5" style={{ color: 'var(--t-faint)' }}>倪海夏正宗紫微斗数 · 智慧解析</p>
+        <p className="text-[12px] mt-0.5" style={{ color: 'var(--t-faint)' }}>倪海夏正宗紫微斗数 · 智慧解析</p>
       </div>
 
       {/* 消息列表 */}
@@ -129,7 +129,7 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
                 }}
               >
                 {msg.role === 'assistant' && (
-                  <div className="text-[10px] mb-1" style={{ color: 'var(--t-faint)' }}>命理师 ·</div>
+                  <div className="text-[12px] mb-1" style={{ color: 'var(--t-faint)' }}>命理师 ·</div>
                 )}
                 <div className="whitespace-pre-wrap text-xs leading-relaxed">
                   {msg.content}
@@ -152,7 +152,7 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
                 key={i}
                 onClick={() => sendMessage(q)}
                 disabled={loading}
-                className="text-left text-[10px] rounded-lg px-2.5 py-2 transition-all line-clamp-2"
+                className="text-left text-[12px] rounded-lg px-2.5 py-2 transition-all line-clamp-2"
                 style={{
                   color: 'var(--t-text2)',
                   border: '1px solid var(--t-border)',

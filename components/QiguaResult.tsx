@@ -96,7 +96,7 @@ function NiQuoteRow({ quote, accent }: { quote: string; accent?: boolean }) {
         {quote}
       </p>
       <p
-        className="text-[10px] mt-1.5 tracking-[0.25em] text-right"
+        className="text-[12px] mt-1.5 tracking-[0.25em] text-right"
         style={{ color: c.textFaint }}
       >
         —— 倪海厦《天纪》
@@ -113,7 +113,7 @@ function YaoLine({ yao, index, isChanging }: { yao: Yao; index: number; isChangi
 
   return (
     <div className="flex items-center gap-3 h-7">
-      <span className="text-[10px] w-8 text-right" style={{ color: c.textFaint }}>
+      <span className="text-[12px] w-8 text-right" style={{ color: c.textFaint }}>
         {POS_NAMES[index]}
       </span>
       <div className="flex-1 flex items-center justify-center relative">
@@ -139,7 +139,7 @@ function YaoLine({ yao, index, isChanging }: { yao: Yao; index: number; isChangi
           </motion.span>
         )}
       </div>
-      <span className="text-[10px] w-10" style={{ color: c.textMuted }}>
+      <span className="text-[12px] w-10" style={{ color: c.textMuted }}>
         {yao.label}
       </span>
     </div>
@@ -176,7 +176,7 @@ function HexagramCard({
           {title}
         </h3>
         {subtitle && (
-          <span className="text-[9px]" style={{ color: c.textFaint }}>
+          <span className="text-[12px]" style={{ color: c.textFaint }}>
             {subtitle}
           </span>
         )}
@@ -199,7 +199,7 @@ function HexagramCard({
             <p className="font-serif text-lg mb-1" style={{ color: c.textPrimary }}>
               {hex.name}
             </p>
-            <p className="text-[10px] mb-1" style={{ color: c.textMuted }}>
+            <p className="text-[12px] mb-1" style={{ color: c.textMuted }}>
               {hex.composition} · {upper}上{lower}下
             </p>
             <p className="text-xs leading-relaxed" style={{ color: c.textSecond }}>
@@ -241,7 +241,7 @@ function Section({
           {title}
         </h3>
         {subtitle && (
-          <span className="text-[9px]" style={{ color: c.textFaint }}>
+          <span className="text-[12px]" style={{ color: c.textFaint }}>
             {subtitle}
           </span>
         )}
@@ -276,24 +276,24 @@ function YaoReadingRow({ r }: { r: YaoReading }) {
           {r.title.split(' · ')[0]}
         </span>
         <span
-          className="text-[10px] px-1.5 py-0.5 rounded shrink-0"
+          className="text-[12px] px-1.5 py-0.5 rounded shrink-0"
           style={{ border: `1px solid ${c.cardBorder}`, color: c.textMuted }}
         >
           {r.yaoNature}
         </span>
         <span
-          className="text-[10px] px-1.5 py-0.5 rounded shrink-0"
+          className="text-[12px] px-1.5 py-0.5 rounded shrink-0"
           style={{ border: `1px solid ${c.cardBorder}`, color: c.textMuted }}
         >
           {r.deweiText}
         </span>
         {r.isChanging && (
-          <span className="text-[10px] px-1.5 py-0.5 rounded shrink-0" style={{ background: c.ctaBg, color: c.ctaText }}>
+          <span className="text-[12px] px-1.5 py-0.5 rounded shrink-0" style={{ background: c.ctaBg, color: c.ctaText }}>
             动爻
           </span>
         )}
         <span className="flex-1" />
-        <span className="text-[10px] shrink-0" style={{ color: c.textFaint }}>
+        <span className="text-[12px] shrink-0" style={{ color: c.textFaint }}>
           {open ? '收起' : '展开'}
         </span>
       </button>
@@ -409,7 +409,7 @@ export default function QiguaResult({ result, onAskAi }: Props) {
         <div className="max-w-xl mx-auto mb-8">
           <label
             htmlFor="qigua-question"
-            className="block text-[10px] tracking-[0.25em] mb-2 text-center"
+            className="block text-[12px] tracking-[0.25em] mb-2 text-center"
             style={{ color: c.textMuted }}
           >
             所占之事（选填 · 写下来断得更准）

@@ -179,7 +179,7 @@ export default function TianjiChatPanel({
           <h3 className="text-xs font-medium tracking-widest" style={{ color: 'var(--t-gold)' }}>
             {title}
           </h3>
-          <p className="text-[10px] mt-0.5" style={{ color: 'var(--t-faint)' }}>
+          <p className="text-[12px] mt-0.5" style={{ color: 'var(--t-faint)' }}>
             {subtitle} · {prefs.style === 'clinical' ? '临床' : prefs.style === 'poetic' ? '诗意' : '古朴'}
             {prefs.multiPerspective && ' · 多视角'}
           </p>
@@ -188,7 +188,7 @@ export default function TianjiChatPanel({
           <button
             type="button"
             onClick={() => setShowSettings(s => !s)}
-            className="text-[10px] px-2 py-1 rounded transition-colors"
+            className="text-[12px] px-2 py-1 rounded transition-colors"
             style={{
               color: showSettings ? 'var(--t-gold)' : 'var(--t-faint)',
               border: `1px solid ${showSettings ? 'rgba(212,168,67,0.3)' : 'var(--t-border)'}`,
@@ -203,7 +203,7 @@ export default function TianjiChatPanel({
               <button
                 type="button"
                 onClick={handleCopy}
-                className="text-[10px] px-2 py-1 rounded transition-colors"
+                className="text-[12px] px-2 py-1 rounded transition-colors"
                 style={{ color: 'var(--t-faint)', border: '1px solid var(--t-border)' }}
                 aria-label="复制最后一条回答"
                 title="复制回答"
@@ -213,7 +213,7 @@ export default function TianjiChatPanel({
               <button
                 type="button"
                 onClick={handleClear}
-                className="text-[10px] px-2 py-1 rounded transition-colors"
+                className="text-[12px] px-2 py-1 rounded transition-colors"
                 style={{ color: 'var(--t-faint)', border: '1px solid var(--t-border)' }}
                 aria-label="清空对话"
                 title="清空对话"
@@ -238,7 +238,7 @@ export default function TianjiChatPanel({
             <div className="px-4 py-3 space-y-3" style={{ background: 'var(--t-bg-soft)' }}>
               {/* 风格选择 */}
               <div>
-                <div className="text-[10px] tracking-widest mb-1.5" style={{ color: 'var(--t-faint)' }}>
+                <div className="text-[12px] tracking-widest mb-1.5" style={{ color: 'var(--t-faint)' }}>
                   解读风格
                 </div>
                 <div className="flex gap-1.5">
@@ -247,7 +247,7 @@ export default function TianjiChatPanel({
                       key={s}
                       type="button"
                       onClick={() => updatePrefs({ style: s })}
-                      className="text-[10px] px-3 py-1 rounded-full transition-colors"
+                      className="text-[12px] px-3 py-1 rounded-full transition-colors"
                       style={{
                         background: prefs.style === s ? 'rgba(212,168,67,0.15)' : 'transparent',
                         color: prefs.style === s ? 'var(--t-gold)' : 'var(--t-faint)',
@@ -262,7 +262,7 @@ export default function TianjiChatPanel({
 
               {/* 多视角开关 */}
               <div className="flex items-center justify-between">
-                <div className="text-[10px] tracking-widest" style={{ color: 'var(--t-faint)' }}>
+                <div className="text-[12px] tracking-widest" style={{ color: 'var(--t-faint)' }}>
                   多视角分析（一次给 2-3 种解读）
                 </div>
                 <button
@@ -286,7 +286,7 @@ export default function TianjiChatPanel({
               </div>
 
               {/* 当前 context key */}
-              <div className="text-[9px] tracking-widest flex items-center gap-2" style={{ color: 'var(--t-faint)' }}>
+              <div className="text-[12px] tracking-widest flex items-center gap-2" style={{ color: 'var(--t-faint)' }}>
                 <span>对话存档：{key}</span>
                 <span>·</span>
                 <span>{messages.length} 条</span>
@@ -306,7 +306,7 @@ export default function TianjiChatPanel({
             <p className="text-xs leading-relaxed" style={{ color: 'var(--t-faint)' }}>
               可直接提问，或从下方选择常见问题
             </p>
-            <p className="text-[10px] mt-2" style={{ color: 'var(--t-faint)', opacity: 0.6 }}>
+            <p className="text-[12px] mt-2" style={{ color: 'var(--t-faint)', opacity: 0.6 }}>
               对话将保留在本机浏览器（{messages.length}/30 条）
             </p>
           </motion.div>
@@ -333,7 +333,7 @@ export default function TianjiChatPanel({
                 }}
               >
                 {msg.role === 'assistant' && (
-                  <div className="text-[10px] mb-1 flex items-center gap-2" style={{ color: 'var(--t-faint)' }}>
+                  <div className="text-[12px] mb-1 flex items-center gap-2" style={{ color: 'var(--t-faint)' }}>
                     <span>术数讲师 ·</span>
                     {msg.content.includes('视角') && (msg.content.match(/视角/g) ?? []).length >= 3 && (
                       <span style={{ color: 'var(--t-gold)' }}>多视角模式</span>
@@ -364,7 +364,7 @@ export default function TianjiChatPanel({
                 key={i}
                 onClick={() => sendMessage(q)}
                 disabled={loading}
-                className="text-left text-[10px] rounded-lg px-2.5 py-2 transition-all line-clamp-2"
+                className="text-left text-[12px] rounded-lg px-2.5 py-2 transition-all line-clamp-2"
                 style={{
                   color: 'var(--t-text2)',
                   border: '1px solid var(--t-border)',

@@ -37,12 +37,12 @@ const SIHUA_COLOR: Record<string, { text: string; bg: string; bdr: string }> = {
 
 function StarCell({ stars, siHua }: { stars: string[]; siHua: { star: string; siHua: string }[] }) {
   if (stars.length === 0) {
-    return <span style={{ fontSize: 11, color: 'var(--t-faint)' }}>空宫（借对宫）</span>;
+    return <span style={{ fontSize: 13, color: 'var(--t-faint)' }}>空宫（借对宫）</span>;
   }
   return (
     <span style={{ display: 'inline-flex', flexWrap: 'wrap', gap: 4, alignItems: 'center' }}>
       {stars.map(s => (
-        <span key={s} style={{ fontSize: 12, color: 'var(--star-major)', fontWeight: 500 }}>
+        <span key={s} style={{ fontSize: 14, color: 'var(--star-major)', fontWeight: 500 }}>
           {s}
         </span>
       ))}
@@ -52,7 +52,7 @@ function StarCell({ stars, siHua }: { stars: string[]; siHua: { star: string; si
           <span
             key={star + sh}
             style={{
-              fontSize: 9, padding: '1px 4px', borderRadius: 4,
+              fontSize: 11, padding: '1px 4px', borderRadius: 4,
               color: c.text, background: c.bg, border: `1px solid ${c.bdr}`,
             }}
           >
@@ -95,19 +95,19 @@ export default function HemingCompareTable({
       className="card-glass rounded-xl p-4"
     >
       <div
-        className="text-[10px] tracking-widest mb-3 flex items-center gap-2 flex-wrap"
+        className="text-[12px] tracking-widest mb-3 flex items-center gap-2 flex-wrap"
         style={{ color: 'var(--t-faint)' }}
       >
         <span style={{ color: 'var(--t-gold)', opacity: 0.6 }}>⇄</span>
         关键宫位对比
-        <span className="text-[9px] ml-auto" style={{ color: 'var(--t-faint)', opacity: 0.75 }}>
+        <span className="text-[12px] ml-auto" style={{ color: 'var(--t-faint)', opacity: 0.75 }}>
           同星共鸣 {totalResonance} 处
         </span>
       </div>
 
       {/* 表头 */}
       <div
-        className="grid gap-2 pb-2 mb-2 text-[10px]"
+        className="grid gap-2 pb-2 mb-2 text-[12px]"
         style={{
           gridTemplateColumns: '64px 1fr 1fr',
           borderBottom: '1px solid var(--t-border)',
@@ -130,14 +130,14 @@ export default function HemingCompareTable({
               border: r.resonance.length > 0 ? '1px solid rgba(212,168,67,0.18)' : '1px solid var(--t-border)',
             }}
           >
-            <div className="text-[11px]" style={{ color: 'var(--t-text2)' }}>
+            <div className="text-[13px]" style={{ color: 'var(--t-text2)' }}>
               {r.name.replace('宫', '')}
             </div>
             <div><StarCell stars={r.sa} siHua={siHuaOf(r.pa)} /></div>
             <div><StarCell stars={r.sb} siHua={siHuaOf(r.pb)} /></div>
             {r.resonance.length > 0 && (
               <div
-                className="text-[9px] col-span-3 -mt-1"
+                className="text-[12px] col-span-3 -mt-1"
                 style={{ color: 'var(--t-gold)', opacity: 0.85 }}
               >
                 共鸣 · {r.resonance.join(' / ')}
@@ -148,7 +148,7 @@ export default function HemingCompareTable({
       </div>
 
       <div
-        className="text-[9px] mt-3 pt-2"
+        className="text-[12px] mt-3 pt-2"
         style={{
           borderTop: '1px solid var(--t-border)',
           color: 'var(--t-faint)',

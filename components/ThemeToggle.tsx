@@ -37,7 +37,7 @@ export default function ThemeToggle() {
           }}
         />
       </div>
-      <span className="text-[11px] font-medium tracking-wide select-none"
+      <span className="text-[13px] font-medium tracking-wide select-none"
         style={{
           color: isDark ? 'rgba(212,180,100,0.85)' : 'rgba(110,72,8,0.8)',
           transition: 'color 0.35s ease',

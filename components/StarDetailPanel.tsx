@@ -198,12 +198,12 @@ export default function StarDetailPanel({ star, palaceName, onClose, onAskAI }: 
             <div className="flex items-center gap-2">
               <span className="text-xl font-bold" style={{ color: 'var(--t-gold)' }}>{star.name}</span>
               {typeConfig && (
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full border ${typeConfig.color}`}>
+                <span className={`text-[12px] px-1.5 py-0.5 rounded-full border ${typeConfig.color}`}>
                   {typeConfig.label}
                 </span>
               )}
               {star.siHua && (
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full border font-medium ${siHuaColors[star.siHua] || ''}`}>
+                <span className={`text-[12px] px-1.5 py-0.5 rounded-full border font-medium ${siHuaColors[star.siHua] || ''}`}>
                   化{star.siHua}
                 </span>
               )}
@@ -221,7 +221,7 @@ export default function StarDetailPanel({ star, palaceName, onClose, onAskAI }: 
                   ...(palaceName ? [`位置 · ${palaceName}`] : []),
                   ...(star.brightness ? [star.brightness === 'bright' ? '庙旺' : star.brightness === 'dim' ? '落陷' : '平和'] : []),
                 ].map(tag => (
-                  <div key={tag} className="text-[10px] px-2 py-1 rounded-full"
+                  <div key={tag} className="text-[12px] px-2 py-1 rounded-full"
                     style={{
                       border: '1px solid var(--t-border)',
                       color: tag.includes('庙旺') ? 'var(--state-good)' : tag.includes('落陷') ? 'var(--state-bad)' : 'var(--t-text2)',
@@ -235,10 +235,10 @@ export default function StarDetailPanel({ star, palaceName, onClose, onAskAI }: 
             {/* 关键词 */}
             {desc && (
               <div>
-                <div className="text-[10px] tracking-widest mb-1.5" style={{ color: 'var(--t-faint)' }}>星曜特质</div>
+                <div className="text-[12px] tracking-widest mb-1.5" style={{ color: 'var(--t-faint)' }}>星曜特质</div>
                 <div className="flex flex-wrap gap-1.5">
                   {desc.keywords.split('·').map(k => (
-                    <span key={k} className="text-[11px] px-2 py-0.5 rounded-full"
+                    <span key={k} className="text-[13px] px-2 py-0.5 rounded-full"
                       style={{ color: 'var(--t-gold)', border: '1px solid rgba(212,168,67,0.2)', background: 'rgba(212,168,67,0.06)' }}>
                       {k.trim()}
                     </span>
@@ -250,10 +250,10 @@ export default function StarDetailPanel({ star, palaceName, onClose, onAskAI }: 
             {/* 古书原文 */}
             {detail && (
               <div className="rounded-xl p-3" style={{ background: 'rgba(212,168,67,0.04)', border: '1px solid rgba(212,168,67,0.12)' }}>
-                <div className="text-[10px] tracking-widest mb-1.5 flex items-center gap-1" style={{ color: 'var(--t-gold)', opacity: 0.7 }}>
+                <div className="text-[12px] tracking-widest mb-1.5 flex items-center gap-1" style={{ color: 'var(--t-gold)', opacity: 0.7 }}>
                   古书原文
                 </div>
-                <p className="text-[11px] leading-relaxed italic" style={{ color: 'var(--t-gold)', opacity: 0.8 }}>{detail.classical}</p>
+                <p className="text-[13px] leading-relaxed italic" style={{ color: 'var(--t-gold)', opacity: 0.8 }}>{detail.classical}</p>
               </div>
             )}
 
@@ -261,7 +261,7 @@ export default function StarDetailPanel({ star, palaceName, onClose, onAskAI }: 
             {detail && (
               <>
                 <div>
-                  <div className="text-[10px] tracking-widest mb-1.5 flex items-center gap-1.5" style={{ color: 'var(--t-faint)' }}>
+                  <div className="text-[12px] tracking-widest mb-1.5 flex items-center gap-1.5" style={{ color: 'var(--t-faint)' }}>
                     <span className="w-3 h-px inline-block" style={{ background: 'var(--t-border-acc)' }} />
                     倪海夏老师解读
                     <span className="w-3 h-px inline-block" style={{ background: 'var(--t-border-acc)' }} />
@@ -277,21 +277,21 @@ export default function StarDetailPanel({ star, palaceName, onClose, onAskAI }: 
                     { label: '健康提示', value: detail.health, icon: '☯' },
                   ].map(item => (
                     <div key={item.label} className="card-inner rounded-lg p-3">
-                      <div className="text-[10px] mb-1 flex items-center gap-1" style={{ color: 'var(--t-faint)' }}>
+                      <div className="text-[12px] mb-1 flex items-center gap-1" style={{ color: 'var(--t-faint)' }}>
                         <span>{item.icon}</span>
                         <span>{item.label}</span>
                       </div>
-                      <p className="text-[11px] leading-relaxed" style={{ color: 'var(--t-text2)' }}>{item.value}</p>
+                      <p className="text-[13px] leading-relaxed" style={{ color: 'var(--t-text2)' }}>{item.value}</p>
                     </div>
                   ))}
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="text-[10px] p-2.5 rounded-lg" style={{ border: '1px solid var(--state-good-bdr)', background: 'var(--state-good-bg)', color: 'var(--state-good)' }}>
+                  <div className="text-[12px] p-2.5 rounded-lg" style={{ border: '1px solid var(--state-good-bdr)', background: 'var(--state-good-bg)', color: 'var(--state-good)' }}>
                     <div className="mb-0.5 font-medium">最佳宫位</div>
                     <div style={{ opacity: 0.7 }}>{detail.bestPalace}</div>
                   </div>
-                  <div className="text-[10px] p-2.5 rounded-lg" style={{ border: '1px solid var(--state-bad-bdr)', background: 'var(--state-bad-bg)', color: 'var(--state-bad)' }}>
+                  <div className="text-[12px] p-2.5 rounded-lg" style={{ border: '1px solid var(--state-bad-bdr)', background: 'var(--state-bad-bg)', color: 'var(--state-bad)' }}>
                     <div className="mb-0.5 font-medium">注意宫位</div>
                     <div style={{ opacity: 0.7 }}>{detail.worstPalace}</div>
                   </div>
@@ -337,7 +337,7 @@ export default function StarDetailPanel({ star, palaceName, onClose, onAskAI }: 
               <button
                 type="button"
                 onClick={onAskAI}
-                className="w-full py-2 rounded-lg text-[11px] transition-opacity hover:opacity-80"
+                className="w-full py-2 rounded-lg text-[13px] transition-opacity hover:opacity-80"
                 style={{
                   background: 'rgba(212,168,67,0.10)',
                   border: '1px solid rgba(212,168,67,0.28)',

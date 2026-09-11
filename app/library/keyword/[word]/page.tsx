@@ -7,6 +7,7 @@
 import Link from 'next/link';
 import { findParagraphsByKeyword, KEYWORD_DICT, getKeywordCloud } from '@/lib/classics/keywords';
 import { highlightKeyword } from '@/lib/classics/highlight';
+import SiteFooter from '@/components/SiteFooter';
 
 export async function generateMetadata({ params }: { params: Promise<{ word: string }> }) {
   const { word } = await params;
@@ -30,13 +31,13 @@ export default async function KeywordPage({ params }: { params: Promise<{ word: 
       {/* 顶栏 */}
       <div className="px-6 py-4 flex items-center justify-between"
         style={{ borderBottom: '1px solid rgba(184,146,42,0.15)', background: 'var(--bg-page)' }}>
-        <Link href="/library" style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.3em', textDecoration: 'none' }}>
+        <Link href="/library" style={{ fontSize: '14px', color: 'var(--ac-text)', letterSpacing: '0.3em', textDecoration: 'none' }}>
           ← 古籍库
         </Link>
-        <div style={{ fontSize: '12px', color: 'var(--tx-3)', letterSpacing: '0.2em' }}>
+        <div style={{ fontSize: '14px', color: 'var(--tx-3)', letterSpacing: '0.2em' }}>
           关键词反查
         </div>
-        <Link href="/chart" style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.2em', textDecoration: 'none' }}>
+        <Link href="/chart" style={{ fontSize: '14px', color: 'var(--ac-text)', letterSpacing: '0.2em', textDecoration: 'none' }}>
           起盘 →
         </Link>
       </div>
@@ -46,8 +47,8 @@ export default async function KeywordPage({ params }: { params: Promise<{ word: 
         <div className="text-center mb-10">
           <div style={{
             display: 'inline-block',
-            fontSize: '11px',
-            color: 'var(--ac)',
+            fontSize: '13px',
+            color: 'var(--ac-text)',
             letterSpacing: '0.3em',
             padding: '4px 14px',
             background: 'rgba(184,146,42,0.08)',
@@ -67,18 +68,18 @@ export default async function KeywordPage({ params }: { params: Promise<{ word: 
             「{word}」
           </h1>
           {def && (
-            <p style={{ fontSize: '14px', color: 'var(--tx-2)', lineHeight: 1.7, maxWidth: '480px', margin: '0 auto' }}>
+            <p style={{ fontSize: '16px', color: 'var(--tx-2)', lineHeight: 1.7, maxWidth: '480px', margin: '0 auto' }}>
               {def.brief}
             </p>
           )}
           {heat && (
             <div style={{
               marginTop: '14px',
-              fontSize: '12px',
+              fontSize: '14px',
               color: 'var(--tx-3)',
               letterSpacing: '0.15em',
             }}>
-              全集共出现 <strong style={{ color: 'var(--ac)' }}>{heat.count}</strong> 次 · 涉及 <strong style={{ color: 'var(--ac)' }}>{heat.bookCount}</strong> 部古籍
+              全集共出现 <strong style={{ color: 'var(--ac-text)' }}>{heat.count}</strong> 次 · 涉及 <strong style={{ color: 'var(--ac-text)' }}>{heat.bookCount}</strong> 部古籍
             </div>
           )}
         </div>
@@ -94,13 +95,13 @@ export default async function KeywordPage({ params }: { params: Promise<{ word: 
             border: '1px solid rgba(184,146,42,0.15)',
           }}>
             <div style={{ fontSize: '40px', marginBottom: '12px', opacity: 0.4 }}>📜</div>
-            <div style={{ fontSize: '14px' }}>未在已收录古籍中找到此关键词的出处</div>
+            <div style={{ fontSize: '16px' }}>未在已收录古籍中找到此关键词的出处</div>
           </div>
         ) : (
           <>
             <div className="flex items-center gap-3 mb-5">
               <div style={{ height: '1px', width: '32px', background: 'var(--ac)' }} />
-              <span style={{ fontSize: '11px', color: 'var(--ac)', letterSpacing: '0.3em', fontWeight: 600 }}>
+              <span style={{ fontSize: '13px', color: 'var(--ac-text)', letterSpacing: '0.3em', fontWeight: 600 }}>
                 共 {contexts.length} 条出处 · 按所属古籍分组
               </span>
               <div style={{ height: '1px', flex: 1, background: 'rgba(184,146,42,0.15)' }} />
@@ -127,19 +128,19 @@ export default async function KeywordPage({ params }: { params: Promise<{ word: 
                     display: 'flex',
                     alignItems: 'center',
                     gap: '8px',
-                    fontSize: '11px',
+                    fontSize: '13px',
                     color: 'var(--tx-3)',
                     marginBottom: '10px',
                     letterSpacing: '0.1em',
                   }}>
-                    <span style={{ color: 'var(--ac)', fontWeight: 600 }}>《{c.book.title}》</span>
+                    <span style={{ color: 'var(--ac-text)', fontWeight: 600 }}>《{c.book.title}》</span>
                     <span style={{ opacity: 0.5 }}>·</span>
                     <span>{c.chapterTitle}</span>
                     <span style={{ opacity: 0.5 }}>·</span>
                     <span style={{ fontFamily: 'var(--font-serif)' }}>第 {c.paragraphId} 段</span>
                   </div>
                   <p style={{
-                    fontSize: '14px',
+                    fontSize: '16px',
                     color: 'var(--tx-0)',
                     lineHeight: 1.9,
                     letterSpacing: '0.02em',
@@ -157,7 +158,7 @@ export default async function KeywordPage({ params }: { params: Promise<{ word: 
           <div style={{ marginTop: '40px' }}>
             <div className="flex items-center gap-3 mb-5">
               <div style={{ height: '1px', width: '32px', background: 'var(--ac)' }} />
-              <span style={{ fontSize: '11px', color: 'var(--ac)', letterSpacing: '0.3em', fontWeight: 600 }}>
+              <span style={{ fontSize: '13px', color: 'var(--ac-text)', letterSpacing: '0.3em', fontWeight: 600 }}>
                 相关关键词
               </span>
               <div style={{ height: '1px', flex: 1, background: 'rgba(184,146,42,0.15)' }} />
@@ -172,7 +173,7 @@ export default async function KeywordPage({ params }: { params: Promise<{ word: 
                     alignItems: 'center',
                     gap: '4px',
                     padding: '5px 12px',
-                    fontSize: '13px',
+                    fontSize: '15px',
                     color: 'var(--tx-0)',
                     background: 'rgba(184,146,42,0.06)',
                     border: '1px solid rgba(184,146,42,0.2)',
@@ -182,7 +183,7 @@ export default async function KeywordPage({ params }: { params: Promise<{ word: 
                   className="hover:!bg-[rgba(184,146,42,0.15)] transition-colors"
                 >
                   {k.text}
-                  <span style={{ fontSize: '10px', color: 'var(--ac-dim)', marginLeft: '2px' }}>{k.count}</span>
+                  <span style={{ fontSize: '12px', color: 'var(--ac-dim)', marginLeft: '2px' }}>{k.count}</span>
                 </Link>
               ))}
             </div>
@@ -191,8 +192,9 @@ export default async function KeywordPage({ params }: { params: Promise<{ word: 
       </div>
 
       <style>{`
-        .keyword-mark { background: rgba(184,146,42,0.3); color: #8b6a14; padding: 0 2px; border-radius: 2px; font-weight: 600; }
+        .keyword-mark { background: rgba(184,146,42,0.3); color: var(--ac-strong); padding: 0 2px; border-radius: 2px; font-weight: 600; }
       `}</style>
+      <SiteFooter />
     </div>
   );
 }

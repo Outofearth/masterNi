@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { downloadAsPng, printReport } from '@/lib/export/pdf-report';
+import { BRAND } from '@/lib/brand';
 
 interface Props {
   /** 抓图/打印的目标 DOM 节点 ref */
@@ -21,14 +22,17 @@ interface Props {
  * B13 通用导出按钮
  *   · 导出 PNG：html2canvas 抓图 → 自动下载
  *   · 打印 / 另存 PDF：浏览器原生 print，配合 globals.css @media print 样式
+ *
+ * 颜色约定（P0-2）：默认值全部走语义 token / brand.ts，不再硬编 hex。
+ * 此前默认 textColor=#1a1a1a 在暗色主题下几乎不可读，改为 --tx-1 随主题自适应。
  */
 export default function ExportReportButton({
   targetRef,
   filename,
   printTitle,
-  gold = '#b8922a',
-  textColor = '#1a1a1a',
-  borderColor = '#d4c89a',
+  gold = 'var(--ac-text)',
+  textColor = 'var(--tx-1)',
+  borderColor = 'var(--bdr-med)',
 }: Props) {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState<'png' | 'pdf' | null>(null);
@@ -51,7 +55,8 @@ export default function ExportReportButton({
     try {
       await downloadAsPng(targetRef.current, `${filename}.png`, {
         scale: 2,
-        bgColor: '#f5efe0',
+        // html2canvas 不接受 CSS 变量，此处用 brand.ts 米底（= --bg-0 同值）
+        bgColor: BRAND.cream,
       });
     } catch (e) {
       // eslint-disable-next-line no-alert
@@ -81,7 +86,7 @@ export default function ExportReportButton({
         disabled={busy !== null}
         whileHover={{ y: -1 }}
         whileTap={{ scale: 0.97 }}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] tracking-[0.2em] transition-all disabled:opacity-50"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] tracking-[0.2em] transition-all disabled:opacity-50"
         style={{
           border: `1px solid ${borderColor}`,
           color: textColor,
@@ -105,7 +110,7 @@ export default function ExportReportButton({
             role="menu"
             className="absolute right-0 mt-1.5 w-52 rounded-lg overflow-hidden z-30"
             style={{
-              background: '#faf5e8',
+              background: 'var(--bg-card)',
               border: `1px solid ${borderColor}`,
               boxShadow: '0 8px 24px rgba(184,146,42,0.15)',
             }}
@@ -114,14 +119,14 @@ export default function ExportReportButton({
               type="button"
               role="menuitem"
               onClick={handlePng}
-              className="w-full text-left px-3 py-2.5 text-[11px] hover:bg-[rgba(184,146,42,0.08)] transition-colors"
+              className="w-full text-left px-3 py-2.5 text-[13px] hover:bg-[rgba(184,146,42,0.08)] transition-colors"
               style={{ color: textColor }}
             >
               <div className="flex items-center gap-2">
                 <span style={{ color: gold }}>▢</span>
                 <div>
                   <div className="font-medium">导出 PNG</div>
-                  <div className="text-[9px] opacity-60 mt-0.5">高清图片，可直接分享</div>
+                  <div className="text-[12px] opacity-60 mt-0.5">高清图片，可直接分享</div>
                 </div>
               </div>
             </button>
@@ -130,14 +135,14 @@ export default function ExportReportButton({
               type="button"
               role="menuitem"
               onClick={handlePdf}
-              className="w-full text-left px-3 py-2.5 text-[11px] hover:bg-[rgba(184,146,42,0.08)] transition-colors"
+              className="w-full text-left px-3 py-2.5 text-[13px] hover:bg-[rgba(184,146,42,0.08)] transition-colors"
               style={{ color: textColor }}
             >
               <div className="flex items-center gap-2">
                 <span style={{ color: gold }}>⎙</span>
                 <div>
                   <div className="font-medium">另存 PDF</div>
-                  <div className="text-[9px] opacity-60 mt-0.5">打印对话框 → 选「另存为 PDF」</div>
+                  <div className="text-[12px] opacity-60 mt-0.5">打印对话框 → 选「另存为 PDF」</div>
                 </div>
               </div>
             </button>

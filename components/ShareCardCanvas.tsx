@@ -93,7 +93,7 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
           }}>紫</div>
           <div>
             <div style={{ fontSize: '15px', color: BRAND.ink, fontWeight: 600, letterSpacing: '0.12em', lineHeight: 1.2 }}>紫微命盘</div>
-            <div style={{ fontSize: '9px', color: BRAND.goldSoft, letterSpacing: '0.18em', marginTop: '2px' }}>倪海夏正宗 · ZI WEI</div>
+            <div style={{ fontSize: '10px', color: BRAND.goldSoft, letterSpacing: '0.18em', marginTop: '2px' }}>倪海夏正宗 · ZI WEI</div>
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
@@ -178,7 +178,7 @@ export default function ShareCardCanvas({ chart, birth, highlight }: ShareCardPr
                       {s.name}{s.siHua ? <span style={{ fontSize: '8px', color: BRAND.cinnabar, marginLeft: '1px' }}>{s.siHua}</span> : ''}
                     </div>
                   )) : (
-                    <div style={{ fontSize: '9px', color: BRAND.goldSoft, fontStyle: 'italic' }}>空宫</div>
+                    <div style={{ fontSize: '10px', color: BRAND.goldSoft, fontStyle: 'italic' }}>空宫</div>
                   )}
                 </div>
               </div>

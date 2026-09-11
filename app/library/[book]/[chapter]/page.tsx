@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ALL_BOOKS, getChapter } from '@/lib/classics';
 import StarText from '@/components/StarText';
+import SiteFooter from '@/components/SiteFooter';
 
 export async function generateStaticParams() {
   return ALL_BOOKS.flatMap(b =>
@@ -38,13 +39,13 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
     <div style={{ background: 'var(--bg-page)', minHeight: '100vh' }}>
       <div className="px-6 py-4 flex items-center justify-between"
         style={{ borderBottom: '1px solid rgba(184,146,42,0.15)', background: 'var(--bg-page)' }}>
-        <Link href={`/library/${book.slug}`} style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.3em', textDecoration: 'none' }}>
+        <Link href={`/library/${book.slug}`} style={{ fontSize: '14px', color: 'var(--ac-text)', letterSpacing: '0.3em', textDecoration: 'none' }}>
           ← 《{book.title}》目录
         </Link>
-        <div style={{ fontSize: '12px', color: 'var(--tx-3)', letterSpacing: '0.15em' }}>
+        <div style={{ fontSize: '14px', color: 'var(--tx-3)', letterSpacing: '0.15em' }}>
           {chapter.title}
         </div>
-        <Link href="/library" style={{ fontSize: '12px', color: 'var(--ac)', letterSpacing: '0.2em', textDecoration: 'none' }}>
+        <Link href="/library" style={{ fontSize: '14px', color: 'var(--ac-text)', letterSpacing: '0.2em', textDecoration: 'none' }}>
           古籍库 →
         </Link>
       </div>
@@ -52,14 +53,14 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
       <article className="max-w-3xl mx-auto px-6 py-12">
         {/* 标题 */}
         <div className="text-center mb-10">
-          <div style={{ fontSize: '11px', color: 'var(--tx-3)', letterSpacing: '0.25em', marginBottom: '8px' }}>
+          <div style={{ fontSize: '13px', color: 'var(--tx-3)', letterSpacing: '0.25em', marginBottom: '8px' }}>
             《{book.title}》· {book.dynasty}
           </div>
           <h1 style={{ fontSize: 'clamp(24px, 3.5vw, 36px)', fontWeight: 700, color: 'var(--tx-0)', letterSpacing: '0.15em', marginBottom: '8px' }}>
             {chapter.title}
           </h1>
           {chapter.subtitle && (
-            <div style={{ fontSize: '13px', color: 'var(--tx-2)', letterSpacing: '0.1em' }}>
+            <div style={{ fontSize: '15px', color: 'var(--tx-2)', letterSpacing: '0.1em' }}>
               {chapter.subtitle}
             </div>
           )}
@@ -69,14 +70,14 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
         <div style={{
           maxWidth: 'max-content',
           margin: '0 auto 20px',
-          fontSize: '10px',
+          fontSize: '12px',
           color: 'var(--tx-3)',
           letterSpacing: '0.1em',
           padding: '5px 12px',
           border: '1px dashed rgba(184,146,42,0.3)',
           borderRadius: '999px',
         }}>
-          文中 <span style={{ color: 'var(--ac)', fontWeight: 600, borderBottom: '1px dashed rgba(184,146,42,0.55)' }}>带下划线</span> 的星曜名可点击，直达知识库详解
+          文中 <span style={{ color: 'var(--ac-text)', fontWeight: 600, borderBottom: '1px dashed rgba(184,146,42,0.55)' }}>带下划线</span> 的星曜名可点击，直达知识库详解
         </div>
 
         {/* 段落 */}
@@ -98,8 +99,8 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
                 gap: '12px',
               }}>
                 <span style={{
-                  fontSize: '11px',
-                  color: 'var(--ac)',
+                  fontSize: '13px',
+                  color: 'var(--ac-text)',
                   fontWeight: 600,
                   letterSpacing: '0.1em',
                   minWidth: '24px',
@@ -112,7 +113,8 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
                   color: 'var(--tx-0)',
                   lineHeight: 2,
                   letterSpacing: '0.04em',
-                  fontFamily: '"PingFang SC", "Hiragino Sans GB", serif',
+                  // 古籍正文统一衬线（改用全局 token，不再硬编字体族）
+                  fontFamily: 'var(--font-serif)',
                 }}>
                   <StarText text={p.text} />
                 </p>
@@ -124,11 +126,11 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
                   padding: '8px 12px',
                   background: 'rgba(184,146,42,0.05)',
                   borderRadius: '6px',
-                  fontSize: '13px',
+                  fontSize: '15px',
                   color: 'var(--tx-2)',
                   lineHeight: 1.8,
                 }}>
-                  <span style={{ fontSize: '10px', color: 'var(--ac)', marginRight: '6px' }}>白话</span>
+                  <span style={{ fontSize: '12px', color: 'var(--ac-text)', marginRight: '6px' }}>白话</span>
                   <StarText text={p.translation} />
                 </div>
               )}
@@ -139,11 +141,11 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
                   padding: '8px 12px',
                   background: 'rgba(196,90,45,0.05)',
                   borderRadius: '6px',
-                  fontSize: '13px',
+                  fontSize: '15px',
                   color: 'var(--tx-2)',
                   lineHeight: 1.8,
                 }}>
-                  <span style={{ fontSize: '10px', color: 'var(--ji)', marginRight: '6px' }}>倪师注</span>
+                  <span style={{ fontSize: '12px', color: 'var(--ji)', marginRight: '6px' }}>倪师注</span>
                   <StarText text={p.niNote} />
                 </div>
               )}
@@ -159,25 +161,25 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
           border: '1px solid rgba(184,146,42,0.18)',
           borderRadius: '10px',
         }}>
-          <div style={{ fontSize: '10px', color: 'var(--tx-3)', letterSpacing: '0.2em', marginBottom: '10px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--tx-3)', letterSpacing: '0.2em', marginBottom: '10px' }}>
             延伸阅读
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
             <Link href="/knowledge" style={{
-              fontSize: '12px', padding: '6px 14px', borderRadius: '999px', textDecoration: 'none',
-              color: 'var(--ac)', background: 'rgba(184,146,42,0.08)', border: '1px solid rgba(184,146,42,0.25)',
+              fontSize: '14px', padding: '6px 14px', borderRadius: '999px', textDecoration: 'none',
+              color: 'var(--ac-text)', background: 'rgba(184,146,42,0.08)', border: '1px solid rgba(184,146,42,0.25)',
             }}>
               知识库 · 14 主星 × 13 宫位 →
             </Link>
             <Link href="/chart" style={{
-              fontSize: '12px', padding: '6px 14px', borderRadius: '999px', textDecoration: 'none',
+              fontSize: '14px', padding: '6px 14px', borderRadius: '999px', textDecoration: 'none',
               color: 'var(--tx-2)', background: 'var(--bg-page)', border: '1px solid rgba(184,146,42,0.18)',
             }}>
               排盘实测 →
             </Link>
             {book.slug && (
               <Link href={`/library/${book.slug}`} style={{
-                fontSize: '12px', padding: '6px 14px', borderRadius: '999px', textDecoration: 'none',
+                fontSize: '14px', padding: '6px 14px', borderRadius: '999px', textDecoration: 'none',
                 color: 'var(--tx-2)', background: 'var(--bg-page)', border: '1px solid rgba(184,146,42,0.18)',
               }}>
                 《{book.title}》目录 →
@@ -201,8 +203,8 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
                 color: 'var(--tx-0)',
               }}
             >
-              <div style={{ fontSize: '10px', color: 'var(--tx-3)', letterSpacing: '0.2em', marginBottom: '2px' }}>← 上一章</div>
-              <div style={{ fontSize: '13px', fontWeight: 500 }}>{book.chapters[prevIdx].title}</div>
+              <div style={{ fontSize: '12px', color: 'var(--tx-3)', letterSpacing: '0.2em', marginBottom: '2px' }}>← 上一章</div>
+              <div style={{ fontSize: '15px', fontWeight: 500 }}>{book.chapters[prevIdx].title}</div>
             </Link>
           ) : <div style={{ flex: 1 }} />}
           {nextIdx < book.chapters.length ? (
@@ -219,11 +221,12 @@ export default async function ChapterPage({ params }: { params: Promise<{ book: 
                 textAlign: 'right',
               }}
             >
-              <div style={{ fontSize: '10px', color: 'var(--tx-3)', letterSpacing: '0.2em', marginBottom: '2px' }}>下一章 →</div>
-              <div style={{ fontSize: '13px', fontWeight: 500 }}>{book.chapters[nextIdx].title}</div>
+              <div style={{ fontSize: '12px', color: 'var(--tx-3)', letterSpacing: '0.2em', marginBottom: '2px' }}>下一章 →</div>
+              <div style={{ fontSize: '15px', fontWeight: 500 }}>{book.chapters[nextIdx].title}</div>
             </Link>
           ) : <div style={{ flex: 1 }} />}
         </div>
+      <SiteFooter />
       </article>
     </div>
   );
