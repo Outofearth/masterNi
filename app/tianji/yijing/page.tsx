@@ -11,6 +11,7 @@ import {
 } from '../_colors';
 import TianjiFadeIn from '../TianjiFadeIn';
 import SiteFooter from '@/components/SiteFooter';
+import SectionEyebrow from '@/components/SectionEyebrow';
 
 /**
  * 易经 64 卦浏览页
@@ -85,13 +86,7 @@ export default function YijingPage() {
 
         <div className="relative mx-auto" style={{ maxWidth: '1280px' }}>
           <TianjiFadeIn>
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-              <span className="text-[13px] tracking-[0.45em]" style={{ color: c.tagText }}>
-                Yi Jing 64 · 象数派
-              </span>
-              <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
-            </div>
+            <SectionEyebrow size={13} tracking="0.45em" className="mb-6">Yi Jing 64 · 象数派</SectionEyebrow>
           </TianjiFadeIn>
 
           <TianjiFadeIn delay={0.1} className="text-center">
@@ -276,7 +271,7 @@ export default function YijingPage() {
       </section>
 
       {/* Footer */}
-      <SiteFooter note="紫微命盘 · 天纪·易经 · 基于倪海夏《天纪》公开教学讲义整理" />
+      <SiteFooter note="紫微命盘 · 天纪·易经 · 基于倪海厦《天纪》公开教学讲义整理" />
     </div>
   );
 }

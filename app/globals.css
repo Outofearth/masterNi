@@ -666,19 +666,66 @@ strong, b { font-weight: 600; }
 }
 
 /* ─── B13 打印 / 另存 PDF 通用样式 ───────────────────────
- * 触发条件：body.print-mode（点「导出 PDF」按钮时挂上）
- *   · 隐藏导航、按钮、抽屉、AI 面板、滚动条、动画
- *   · 强制白底黑字，方便打印 / 另存 PDF
- *   · 命盘/卦象区块容器加 .export-root 以被打快照
+ * 触发条件：body.print-mode（点「导出报告」→「另存 PDF」时挂上）
+ *
+ * 设计要点（2026-09-11 重写）：
+ *  1) **不再用 `body.print-mode *` 整体刷白**。命盘的网格线是 .chart-grid 的
+ *     背景色透过 1px gap 显出来的、宫格底色同样承载信息，整体刷白会把整张命盘
+ *     变成一块白板 —— 这正是「导出的 PDF 里命盘格子不可见」的根因。
+ *     改为「在 body 上把设计 token 覆写成浅色」，让所有元素自然解析出浅色值：
+ *     既保住网格线与四化/命宫高亮，也不受当前明暗主题影响（否则暗色主题下
+ *     打印会得到一张黑底命盘）。
+ *  2) 单屏工作台（左右两栏 + 高度锁定）改成单列自然流 —— 两栏挤在一页正是
+ *     「纵向错行」的根因。
+ *  3) 打印固定输出「命盘 + 命盘速览」：AI 解读面板在纸上没有意义，隐藏它。
  * ──────────────────────────────────────────────────── */
 @media print {
-  body.print-mode,
-  body.print-mode * {
+  /* ① body 级 token 覆写：把双主题统一钉在浅色一档 */
+  body.print-mode {
+    --bg-0: #ffffff;
+    --bg-1: #f6f2e6;
+    --bg-2: #efe8d6;
+    --bg-card: #ffffff;
+    --tx-0: #111111;
+    --tx-1: #1a1a1a;
+    --tx-2: #333333;
+    --tx-3: #555555;
+    --ac:        #b8922a;
+    --ac-dim:    #7a5f1a;
+    --ac-bg:     rgba(184,146,42,0.08);
+    --ac-bdr:    rgba(184,146,42,0.30);
+    --ac-text:   #805c0e;
+    --ac-strong: #6a4206;
+    --lu:   #1f7a3f;  --lu-bg:   rgba(31,122,63,0.08);   --lu-bdr:   rgba(31,122,63,0.30);
+    --quan: #1d4ed8;  --quan-bg: rgba(29,78,216,0.08);   --quan-bdr: rgba(29,78,216,0.30);
+    --ke:   #7a600c;  --ke-bg:   rgba(122,96,12,0.08);   --ke-bdr:   rgba(122,96,12,0.30);
+    --ji:   #c0392b;  --ji-bg:   rgba(192,57,43,0.08);   --ji-bdr:   rgba(192,57,43,0.30);
+    --state-good: #1f7a3f;  --state-bad: #c0392b;
+    --da-xian: #7c3aed;  --da-xian-bg: rgba(124,58,237,0.08);  --da-xian-bdr: rgba(124,58,237,0.30);
+    --sel:     #2563eb;  --sel-bg:     rgba(37,99,235,0.10);   --sel-bdr:     rgba(37,99,235,0.35);
+    --star-major: #8a5a0e;  --star-major-bright: #8f5f05;  --star-major-dim: #6f4a16;
+    --ming: #a84b07;  --shen: #0c6a84;  --lucky: #0c6a84;  --sha: #9f2d23;
+    /* 工作台别名必须显式覆写：暗色主题下它们被指向暗底 */
+    --t-bg:         #ffffff;
+    --t-surface:    #f6f2e6;
+    --t-card:       #ffffff;
+    --t-border:     #c9bda1;
+    --t-faint:      #555555;
+    --t-text:       #1a1a1a;
+    --t-text1:      #111111;
+    --t-text2:      #333333;
+    --t-gold:       #805c0e;
+    --bdr:          rgba(0,0,0,0.16);
+    --bdr-med:      rgba(0,0,0,0.22);
+    --bdr-heavy:    rgba(0,0,0,0.30);
+
     background: #ffffff !important;
     color: #1a1a1a !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+
+  /* ② 隐藏导航 / 按钮 / 抽屉 / 弹层 / Tab 条 */
   body.print-mode .site-header,
   body.print-mode .no-export,
   body.print-mode button,
@@ -686,15 +733,54 @@ strong, b { font-weight: 600; }
   body.print-mode .fixed,
   body.print-mode [role="tablist"],
   body.print-mode .export-btn-row,
+  body.print-mode .chart-workspace-topbar,
   body.print-mode .qigua-history-btn {
     display: none !important;
   }
-  body.print-mode .export-root {
-    box-shadow: none !important;
-    border: 1px solid #d4d4d4 !important;
-    page-break-inside: avoid;
-    margin: 0 auto !important;
+
+  /* ③ 单屏工作台 → 单列自然流（消除两栏挤压导致的纵向错行） */
+  body.print-mode .ziwei-workspace {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    gap: 0 !important;
   }
+  body.print-mode .ziwei-workspace-grid { display: block !important; }
+  body.print-mode .ziwei-left { overflow: visible !important; margin: 0 0 18px !important; }
+
+  /* ④ 固定输出「命盘 + 命盘速览」：无论当前停在哪个 Tab */
+  body.print-mode .chart-pane-ai { display: none !important; }
+  body.print-mode .chart-pane-summary {
+    display: flex !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+  body.print-mode .chart-pane-summary > div { overflow: visible !important; height: auto !important; }
+  body.print-mode .chart-pane-summary > div:last-child { padding: 0 !important; }
+
+  /* ⑤ 命盘：保住网格线与宫格底纹（「格子可见」的关键） */
+  body.print-mode .chart-board { break-inside: avoid; }
+  body.print-mode .chart-grid {
+    background: #b9a982 !important;   /* 网格线颜色（透过 1px gap 显色） */
+    border-color: #b9a982 !important;
+    box-shadow: none !important;
+  }
+
+  /* ⑥ 速览卡片：去阴影、保留描边，避免打印发灰 */
+  body.print-mode .card-glass,
+  body.print-mode .card-inner {
+    box-shadow: none !important;
+    border-color: #d8cfb8 !important;
+  }
+  body.print-mode .export-root { box-shadow: none !important; margin: 0 auto !important; }
+
   body.print-mode .export-page-title {
     display: block !important;
     font-size: 22px;
@@ -703,10 +789,140 @@ strong, b { font-weight: 600; }
     padding-bottom: 8px;
     border-bottom: 2px solid #b8922a;
   }
+
+  html { background: #ffffff !important; }
   @page {
     size: A4;
-    margin: 12mm;
+    margin: 14mm 13mm 15mm;
   }
 }
+
 /* 屏幕下隐藏打印标题 */
 .export-page-title { display: none; }
+
+/* ─── 导出报告「纸张」：PNG 与 PDF 共用的报告 DOM ─────────────
+ * 设计要点：
+ *  · 与 app 界面完全解耦 —— 报告版式怎么改都不会影响 app，反之亦然
+ *  · 700px 固定宽 —— 与 app 内命盘同宽，PNG/PDF 排版一致
+ *  · 自身携带浅色调色板（双主题被钉在浅色档），不论 app 当前是暗色还是亮色
+ *  · 屏幕下藏在 0 高度 + overflow:hidden 宿主里（不可见、不占位、不产生滚动条）；
+ *    html2canvas 只克隆目标子树，隐藏不影响抓图
+ *  · 保持与上方 @media print 里 body.print-mode 的 token 块同步 —— 两处任一
+ *    改动另一处必须跟着改，否则暗色主题下打印会出现「黑底命盘」
+ * ──────────────────────────────────────────────────── */
+.report-sheet {
+  --bg-0: #ffffff; --bg-1: #f6f2e6; --bg-2: #efe8d6; --bg-card: #ffffff;
+  --tx-0: #111111; --tx-1: #1a1a1a; --tx-2: #333333; --tx-3: #555555;
+  --ac:        #b8922a; --ac-dim:    #7a5f1a;
+  --ac-bg:     rgba(184,146,42,0.08); --ac-bdr: rgba(184,146,42,0.30);
+  --ac-text:   #805c0e; --ac-strong: #6a4206;
+  --lu:   #1f7a3f;  --quan: #1d4ed8;  --ke: #7a600c;  --ji: #c0392b;
+  --state-good: #1f7a3f;  --state-bad: #c0392b;
+  --da-xian: #7c3aed;  --sel: #2563eb;
+  --star-major: #8a5a0e; --star-major-bright: #8f5f05; --star-major-dim: #6f4a16;
+  --ming: #a84b07; --shen: #0c6a84; --lucky: #0c6a84; --sha: #9f2d23;
+  --t-bg:         #ffffff; --t-surface: #f6f2e6; --t-card: #ffffff;
+  --t-border:     #c9bda1; --t-faint:   #555555;
+  --t-text:       #1a1a1a; --t-text1:   #111111; --t-text2: #333333; --t-gold: #805c0e;
+  --bdr:          rgba(0,0,0,0.16); --bdr-med: rgba(0,0,0,0.22); --bdr-heavy: rgba(0,0,0,0.30);
+
+  background: #fffdf6;
+  color: #1a1a1a;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.report-sheet-host {
+  position: relative;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.report-sheet {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 700px;
+  padding: 34px 30px 28px;
+  box-sizing: border-box;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.report-sheet-head {
+  border-bottom: 2px solid #b8922a;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+.report-sheet-brand {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: #805c0e;
+  margin-bottom: 4px;
+}
+.report-sheet-title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  margin: 4px 0 10px;
+  color: #1a1a1a;
+  letter-spacing: 0.05em;
+}
+.report-sheet-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 12px;
+  color: #555;
+  line-height: 1.8;
+}
+.report-section { margin-top: 22px; }
+.report-section + .report-section { margin-top: 28px; }
+.report-h2 {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 12px;
+  padding-left: 10px;
+  border-left: 3px solid #b8922a;
+  letter-spacing: 0.04em;
+}
+.report-sheet-foot {
+  margin-top: 24px;
+  padding-top: 12px;
+  border-top: 1px solid #d8cfb8;
+  font-size: 11px;
+  color: #777;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* 单独打印「报告纸张」：隐藏整个 app，只显示纸张 */
+@media print {
+  body.report-mode .ziwei-workspace,
+  body.report-mode .site-header,
+  body.report-mode .site-footer,
+  body.report-mode .chart-workspace-topbar,
+  body.report-mode .no-print {
+    display: none !important;
+  }
+  body.report-mode .report-sheet-host {
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+    pointer-events: auto !important;
+  }
+  body.report-mode .report-sheet {
+    position: static !important;
+    width: auto !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+  body.report-mode .report-section,
+  body.report-mode .card-glass,
+  body.report-mode .card-inner { break-inside: avoid; }
+  body.report-mode .report-h2 { break-after: avoid; }
+  /* 命盘留主页；速览另起一页，让两段不挤在一页 */
+  body.report-mode .report-sheet-summary { break-before: page; }
+}

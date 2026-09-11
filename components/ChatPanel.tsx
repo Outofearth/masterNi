@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { ZiweiChart } from '@/lib/ziwei/types';
+import { IS_STATIC_EXPORT, AI_UNAVAILABLE_NOTICE } from '@/lib/ai-guard';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -39,6 +40,13 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setLoading(true);
+
+    // 静态版无服务端，直接说明原因
+    if (IS_STATIC_EXPORT) {
+      setMessages(prev => [...prev, { role: 'assistant', content: AI_UNAVAILABLE_NOTICE }]);
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch('/api/interpret', {
@@ -93,7 +101,7 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
       {/* 标题 */}
       <div className="px-4 py-3 flex-shrink-0" style={{ borderBottom: '1px solid var(--t-border)' }}>
         <h3 className="text-xs font-medium tracking-widest" style={{ color: 'var(--t-gold)' }}>AI 命盘解读</h3>
-        <p className="text-[12px] mt-0.5" style={{ color: 'var(--t-faint)' }}>倪海夏正宗紫微斗数 · 智慧解析</p>
+        <p className="text-[12px] mt-0.5" style={{ color: 'var(--t-faint)' }}>倪海厦正宗紫微斗数 · 智慧解析</p>
       </div>
 
       {/* 消息列表 */}

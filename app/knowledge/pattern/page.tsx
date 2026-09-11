@@ -21,6 +21,7 @@ import {
   type PatternLevel,
 } from '@/lib/ziwei/pattern-catalog';
 import SiteFooter from '@/components/SiteFooter';
+import SectionEyebrow from '@/components/SectionEyebrow';
 
 export default function PatternKnowledgePage() {
   const [query, setQuery] = useState('');
@@ -55,11 +56,7 @@ export default function PatternKnowledgePage() {
 
       {/* Hero */}
       <section className="text-center px-6 py-12">
-        <div className="flex items-center justify-center gap-3 mb-3">
-          <div style={{ height: '1px', width: '48px', background: 'linear-gradient(to right, transparent, rgba(184,146,42,0.4))' }} />
-          <span style={{ fontSize: '13px', color: 'var(--ac-text)', letterSpacing: '0.4em' }}>PATTERN LIBRARY</span>
-          <div style={{ height: '1px', width: '48px', background: 'linear-gradient(to left, transparent, rgba(184,146,42,0.4))' }} />
-        </div>
+        <SectionEyebrow size={13} className="mb-3">PATTERN LIBRARY</SectionEyebrow>
         <h1 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 700, color: 'var(--tx-0)', letterSpacing: '0.15em', marginBottom: '10px' }}>
           紫微格局词典
         </h1>

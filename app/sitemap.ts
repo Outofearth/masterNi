@@ -10,8 +10,12 @@
 import type { MetadataRoute } from 'next';
 import { ALL_BOOKS } from '@/lib/classics';
 import { getAllKnowledgeRoutes } from '@/lib/seo/knowledge';
+import { SITE_URL } from '@/lib/site';
 
-const BASE_URL = 'https://wdyziweidoushu666.com';
+const BASE_URL = SITE_URL;
+
+// 静态导出（GitHub Pages）要求 Metadata Route 显式声明静态，原因同 robots.ts。
+export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastmod = new Date('2026-04-28');

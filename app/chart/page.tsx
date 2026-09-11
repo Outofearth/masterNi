@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import BirthForm from '@/components/BirthForm';
 import type { BirthFormState } from '@/components/BirthForm';
 import ChartBoard from '@/components/ChartBoard';
@@ -7,10 +7,13 @@ import InsightPanel, { type SelectedSiHua, type SelectedStar } from '@/component
 import ChartSummary from '@/components/ChartSummary';
 import StarDetailPanel from '@/components/StarDetailPanel';
 import ShareModal from '@/components/ShareModal';
+import ShareButton from '@/components/ShareButton';
 import ThemeToggle from '@/components/ThemeToggle';
 import ExportReportButton from '@/components/ExportReportButton';
+import ChartReportSheet from '@/components/ChartReportSheet';
 import { generateChart } from '@/lib/ziwei/algorithm';
 import { formToSearchParams, searchParamsToForm } from '@/lib/ziwei/share';
+import { BRANCHES } from '@/lib/ziwei/constants';
 import { useHistory } from '@/lib/ziwei/history';
 import type { BirthInfo, ZiweiChart, Palace, Star } from '@/lib/ziwei/types';
 import SiteFooter from '@/components/SiteFooter';
@@ -64,6 +67,11 @@ export default function ChartPage() {
   }, []);
 
   const boardRef = useRef<HTMLDivElement>(null);
+  /**
+   * 「报告纸张」ref：导出 PNG / 另存 PDF 都抓这份 DOM（避开 app 内
+   * overflow:auto/固定高度导致的「抓出来的图/打印缺内容」问题）。
+   */
+  const sheetRef = useRef<HTMLDivElement>(null);
 
   const handleFormSave = useCallback((data: BirthFormState) => {
     setFormState(data);
@@ -76,11 +84,43 @@ export default function ChartPage() {
   }, [formState, save]);
 
   const openShare = useCallback(() => {
-    if (!formState) return;
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
-    setShareUrl(`${origin}/chart?${formToSearchParams(formState).toString()}`);
+    if (formState) {
+      setShareUrl(`${origin}/chart?${formToSearchParams(formState).toString()}`);
+    } else {
+      // 兜底：从 URL 参数直接起盘、还没经过表单保存时，仍给出可回填的链接，
+      // 而不是让「分享」按钮静默无响应。
+      const b = chart?.birthInfo;
+      if (!b) return;
+      const p = new URLSearchParams();
+      p.set('y', String(b.year));
+      p.set('m', String(b.month));
+      p.set('d', String(b.day));
+      p.set('g', b.gender === 'male' ? 'm' : 'f');
+      setShareUrl(`${origin}/chart?${p.toString()}`);
+    }
     setShareOpen(true);
-  }, [formState]);
+  }, [formState, chart]);
+
+  /** 分享卡用的出生信息：优先表单原文（含真太阳时用的钟点），缺失时退回排盘结果 */
+  const shareBirth = useMemo(() => {
+    const b = chart?.birthInfo;
+    const hourText = formState
+      ? (formState.unknownTime
+        ? '时辰未详'
+        : `${String(formState.clockHour).padStart(2, '0')}:${String(formState.clockMinute).padStart(2, '0')}`)
+      : (b ? `${BRANCHES[b.hour] ?? ''}时` : '');
+    return {
+      year: String(formState?.year ?? b?.year ?? ''),
+      month: String(formState?.month ?? b?.month ?? ''),
+      day: String(formState?.day ?? b?.day ?? ''),
+      hour: formState?.clockHour ?? '',
+      minute: formState?.clockMinute ?? '',
+      hourText,
+      gender: (formState?.gender ?? b?.gender ?? 'male') as 'male' | 'female',
+      city: formState?.city || formState?.province || b?.city || b?.province || undefined,
+    };
+  }, [chart, formState]);
 
   // A3：静态面板里点「让 AI 深度解读」→ 关面板 → 切到 AI Tab → 触发解读
   const askAIAboutStar = useCallback(() => {
@@ -162,9 +202,10 @@ export default function ChartPage() {
   // 布局规则见 app/globals.css（.ziwei-workspace* / .ziwei-left）：
   // 整页锁定一屏；左命盘超高时自身滚动；右 AI 解读对话在消息区内上下滚动。
   return (
+    <>
     <div className="ziwei-workspace">
-      {/* 顶栏：返回起盘 + 分享 + 导出 PDF/PNG + 主题切换 */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, padding: '2px 4px' }}>
+      {/* 顶栏：返回起盘 + 主题切换（「分享 / 导出报告」已下移到各 Tab 面板头部） */}
+      <div className="chart-workspace-topbar" style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, padding: '2px 4px' }}>
         <button
           type="button"
           onClick={() => {
@@ -186,24 +227,9 @@ export default function ChartPage() {
           倪海厦体系排盘 · 点宫位看三方四正、点主星看星曜速查、点四化看飞化
         </span>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
-          {/* A2 一键分享 */}
-          <button
-            type="button"
-            onClick={openShare}
-            style={{
-              padding: '6px 14px', cursor: 'pointer', fontSize: 15,
-              border: '1px solid rgba(212,168,67,0.35)', borderRadius: 8,
-              background: 'rgba(212,168,67,0.10)', color: 'var(--t-gold)',
-            }}
-            aria-label="分享这张命盘"
-          >
-            分享
-          </button>
-          <ExportReportButton
-            targetRef={boardRef}
-            filename="ziwei-chart"
-            printTitle="紫微命盘报告"
-          />
+          {/* 「分享」「导出报告」已下移到各 Tab 面板头部（AI 解读 / 命盘速览 各一份，同款同排）：
+              顶栏与面板里重复出现两个导出入口容易误点，且顶栏按钮离内容太远、归属不明。
+              这里只留主题切换。 */}
           <ThemeToggle />
         </div>
       </div>
@@ -271,21 +297,42 @@ export default function ChartPage() {
           </div>
 
           <div style={{ flex: 1, minHeight: 0, display: 'grid' }}>
-            <div style={{ display: rightTab === 'ai' ? 'block' : 'none', minHeight: 0, height: '100%' }}>
+            <div className="chart-pane-ai" style={{ display: rightTab === 'ai' ? 'block' : 'none', minHeight: 0, height: '100%' }}>
               <InsightPanel
                 chart={chart}
                 selectedPalace={selectedPalace}
                 selectedStar={selectedStar}
                 selectedSiHua={selectedSiHua}
+                onShare={openShare}
               />
             </div>
+
+            {/* 命盘速览：头部动作区与「AI 解读」面板同款 —— 标题 + 分享 + 导出报告，
+                头部固定、正文独立滚动。此前这两个入口挂在顶栏上，与面板里的
+                「导出 PDF 报告」构成两个导出入口，归属不清且容易误点。 */}
             <div
-              style={{
-                display: rightTab === 'summary' ? 'block' : 'none',
-                minHeight: 0, height: '100%', overflowY: 'auto',
-              }}
+              className="chart-pane-summary h-full rounded-xl overflow-hidden card-glass"
+              style={{ display: rightTab === 'summary' ? 'flex' : 'none', flexDirection: 'column', minHeight: 0 }}
             >
-              <ChartSummary chart={chart} />
+              <div
+                className="flex items-center justify-between flex-shrink-0 pl-3 pr-2 pt-2.5 pb-2"
+                style={{ borderBottom: '1px solid var(--t-border)' }}
+              >
+                <span className="text-[14px] font-medium tracking-widest" style={{ color: 'var(--t-gold)' }}>✦ 命盘速览</span>
+                <div className="flex items-center gap-1.5">
+                  <ShareButton onClick={openShare} />
+                  <ExportReportButton
+                    targetRef={boardRef}
+                    sheetRef={sheetRef}
+                    filename="ziwei-chart-summary"
+                    printTitle="紫微命盘速览报告"
+                    size="panel"
+                  />
+                </div>
+              </div>
+              <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '14px 14px 18px' }}>
+                <ChartSummary chart={chart} />
+              </div>
             </div>
           </div>
         </div>
@@ -297,17 +344,20 @@ export default function ChartPage() {
         onClose={() => setShareOpen(false)}
         shareUrl={shareUrl}
         chart={chart}
-        birth={{
-          year: formState?.year ?? '',
-          month: formState?.month ?? '',
-          day: formState?.day ?? '',
-          hour: formState?.clockHour ?? '',
-          minute: formState?.clockMinute ?? '',
-          gender: formState?.gender ?? 'male',
-          city: formState?.city || formState?.province || undefined,
-        }}
+        birth={shareBirth}
       />
     </div>
+
+    {/* 报告纸张 —— 屏幕下藏在 0 高度宿主里（不可见、不占位、不产生滚动条），
+        html2canvas 抓的就是它，PDF 打印路径也会单独只打这份（详见 globals.css
+        的 .report-sheet / .report-mode 规则）。起盘后才有意义。
+        注意：必须放在 .ziwei-workspace 之外，否则 report-mode 隐藏 app 时会把它一起藏掉。 */}
+    {chart && (
+      <div className="report-sheet-host">
+        <ChartReportSheet chart={chart} ref={sheetRef} />
+      </div>
+    )}
+    </>
   );
 }
 

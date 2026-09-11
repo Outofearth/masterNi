@@ -18,7 +18,7 @@ export { DIJI_MODULES, DIJI_STATS } from './diji';
 /** 倪海厦完整传记 */
 export const NI_HAIXIA_BIO = {
   name: '倪海厦',
-  nameVariant: '倪海夏',
+  nameVariant: '倪海厦',
   alias: '梵宇龙',
   birth: '1954年1月1日',
   death: '2012年1月31日',

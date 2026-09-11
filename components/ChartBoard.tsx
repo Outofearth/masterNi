@@ -11,6 +11,12 @@ interface ChartBoardProps {
   onStarSelect?: (star: Star, palace: Palace) => void;
   onPalaceSelect?: (palace: Palace) => void;
   onSiHuaClick?: (starName: string, siHua: string, view: TimeView) => void;
+  /**
+   * 静态报告模式（导出 PNG / 打印 PDF 用）：
+   * 隐藏「本命/大限/流年」时间导航轴与「点击宫位看三方四正」交互提示 ——
+   * 这两样在纸上既点不动也没有意义，留着只会占版面、看着像没做完。
+   */
+  plain?: boolean;
 }
 
 const BRANCH_GRID_POS: Record<number, [number, number]> = {
@@ -52,7 +58,7 @@ function getSanFangSiZheng(branch: number): [number, number, number, number] {
 
 const ANIMATION_ORDER = [5, 6, 7, 8, 9, 10, 11, 0, 1, 2, 3, 4];
 
-export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHuaClick }: ChartBoardProps) {
+export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHuaClick, plain = false }: ChartBoardProps) {
   const [selectedBranch, setSelectedBranch] = useState<number | null>(null);
   const [timeView, setTimeView] = useState<TimeView>('mingpan');
   const [liunianYear, setLiunianYear] = useState<number>(new Date().getFullYear());
@@ -88,15 +94,17 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
   const sanFangSet = sanFangBranches ? new Set(sanFangBranches) : null;
 
   return (
-    <div className="w-full select-none">
-      {/* 时间导航轴 */}
-      <TimeNav
-        chart={chart}
-        view={timeView}
-        liunianYear={liunianYear}
-        onViewChange={setTimeView}
-        onYearChange={setLiunianYear}
-      />
+    <div className="chart-board w-full select-none">
+      {/* 时间导航轴（静态报告模式不渲染） */}
+      {!plain && (
+        <TimeNav
+          chart={chart}
+          view={timeView}
+          liunianYear={liunianYear}
+          onViewChange={setTimeView}
+          onYearChange={setLiunianYear}
+        />
+      )}
 
       {/* 命盘标题 */}
       <motion.div
@@ -112,9 +120,12 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
         </h2>
       </motion.div>
 
-      {/* 4x4 命盘网格（含 SVG 叠加层） */}
+      {/* 4x4 命盘网格（含 SVG 叠加层）
+          注意：宫格之间的「线」不是 border，而是容器背景色透过 1px gap 显出来的，
+          所以 .chart-grid 的 background 就是网格线颜色 —— 打印样式必须保住它，
+          否则整体刷白后整张命盘会变成一块白板（见 globals.css @media print）。 */}
       <div
-        className="grid rounded-xl overflow-hidden relative"
+        className="chart-grid grid rounded-xl overflow-hidden relative"
         style={{
           gridTemplateColumns: 'repeat(4, 1fr)',
           gridTemplateRows: 'repeat(4, auto)',
@@ -273,9 +284,9 @@ export default function ChartBoard({ chart, onStarSelect, onPalaceSelect, onSiHu
         ].map(({ h, c }) => (
           <span key={h} className={`border px-1.5 py-0.5 rounded-full font-medium ${c}`}>{h}</span>
         ))}
-        <span className="px-1.5 py-0.5 rounded-full" style={{ color: 'var(--t-faint)', border: '1px solid var(--t-border)' }}>
+        {!plain && <span className="px-1.5 py-0.5 rounded-full" style={{ color: 'var(--t-faint)', border: '1px solid var(--t-border)' }}>
           点击宫位看三方四正
-        </span>
+        </span>}
       </motion.div>
     </div>
   );

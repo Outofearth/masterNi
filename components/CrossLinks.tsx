@@ -11,6 +11,7 @@
  */
 
 import Link from 'next/link';
+import SectionEyebrow from '@/components/SectionEyebrow';
 
 export interface CrossLink {
   /** 目标路由，如 '/knowledge/ziwei/overview' */
@@ -43,17 +44,9 @@ export default function CrossLinks({
         borderRadius: '12px',
       }}
     >
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        marginBottom: '12px',
-      }}>
-        <div style={{ height: '1px', width: '20px', background: 'rgba(184,146,42,0.5)' }} />
-        <span style={{ fontSize: '12px', color: 'var(--tx-3)', letterSpacing: '0.25em' }}>
-          {title}
-        </span>
-      </div>
+      <SectionEyebrow align="left" tracking="0.25em" textColor="var(--tx-3)" className="mb-3">
+        {title}
+      </SectionEyebrow>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
         {links.map(l => (

@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
       const system: ChatMsg = {
         role: 'system',
         content: [
-          '你是"王多鱼AI"紫微斗数合盘专家，口径为倪海厦《天纪》体系。'
+          '你是「紫微研究」紫微斗数合盘专家，口径为倪海厦《天纪》体系。'
             + '根据双方命盘做缘分匹配度、感情走向、互补/矛盾点与相处建议的结构化分析（可用【小标题】分段）。'
             + '只使用倪海厦体系论法（三方四正、对宫借星、大限/流年四化用宫干，不用飞星派、三合派术语）。',
           ...(corpusA ? [`甲方样本语料（命中 ${birthA?.year}-${birthA?.month}-${birthA?.day} 时辰${birthA?.hour} ${birthA?.gender}）：\n${corpusA}`] : []),

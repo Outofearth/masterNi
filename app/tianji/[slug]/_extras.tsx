@@ -17,6 +17,7 @@ import { useTianjiColors } from '../_colors';
 import { STAR_DESCRIPTIONS } from '@/lib/ziwei/constants';
 import { analyzeText, lookupRadicalWuxing } from '@/lib/cezi/dict';
 import { FENGSHUI_ENTRIES } from '@/lib/nihai/tianji';
+import SectionEyebrow from '@/components/SectionEyebrow';
 
 // ─── 通用小部件 ─────────────────────────────────────────
 
@@ -29,32 +30,10 @@ function Block({
   subtitle?: string;
   children: React.ReactNode;
 }) {
-  const { theme } = useTheme();
-  const c = useTianjiColors(theme);
-
   return (
     <section className="relative px-6 py-12">
       <div className="mx-auto" style={{ maxWidth: '960px' }}>
-        <div className="flex items-center gap-3 mb-6 justify-center">
-          <div
-            className="h-px w-12"
-            style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }}
-          />
-          <div className="text-center">
-            <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
-              {title}
-            </span>
-            {subtitle && (
-              <div className="text-[12px] mt-1" style={{ color: c.textFaint }}>
-                {subtitle}
-              </div>
-            )}
-          </div>
-          <div
-            className="h-px w-12"
-            style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }}
-          />
-        </div>
+        <SectionEyebrow subtitle={subtitle} className="mb-6">{title}</SectionEyebrow>
         {children}
       </div>
     </section>

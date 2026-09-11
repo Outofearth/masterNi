@@ -1,5 +1,8 @@
 node_modules/
 .next/
+out/
+.static-export-stash/
+*.exportbak
 .vercel/
 .env*
 !.env.example

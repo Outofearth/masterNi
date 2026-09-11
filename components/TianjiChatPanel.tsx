@@ -15,6 +15,7 @@ import {
   type StoredMessage,
   type UserPrefs,
 } from '@/lib/nihai/chat-memory';
+import { IS_STATIC_EXPORT, AI_UNAVAILABLE_NOTICE } from '@/lib/ai-guard';
 
 /**
  * 天纪 AI 解读面板 —— v2
@@ -101,6 +102,13 @@ export default function TianjiChatPanel({
     setMessages(updated);
     setInput('');
     setLoading(true);
+
+    // 静态版无服务端，直接说明原因
+    if (IS_STATIC_EXPORT) {
+      setMessages(prev => [...prev, { role: 'assistant', content: AI_UNAVAILABLE_NOTICE, ts: Date.now() }]);
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch('/api/tianji-chat', {

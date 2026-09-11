@@ -11,7 +11,7 @@ interface ShareModalProps {
   onClose: () => void;
   shareUrl: string;
   chart: ZiweiChart | null;
-  birth: { year: string; month: string; day: string; hour: string; minute: string; gender: 'male' | 'female'; city?: string };
+  birth: { year: string; month: string; day: string; hour: string; minute: string; gender: 'male' | 'female'; city?: string; hourText?: string };
   highlight?: string;
 }
 
@@ -69,7 +69,8 @@ export default function ShareModal({ open, onClose, shareUrl, chart, birth, high
             className="rounded-2xl overflow-hidden"
             style={{
               background: 'white',
-              maxWidth: '680px',
+              // 728 = 卡片 680 + 预览区左右各 24，避免卡片被裁切而出现横向滚动条
+              maxWidth: '728px',
               width: '100%',
               maxHeight: '92vh',
               overflowY: 'auto',

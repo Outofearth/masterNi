@@ -11,7 +11,7 @@ interface StarDetailPanelProps {
   onAskAI?: () => void;
 }
 
-// 倪海夏体系各星详细解读（参考顾祥弘《飞星紫微斗数全书》及南北山人《紫微斗数全书》）
+// 倪海厦体系各星详细解读（参考顾祥弘《飞星紫微斗数全书》及南北山人《紫微斗数全书》）
 const STAR_DETAIL: Record<string, {
   niHaixia: string;
   classical: string;
@@ -257,13 +257,13 @@ export default function StarDetailPanel({ star, palaceName, onClose, onAskAI }: 
               </div>
             )}
 
-            {/* 倪海夏解读 */}
+            {/* 倪海厦解读 */}
             {detail && (
               <>
                 <div>
                   <div className="text-[12px] tracking-widest mb-1.5 flex items-center gap-1.5" style={{ color: 'var(--t-faint)' }}>
                     <span className="w-3 h-px inline-block" style={{ background: 'var(--t-border-acc)' }} />
-                    倪海夏老师解读
+                    倪海厦老师解读
                     <span className="w-3 h-px inline-block" style={{ background: 'var(--t-border-acc)' }} />
                   </div>
                   <p className="text-xs leading-relaxed" style={{ color: 'var(--t-text2)' }}>{detail.niHaixia}</p>

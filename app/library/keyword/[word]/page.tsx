@@ -8,12 +8,21 @@ import Link from 'next/link';
 import { findParagraphsByKeyword, KEYWORD_DICT, getKeywordCloud } from '@/lib/classics/keywords';
 import { highlightKeyword } from '@/lib/classics/highlight';
 import SiteFooter from '@/components/SiteFooter';
+import SectionEyebrow from '@/components/SectionEyebrow';
+
+/**
+ * 静态导出：把词典里的全部关键词预生成成页面（/library/keyword/<词>）。
+ * 词表即 KEYWORD_DICT —— 与词云跳转共用同一来源，不会出现「有链接无页面」。
+ */
+export function generateStaticParams() {
+  return KEYWORD_DICT.map((k) => ({ word: k.text }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ word: string }> }) {
   const { word } = await params;
   return {
     title: `「${decodeURIComponent(word)}」· 古籍原典反查 · 紫微斗数古籍库`,
-    description: `查看 "${decodeURIComponent(word)}" 在所有收录古籍里的所有出处段落。倪海夏《天纪》引证目录`,
+    description: `查看 "${decodeURIComponent(word)}" 在所有收录古籍里的所有出处段落。倪海厦《天纪》引证目录`,
   };
 }
 
@@ -99,13 +108,9 @@ export default async function KeywordPage({ params }: { params: Promise<{ word: 
           </div>
         ) : (
           <>
-            <div className="flex items-center gap-3 mb-5">
-              <div style={{ height: '1px', width: '32px', background: 'var(--ac)' }} />
-              <span style={{ fontSize: '13px', color: 'var(--ac-text)', letterSpacing: '0.3em', fontWeight: 600 }}>
-                共 {contexts.length} 条出处 · 按所属古籍分组
-              </span>
-              <div style={{ height: '1px', flex: 1, background: 'rgba(184,146,42,0.15)' }} />
-            </div>
+            <SectionEyebrow align="left" divider size={13} tracking="0.3em" weight={600} className="mb-5">
+              共 {contexts.length} 条出处 · 按所属古籍分组
+            </SectionEyebrow>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {contexts.map((c, i) => (
@@ -156,13 +161,9 @@ export default async function KeywordPage({ params }: { params: Promise<{ word: 
         {/* 相关关键词推荐 */}
         {heat && cloud.length > 1 && (
           <div style={{ marginTop: '40px' }}>
-            <div className="flex items-center gap-3 mb-5">
-              <div style={{ height: '1px', width: '32px', background: 'var(--ac)' }} />
-              <span style={{ fontSize: '13px', color: 'var(--ac-text)', letterSpacing: '0.3em', fontWeight: 600 }}>
-                相关关键词
-              </span>
-              <div style={{ height: '1px', flex: 1, background: 'rgba(184,146,42,0.15)' }} />
-            </div>
+            <SectionEyebrow align="left" divider size={13} tracking="0.3em" weight={600} className="mb-5">
+              相关关键词
+            </SectionEyebrow>
             <div className="flex flex-wrap gap-2">
               {cloud.filter(k => k.text !== word && k.category === def?.category).slice(0, 10).map(k => (
                 <Link

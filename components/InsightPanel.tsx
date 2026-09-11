@@ -6,6 +6,8 @@ import type { ZiweiChart, Palace, Star } from '@/lib/ziwei/types';
 import type { TimeView } from './TimeNav';
 import { exportChartPdf } from '@/lib/reportExport';
 import { STAR_TO_SLUG } from '@/lib/seo/knowledge';
+import ShareButton from './ShareButton';
+import { IS_STATIC_EXPORT, AI_UNAVAILABLE_NOTICE } from '@/lib/ai-guard';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -41,6 +43,12 @@ interface InsightPanelProps {
   selectedSiHua?: SelectedSiHua | null;
   /** A4-1：命盘上点选的主星（点击主星名触发单星详解） */
   selectedStar?: SelectedStar | null;
+  /**
+   * 面板头部的「分享」动作。
+   * 分享卡片/链接的组装在 /chart 页（它持有出生信息与分享 URL），
+   * 面板只负责把入口摆在「导出 PDF 报告」旁边，两个按钮同款同排。
+   */
+  onShare?: () => void;
 }
 
 const TOPICS = [
@@ -59,7 +67,7 @@ const TOPIC_PROMPTS: Record<string, string> = {
 用一句话概括这个命盘的核心格局与命主气质。
 
 **【主星解读】**
-命宫主星的核心特质，引用倪海夏原话或观点。
+命宫主星的核心特质，引用倪海厦原话或观点。
 
 **【三方四正】**
 财、官、迁三宫的联动分析及整体格局。
@@ -76,7 +84,7 @@ const TOPIC_PROMPTS: Record<string, string> = {
 一句话定性感情命格。
 
 **【夫妻宫分析】**
-夫妻宫主星、四化，以及倪海夏体系的具体解读。
+夫妻宫主星、四化，以及倪海厦体系的具体解读。
 
 **【三方联动】**
 相关宫位对感情的影响。
@@ -127,7 +135,7 @@ const TOPIC_PROMPTS: Record<string, string> = {
 疾厄宫星曜与健康含义。
 
 **【主要风险】**
-结合倪海夏子午流注理论，分析主要健康隐患与需关注的部位。
+结合倪海厦子午流注理论，分析主要健康隐患与需关注的部位。
 
 **【大限健康走势】**
 当下健康趋势与关键时间段。
@@ -260,7 +268,7 @@ function StarQuickLinks({ links }: { links: QuickLink[] }) {
   );
 }
 
-export default function InsightPanel({ chart, selectedPalace, selectedSiHua, selectedStar }: InsightPanelProps) {
+export default function InsightPanel({ chart, selectedPalace, selectedSiHua, selectedStar, onShare }: InsightPanelProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -308,7 +316,7 @@ export default function InsightPanel({ chart, selectedPalace, selectedSiHua, sel
 ${selectedPalace.name}在命盘中的意义，以及这种星曜配置的整体判断。
 
 **【主星解读】**
-主星在此宫的倪海夏体系解读，引用具体观点。
+主星在此宫的倪海厦体系解读，引用具体观点。
 
 **【三方四正联动】**
 三方四正宫位对此宫的影响。
@@ -341,7 +349,7 @@ ${selectedPalace.name}在命盘中的意义，以及这种星曜配置的整体�
     const prompt = `请分析【${viewLabel}${selectedSiHua.starName}化${selectedSiHua.siHua}】的飞化影响，按以下结构输出：
 
 **【化${selectedSiHua.siHua}基本含义】**
-化${selectedSiHua.siHua}在倪海夏体系中的核心含义，以及${selectedSiHua.starName}化${selectedSiHua.siHua}的特殊含义。
+化${selectedSiHua.siHua}在倪海厦体系中的核心含义，以及${selectedSiHua.starName}化${selectedSiHua.siHua}的特殊含义。
 
 **【落宫影响】**
 ${selectedSiHua.starName}化${selectedSiHua.siHua}落在【${palaceName}】，该宫主管的领域受到何种影响，倪师如何解读。
@@ -380,7 +388,7 @@ ${selectedSiHua.starName}化${selectedSiHua.siHua}落在【${palaceName}】，�
 ${star.name}星的五行属性、核心星性与代表人物原型。
 
 **【入${palace.name}】**
-${star.name}落在${palace.name}的具体表现，引用倪海夏体系的具体论断。
+${star.name}落在${palace.name}的具体表现，引用倪海厦体系的具体论断。
 
 **【四化影响】**
 ${star.siHua
@@ -403,6 +411,13 @@ ${star.siHua
   }, [selectedStar]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const streamResponse = async (apiMessages: { role: 'user' | 'assistant'; content: string }[]) => {
+    // 静态版（GitHub Pages）没有服务端：先把原因讲清楚，而不是弹「解读失败」
+    if (IS_STATIC_EXPORT) {
+      setMessages(prev => [...prev, { role: 'assistant', content: AI_UNAVAILABLE_NOTICE }]);
+      setLoading(false);
+      loadingRef.current = false;
+      return;
+    }
     try {
       const res = await fetch('/api/interpret', {
         method: 'POST',
@@ -480,28 +495,32 @@ ${star.siHua
   return (
     <div className="flex flex-col h-full rounded-xl overflow-hidden card-glass">
 
-      {/* ── 头部：标题 + 导出报告 ── */}
+      {/* ── 头部：标题 + 分享 + 导出报告 ── */}
       <div className="flex items-center justify-between flex-shrink-0 pl-3 pr-2 pt-2.5 pb-2" style={{ borderBottom: '1px solid var(--t-border)' }}>
         <span className="text-[14px] font-medium tracking-widest" style={{ color: 'var(--t-gold)' }}>✦ AI 命盘解读</span>
-        <button
-          type="button"
-          onClick={handleExport}
-          disabled={loading}
-          title="将排盘与解读对话导出为 PDF 报告（浏览器打印对话框中选择“另存为 PDF”）"
-          className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[14px] font-medium transition-all disabled:opacity-40"
-          style={{
-            background: 'rgba(212,168,67,0.12)',
-            border: '1px solid rgba(212,168,67,0.28)',
-            color: 'var(--t-gold)',
-          }}
-        >
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7 10 12 15 17 10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
-          导出 PDF 报告
-        </button>
+        <div className="flex items-center gap-1.5">
+          {onShare && <ShareButton onClick={onShare} />}
+          <button
+            type="button"
+            onClick={handleExport}
+            disabled={loading}
+            title="将排盘与解读对话导出为 PDF 报告（浏览器打印对话框中选择“另存为 PDF”）"
+            className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[14px] font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            style={{
+              background: 'rgba(212,168,67,0.12)',
+              border: '1px solid rgba(212,168,67,0.28)',
+              color: 'var(--t-gold)',
+              cursor: loading ? 'not-allowed' : 'pointer',
+            }}
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            导出 PDF 报告
+          </button>
+        </div>
       </div>
 
       {/* ── Topic buttons ── */}

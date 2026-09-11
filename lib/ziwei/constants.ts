@@ -125,7 +125,7 @@ export const STAR_BRIGHTNESS: Record<string, Record<number, string>> = {
             1: 'dim', 4: 'dim', 7: 'dim', 10: 'dim' },
 };
 
-// 主星描述（倪海夏体系）
+// 主星描述（倪海厦体系）
 export const STAR_DESCRIPTIONS: Record<string, { keywords: string; nature: string; element: string }> = {
   '紫微': { keywords: '帝王·尊贵·独立', nature: '中性偏吉', element: '土' },
   '天机': { keywords: '智慧·机变·谋略', nature: '吉星', element: '木' },

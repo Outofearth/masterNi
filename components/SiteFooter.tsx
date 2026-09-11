@@ -14,7 +14,7 @@
 import Link from 'next/link';
 
 interface Props {
-  /** 模块专属说明，如「天纪模块 · 基于倪海夏《天纪》公开教学讲义整理」 */
+  /** 模块专属说明，如「天纪模块 · 基于倪海厦《天纪》公开教学讲义整理」 */
   note?: string;
   /** 紧凑模式：不显示条款链接（用于底部已有模块导航的页面） */
   compact?: boolean;
@@ -57,7 +57,7 @@ export default function SiteFooter({
           </p>
         )}
         <p style={{ fontSize: fs, color: 'var(--tx-3)', letterSpacing: '0.05em', margin: 0 }}>
-          紫微命盘 · 基于倪海夏正宗体系 · 仅供参考，命运掌握在自己手中
+          紫微命盘 · 基于倪海厦正宗体系 · 仅供参考，命运掌握在自己手中
         </p>
         <p
           style={{

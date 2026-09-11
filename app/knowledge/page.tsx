@@ -20,11 +20,12 @@ import {
   getStarFuqiInsight,
 } from '@/lib/ziwei/star-aggregate';
 import SiteFooter from '@/components/SiteFooter';
+import SectionEyebrow from '@/components/SectionEyebrow';
 
 export const metadata = {
-  title: '紫微斗数知识库 · 十四主星 · 倪海夏正宗体系',
-  description: '基于倪海夏《天纪》体系与古籍《紫微斗数全集》《骨髓赋》编纂的紫微斗数知识库。逐星查看十四主星的星曜档案、古籍原文、宫位论断与关联格局。',
-  keywords: ['紫微斗数', '倪海夏', '倪海厦紫微斗数', '紫微斗数全集', '紫微斗数全书', '14 主星', '12 宫位'],
+  title: '紫微斗数知识库 · 十四主星 · 倪海厦正宗体系',
+  description: '基于倪海厦《天纪》体系与古籍《紫微斗数全集》《骨髓赋》编纂的紫微斗数知识库。逐星查看十四主星的星曜档案、古籍原文、宫位论断与关联格局。',
+  keywords: ['紫微斗数', '倪海厦', '倪海厦紫微斗数', '紫微斗数全集', '紫微斗数全书', '14 主星', '12 宫位'],
 };
 
 const CHIP_STYLE = {
@@ -56,17 +57,13 @@ export default function KnowledgeHomePage() {
 
       {/* Hero */}
       <div className="text-center px-6 py-14">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <div style={{ height: '1px', width: '48px', background: 'linear-gradient(to right, transparent, rgba(184,146,42,0.4))' }} />
-          <span style={{ fontSize: '13px', color: 'var(--ac-text)', letterSpacing: '0.4em' }}>KNOWLEDGE BASE</span>
-          <div style={{ height: '1px', width: '48px', background: 'linear-gradient(to left, transparent, rgba(184,146,42,0.4))' }} />
-        </div>
+        <SectionEyebrow size={13} className="mb-4">KNOWLEDGE BASE</SectionEyebrow>
         <h1 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 700, color: 'var(--tx-0)', letterSpacing: '0.15em', marginBottom: '12px' }}>
           紫微斗数知识库
         </h1>
         <p style={{ fontSize: '16px', color: 'var(--tx-2)', letterSpacing: '0.08em', maxWidth: '600px', margin: '0 auto', lineHeight: 1.7 }}>
           十四主星 · 星曜档案 / 古籍原文 / 宫位论断 / 关联格局<br />
-          基于倪海夏《天纪》体系整理 · 内容持续补充中
+          基于倪海厦《天纪》体系整理 · 内容持续补充中
         </p>
       </div>
 

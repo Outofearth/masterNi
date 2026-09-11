@@ -72,7 +72,7 @@ export default function SiteHeader() {
             className="text-[13px] hidden sm:inline tracking-[0.2em]"
             style={{ color: 'var(--tx-3)' }}
           >
-            倪海夏正宗
+            倪海厦正宗
           </span>
         </Link>
 

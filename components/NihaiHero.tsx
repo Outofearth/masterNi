@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { useTheme } from '@/components/ThemeProvider';
 import { useTianjiColors } from '@/app/tianji/_colors';
 import TianjiFadeIn from '@/app/tianji/TianjiFadeIn';
+import SectionEyebrow from '@/components/SectionEyebrow';
 
 /**
  * 倪海厦「三纪」（天纪 / 地纪 / 人纪）统一 Hero 标题组
@@ -54,13 +55,7 @@ export default function NihaiHero({
 
       {/* 标签行：金线 + 小字 */}
       <TianjiFadeIn className="text-center">
-        <div className="flex items-center justify-center gap-3 mb-6">
-          <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-          <span className="text-[13px] tracking-[0.45em]" style={{ color: c.tagText }}>
-            {badge}
-          </span>
-          <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
-        </div>
+        <SectionEyebrow size={13} tracking="0.45em" className="mb-6">{badge}</SectionEyebrow>
       </TianjiFadeIn>
 
       {/* 主标题 */}

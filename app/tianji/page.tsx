@@ -19,6 +19,7 @@ import TianjiFadeIn from './TianjiFadeIn';
 import NihaiHero from '@/components/NihaiHero';
 import SiteFooter from '@/components/SiteFooter';
 import StatusBadge from '@/components/StatusBadge';
+import SectionEyebrow from '@/components/SectionEyebrow';
 
 /**
  * 天纪总览页
@@ -165,7 +166,7 @@ export default function TianjiOverviewPage() {
                   ▶
                 </div>
                 <div className="text-base lg:text-lg tracking-[0.2em] mb-2" style={{ color: c.textPrimary, fontFamily: 'var(--font-serif)' }}>
-                  倪海夏天纪 DVD · 视频位
+                  倪海厦天纪 DVD · 视频位
                 </div>
                 <div className="text-[13px] tracking-[0.25em] mb-1" style={{ color: c.tagText }}>
                   24 集 · 48 小时 · 原声讲义
@@ -189,15 +190,9 @@ export default function TianjiOverviewPage() {
         <div className="mx-auto" style={{ maxWidth: '1280px' }}>
           <TianjiFadeIn>
             <div className="text-center mb-10">
-              <div className="flex items-center justify-center gap-3 mb-3">
-                <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-                <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
-                  Three Realms
-                </span>
-                <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
-              </div>
+              <SectionEyebrow className="mb-3">Three Realms</SectionEyebrow>
               <h2 className="grad-text text-2xl lg:text-3xl font-bold mb-3 tracking-[0.15em]">
-                倪海夏 · 三才论
+                倪海厦 · 三才论
               </h2>
               <p className="text-sm max-w-xl mx-auto leading-relaxed" style={{ color: c.textSecond }}>
                 《天纪》课程的核心思想 —— 命 / 相 / 卜 / 山 / 医，五术兼备，
@@ -277,13 +272,7 @@ export default function TianjiOverviewPage() {
         <div className="mx-auto" style={{ maxWidth: '1280px' }}>
           <TianjiFadeIn>
             <div className="text-center mb-10">
-              <div className="flex items-center justify-center gap-3 mb-3">
-                <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-                <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
-                  Six Disciplines
-                </span>
-                <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
-              </div>
+              <SectionEyebrow className="mb-3">Six Disciplines</SectionEyebrow>
               <h2 className="grad-text text-2xl lg:text-3xl font-bold mb-3 tracking-[0.15em]">
                 天纪六模块
               </h2>
@@ -424,13 +413,7 @@ export default function TianjiOverviewPage() {
         <div className="mx-auto" style={{ maxWidth: '1280px' }}>
           <TianjiFadeIn>
             <div className="text-center mb-10">
-              <div className="flex items-center justify-center gap-3 mb-3">
-                <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-                <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
-                  24 Episodes
-                </span>
-                <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
-              </div>
+              <SectionEyebrow className="mb-3">24 Episodes</SectionEyebrow>
               <h2 className="grad-text text-2xl lg:text-3xl font-bold mb-3 tracking-[0.15em]">
                 24 集课程结构
               </h2>
@@ -528,13 +511,7 @@ export default function TianjiOverviewPage() {
         <div className="mx-auto" style={{ maxWidth: '1280px' }}>
           <TianjiFadeIn>
             <div className="text-center mb-10">
-              <div className="flex items-center justify-center gap-3 mb-3">
-                <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-                <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
-                  Words from Master Ni
-                </span>
-                <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
-              </div>
+              <SectionEyebrow className="mb-3">Words from Master Ni</SectionEyebrow>
               <h2 className="grad-text text-2xl lg:text-3xl font-bold mb-3 tracking-[0.15em]">
                 倪师语录精选
               </h2>
@@ -575,13 +552,7 @@ export default function TianjiOverviewPage() {
         <div className="mx-auto" style={{ maxWidth: '960px' }}>
           <TianjiFadeIn>
             <div className="text-center mb-8">
-              <div className="flex items-center justify-center gap-3 mb-3">
-                <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-                <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
-                  AI Interprets Tian Ji
-                </span>
-                <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
-              </div>
+              <SectionEyebrow className="mb-3">AI Interprets Tian Ji</SectionEyebrow>
               <h2 className="text-2xl lg:text-3xl font-bold mb-3 tracking-[0.15em]"
                 style={{ color: c.textPrimary, fontFamily: 'var(--font-serif)' }}>
                 问天纪
@@ -602,7 +573,7 @@ export default function TianjiOverviewPage() {
       </section>
 
       {/* Footer */}
-      <SiteFooter note="紫微命盘 · 天纪模块 · 基于倪海夏《天纪》公开教学讲义整理" />
+      <SiteFooter note="紫微命盘 · 天纪模块 · 基于倪海厦《天纪》公开教学讲义整理" />
     </div>
   );
 }
