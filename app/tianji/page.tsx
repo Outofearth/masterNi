@@ -16,6 +16,9 @@ import {
   useSyncBodyBackground,
 } from './_colors';
 import TianjiFadeIn from './TianjiFadeIn';
+import NihaiHero from '@/components/NihaiHero';
+import SiteFooter from '@/components/SiteFooter';
+import StatusBadge from '@/components/StatusBadge';
 
 /**
  * 天纪总览页
@@ -62,42 +65,18 @@ export default function TianjiOverviewPage() {
         </div>
 
         <div className="relative mx-auto" style={{ maxWidth: '1280px' }}>
-          {/* 标签行 */}
-          <TianjiFadeIn>
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-              <span className="text-[11px] tracking-[0.45em]" style={{ color: c.tagText }}>
-                Tian Ji · 上知天文
-              </span>
-              <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
-            </div>
-          </TianjiFadeIn>
-
-          {/* 主标题 */}
-          <TianjiFadeIn delay={0.1}>
-            <h1
-              className="grad-text font-bold leading-none text-center mb-6 tracking-tight"
-              style={{
-                fontSize: 'clamp(56px, 9vw, 124px)',
-                letterSpacing: '0.07em',
-              }}
-            >
-              天纪
-            </h1>
-          </TianjiFadeIn>
-
-          {/* 副标题 */}
-          <TianjiFadeIn delay={0.2}>
-            <p className="text-base md:text-lg tracking-[0.18em] mb-3 text-center" style={{ color: c.textSecond, fontWeight: 500 }}>
-              紫微斗数 · 易经 · 堪舆 · 推命
-            </p>
-          </TianjiFadeIn>
-          <TianjiFadeIn delay={0.3}>
-            <p className="text-sm max-w-2xl mx-auto leading-relaxed mb-10 text-center" style={{ color: c.textMuted }}>
-              倪海厦《天纪》24 集课程体系化整理，共 48 小时录像、4 册讲义。
-              涵盖紫微斗数、易经 64 卦、风水堪舆、推命面相、测字六大模块。
-            </p>
-          </TianjiFadeIn>
+          {/* 标题组：三纪统一组件（标签行 + 渐变大字 + 副标题 + 说明） */}
+          <NihaiHero
+            badge="Tian Ji · 上知天文"
+            title="天纪"
+            subtitle="紫微斗数 · 易经 · 堪舆 · 推命"
+            description={
+              <>
+                倪海厦《天纪》24 集课程体系化整理，共 48 小时录像、4 册讲义。
+                涵盖紫微斗数、易经 64 卦、风水堪舆、推命面相、测字六大模块。
+              </>
+            }
+          />
 
           {/* 数据条 */}
           <TianjiFadeIn delay={0.4}>
@@ -120,10 +99,10 @@ export default function TianjiOverviewPage() {
                     style={{ color: c.goldSolid, fontFamily: 'var(--font-serif)' }}>
                     {s.value}
                   </div>
-                  <div className="text-[11px] tracking-[0.2em] mt-1" style={{ color: c.textSecond }}>
+                  <div className="text-[13px] tracking-[0.2em] mt-1" style={{ color: c.textSecond }}>
                     {s.label}
                   </div>
-                  <div className="text-[9px] mt-0.5 tracking-wider" style={{ color: c.textMuted }}>
+                  <div className="text-[12px] mt-0.5 tracking-wider" style={{ color: c.textMuted }}>
                     {s.sub}
                   </div>
                 </div>
@@ -188,10 +167,10 @@ export default function TianjiOverviewPage() {
                 <div className="text-base lg:text-lg tracking-[0.2em] mb-2" style={{ color: c.textPrimary, fontFamily: 'var(--font-serif)' }}>
                   倪海夏天纪 DVD · 视频位
                 </div>
-                <div className="text-[11px] tracking-[0.25em] mb-1" style={{ color: c.tagText }}>
+                <div className="text-[13px] tracking-[0.25em] mb-1" style={{ color: c.tagText }}>
                   24 集 · 48 小时 · 原声讲义
                 </div>
-                <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full text-[10px] tracking-[0.2em]"
+                <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full text-[12px] tracking-[0.2em]"
                   style={{
                     background: 'transparent',
                     border: `1px dashed ${c.goldLine}`,
@@ -212,7 +191,7 @@ export default function TianjiOverviewPage() {
             <div className="text-center mb-10">
               <div className="flex items-center justify-center gap-3 mb-3">
                 <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-                <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
+                <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
                   Three Realms
                 </span>
                 <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
@@ -269,7 +248,7 @@ export default function TianjiOverviewPage() {
                     <div className="text-4xl font-bold leading-none" style={{ color: item.color }}>
                       {item.glyph}
                     </div>
-                    <div className="text-[10px] tracking-[0.2em] px-2 py-1 rounded-full"
+                    <div className="text-[12px] tracking-[0.2em] px-2 py-1 rounded-full"
                       style={{ color: c.textMuted, border: `1px solid ${item.border}` }}>
                       {item.note}
                     </div>
@@ -281,7 +260,7 @@ export default function TianjiOverviewPage() {
                   <ul className="space-y-2 flex-1">
                     {item.items.map((it) => (
                       <li key={it} className="text-xs flex items-center gap-2" style={{ color: c.textSecond }}>
-                        <span className="text-[8px]" style={{ color: item.color }}>▸</span>
+                        <span className="text-[11px]" style={{ color: item.color }}>▸</span>
                         {it}
                       </li>
                     ))}
@@ -300,7 +279,7 @@ export default function TianjiOverviewPage() {
             <div className="text-center mb-10">
               <div className="flex items-center justify-center gap-3 mb-3">
                 <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-                <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
+                <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
                   Six Disciplines
                 </span>
                 <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
@@ -340,15 +319,8 @@ export default function TianjiOverviewPage() {
                         {m.icon}
                       </div>
                       <div className="flex flex-col items-end gap-1">
-                        <span className="text-[9px] tracking-[0.2em] uppercase"
-                          style={{
-                            color: m.status === 'active' ? c.statusActive :
-                                  m.status === 'preview' ? c.statusPreview : c.statusComing,
-                          }}>
-                          {m.status === 'active' ? '已开放' :
-                           m.status === 'preview' ? '预览' : '筹备'}
-                        </span>
-                        <span className="text-[9px] tracking-[0.15em]" style={{ color: c.textMuted }}>
+                        <StatusBadge status={m.status} />
+                        <span className="text-[12px] tracking-[0.15em]" style={{ color: c.textMuted }}>
                           {m.school}
                         </span>
                       </div>
@@ -359,7 +331,7 @@ export default function TianjiOverviewPage() {
                       <div className="text-xl font-bold tracking-[0.1em] mb-0.5" style={{ color: c.textPrimary }}>
                         {m.name}
                       </div>
-                      <div className="text-[10px] tracking-wider" style={{ color: c.goldSolid, opacity: 0.7 }}>
+                      <div className="text-[12px] tracking-wider" style={{ color: c.goldSolid, opacity: 0.7 }}>
                         {m.nameEn}
                       </div>
                     </div>
@@ -377,10 +349,10 @@ export default function TianjiOverviewPage() {
                     {/* 章节数 + 进入链接 */}
                     <div className="flex items-center justify-between pt-3"
                       style={{ borderTop: `1px solid ${c.featureBord}` }}>
-                      <span className="text-[10px] tracking-wider" style={{ color: c.textMuted }}>
+                      <span className="text-[12px] tracking-wider" style={{ color: c.textMuted }}>
                         {m.chapters.length} 章 · {m.keywords.length} 关键词
                       </span>
-                      <span className="text-[10px] tracking-[0.2em]" style={{ color: c.goldSolid }}>
+                      <span className="text-[12px] tracking-[0.2em]" style={{ color: c.goldSolid }}>
                         进入 →
                       </span>
                     </div>
@@ -408,7 +380,7 @@ export default function TianjiOverviewPage() {
                 }}
               >
                 <div>
-                  <div className="text-[10px] tracking-[0.4em] uppercase mb-3" style={{ color: c.tagText }}>
+                  <div className="text-[12px] tracking-[0.4em] uppercase mb-3" style={{ color: c.tagText }}>
                     Yi Jing 64
                   </div>
                   <h3 className="grad-text text-3xl lg:text-4xl font-bold mb-4 tracking-[0.1em]">
@@ -435,7 +407,7 @@ export default function TianjiOverviewPage() {
                         style={{ color: c.goldSolid, fontFamily: 'var(--font-serif)' }}>
                         {h.name}
                       </div>
-                      <div className="text-[8px] mt-0.5" style={{ color: c.textMuted }}>
+                      <div className="text-[11px] mt-0.5" style={{ color: c.textMuted }}>
                         {h.composition}
                       </div>
                     </div>
@@ -454,7 +426,7 @@ export default function TianjiOverviewPage() {
             <div className="text-center mb-10">
               <div className="flex items-center justify-center gap-3 mb-3">
                 <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-                <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
+                <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
                   24 Episodes
                 </span>
                 <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
@@ -499,7 +471,7 @@ export default function TianjiOverviewPage() {
                           }}>
                           {ep.dvd}
                         </div>
-                        <div className="text-[9px] tracking-[0.2em]" style={{ color: c.textMuted }}>
+                        <div className="text-[12px] tracking-[0.2em]" style={{ color: c.textMuted }}>
                           DVD · 第 {ep.dvd} 集
                         </div>
                         <div className="ml-auto text-base" style={{ color: c.goldSolid }}>
@@ -508,7 +480,7 @@ export default function TianjiOverviewPage() {
                       </div>
                       <div className="space-y-2">
                         <div>
-                          <div className="text-[9px] tracking-[0.15em] mb-0.5" style={{ color: c.tagText }}>
+                          <div className="text-[12px] tracking-[0.15em] mb-0.5" style={{ color: c.tagText }}>
                             前半 · 命学
                           </div>
                           <div className="text-xs font-medium leading-relaxed" style={{ color: c.textPrimary }}>
@@ -516,7 +488,7 @@ export default function TianjiOverviewPage() {
                           </div>
                         </div>
                         <div>
-                          <div className="text-[9px] tracking-[0.15em] mb-0.5" style={{ color: c.tagText }}>
+                          <div className="text-[12px] tracking-[0.15em] mb-0.5" style={{ color: c.tagText }}>
                             后半 · 易经
                           </div>
                           <div className="text-xs leading-relaxed" style={{ color: c.textSecond }}>
@@ -532,11 +504,11 @@ export default function TianjiOverviewPage() {
                         className="px-4 pb-4 pt-2 space-y-1.5"
                         style={{ borderTop: `1px solid ${c.featureBord}` }}
                       >
-                        <div className="text-[9px] tracking-[0.2em] mb-1" style={{ color: c.tagText }}>
+                        <div className="text-[12px] tracking-[0.2em] mb-1" style={{ color: c.tagText }}>
                           本集要诀
                         </div>
                         {ep.highlights.map((h, j) => (
-                          <div key={j} className="text-[10px] flex items-start gap-1.5" style={{ color: c.textMuted }}>
+                          <div key={j} className="text-[12px] flex items-start gap-1.5" style={{ color: c.textMuted }}>
                             <span style={{ color: c.goldSolid }}>·</span>
                             <span>{h}</span>
                           </div>
@@ -558,7 +530,7 @@ export default function TianjiOverviewPage() {
             <div className="text-center mb-10">
               <div className="flex items-center justify-center gap-3 mb-3">
                 <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-                <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
+                <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
                   Words from Master Ni
                 </span>
                 <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
@@ -578,7 +550,7 @@ export default function TianjiOverviewPage() {
                     border: `1px solid ${c.cardBorder}`,
                   }}>
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-[9px] tracking-[0.2em] uppercase px-2 py-0.5 rounded-full"
+                    <span className="text-[12px] tracking-[0.2em] uppercase px-2 py-0.5 rounded-full"
                       style={{
                         color: c.goldSolid,
                         background: 'transparent',
@@ -605,7 +577,7 @@ export default function TianjiOverviewPage() {
             <div className="text-center mb-8">
               <div className="flex items-center justify-center gap-3 mb-3">
                 <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-                <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
+                <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid, opacity: 0.7 }}>
                   AI Interprets Tian Ji
                 </span>
                 <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
@@ -630,17 +602,7 @@ export default function TianjiOverviewPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-10 px-6" style={{ borderTop: `1px solid ${c.featureBord}` }}>
-        <div className="text-center max-w-2xl mx-auto">
-          <p className="text-[10px] tracking-wider mb-3" style={{ color: c.textFaint }}>
-            紫微命盘 · 天纪模块 · 基于倪海夏《天纪》公开教学讲义整理
-          </p>
-          <p className="text-[10px] tracking-wider leading-relaxed" style={{ color: c.textFaint, opacity: 0.85 }}>
-            本平台基于中国传统文化研究，仅提供学习参考。<br />
-            不构成任何医疗、投资、法律或重大决策建议。
-          </p>
-        </div>
-      </footer>
+      <SiteFooter note="紫微命盘 · 天纪模块 · 基于倪海夏《天纪》公开教学讲义整理" />
     </div>
   );
 }

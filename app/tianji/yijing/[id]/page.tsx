@@ -13,6 +13,7 @@ import {
   useSyncBodyBackground,
 } from '../../_colors';
 import TianjiFadeIn from '../../TianjiFadeIn';
+import SiteFooter from '@/components/SiteFooter';
 
 /**
  * 单卦详情页
@@ -81,20 +82,20 @@ export default function HexagramDetailPage() {
           <TianjiFadeIn>
             <div className="flex items-center justify-center gap-2 mb-4">
               <Link href="/tianji/yijing"
-                className="text-[10px] tracking-[0.25em] inline-flex items-center gap-1"
+                className="text-[12px] tracking-[0.25em] inline-flex items-center gap-1"
                 style={{ color: c.tagText }}>
                 ← 64 卦
               </Link>
               <span style={{ color: c.textFaint }}>·</span>
-              <span className="text-[10px] tracking-[0.25em]"
+              <span className="text-[12px] tracking-[0.25em]"
                 style={{ color: c.tagText, fontFamily: 'var(--font-mono)' }}>
                 第 {String(hex.number).padStart(2, '0')} 卦 / 64
               </span>
             </div>
           </TianjiFadeIn>
 
-          <TianjiFadeIn delay={0.1}>
-            <h1 className="grad-text font-bold leading-none text-center mb-2 tracking-tight"
+          <TianjiFadeIn delay={0.1} className="text-center">
+            <h1 className="grad-text font-bold leading-none mb-2 tracking-tight"
               style={{
                 fontSize: 'clamp(80px, 14vw, 180px)',
                 letterSpacing: '0.05em',
@@ -115,7 +116,7 @@ export default function HexagramDetailPage() {
             <div className="flex items-center justify-center gap-4 mb-2 text-xl tracking-wider"
               style={{ color: c.goldSolid }}>
               <span className="flex items-center gap-1.5">
-                <span className="text-[10px] tracking-widest" style={{ color: c.textMuted }}>上</span>
+                <span className="text-[12px] tracking-widest" style={{ color: c.textMuted }}>上</span>
                 <span className="text-2xl">{BAGUA_SYMBOL[hex.upper]}</span>
                 <span style={{ fontFamily: 'var(--font-serif)' }}>{hex.upper}</span>
               </span>
@@ -123,7 +124,7 @@ export default function HexagramDetailPage() {
               <span className="flex items-center gap-1.5">
                 <span className="text-2xl">{BAGUA_SYMBOL[hex.lower]}</span>
                 <span style={{ fontFamily: 'var(--font-serif)' }}>{hex.lower}</span>
-                <span className="text-[10px] tracking-widest" style={{ color: c.textMuted }}>下</span>
+                <span className="text-[12px] tracking-widest" style={{ color: c.textMuted }}>下</span>
               </span>
             </div>
           </TianjiFadeIn>
@@ -147,14 +148,14 @@ export default function HexagramDetailPage() {
                 <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
                   <div className="flex items-center gap-3">
                     <div className="h-px w-6" style={{ background: c.goldLine }} />
-                    <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
+                    <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
                       卦辞 · Meaning
                     </span>
                   </div>
                   {classicSrc && (
                     <span
                       title={classicSrc.classicalExcerpt}
-                      className="text-[10px] px-2 py-1 rounded-full"
+                      className="text-[12px] px-2 py-1 rounded-full"
                       style={{
                         color: c.goldSolid,
                         background: c.featureBg,
@@ -179,12 +180,12 @@ export default function HexagramDetailPage() {
                 )}
                 <div className="flex items-center gap-2 flex-wrap pt-3"
                   style={{ borderTop: `1px dashed ${c.cardBorder}` }}>
-                  <span className="text-[10px] tracking-[0.2em]" style={{ color: c.tagText }}>
+                  <span className="text-[12px] tracking-[0.2em]" style={{ color: c.tagText }}>
                     古籍引证
                   </span>
                   <Link
                     href={`/library/search?q=${encodeURIComponent(classicSrc?.libraryQuery ?? hex.name)}`}
-                    className="text-[11px] tracking-wider inline-flex items-center gap-1 hover:underline"
+                    className="text-[13px] tracking-wider inline-flex items-center gap-1 hover:underline"
                     style={{ color: c.goldSolid }}
                     aria-label={`在古籍库中检索 ${hex.name} 卦相关章节`}
                   >
@@ -211,7 +212,7 @@ export default function HexagramDetailPage() {
                 >
                   <div className="flex items-center gap-3 mb-5">
                     <div className="h-px w-6" style={{ background: c.goldSolid }} />
-                    <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid }}>
+                    <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid }}>
                       古籍原文 · 倪师解读 对照
                     </span>
                   </div>
@@ -225,12 +226,12 @@ export default function HexagramDetailPage() {
                       }}
                     >
                       <div className="flex items-center gap-2 mb-2">
-                        <span aria-hidden="true" style={{ fontSize: 14 }}>📜</span>
-                        <span className="text-[10px] tracking-[0.3em]" style={{ color: c.tagText }}>
+                        <span aria-hidden="true" style={{ fontSize: 16 }}>📜</span>
+                        <span className="text-[12px] tracking-[0.3em]" style={{ color: c.tagText }}>
                           古籍原文
                         </span>
                       </div>
-                      <p className="text-[10px] tracking-wider mb-2"
+                      <p className="text-[12px] tracking-wider mb-2"
                         style={{ color: c.goldSolid, fontFamily: 'var(--font-serif)' }}>
                         {classicSrc.classicalReference}
                       </p>
@@ -253,12 +254,12 @@ export default function HexagramDetailPage() {
                       }}
                     >
                       <div className="flex items-center gap-2 mb-2">
-                        <span aria-hidden="true" style={{ fontSize: 14 }}>🪶</span>
-                        <span className="text-[10px] tracking-[0.3em]" style={{ color: c.goldSolid }}>
+                        <span aria-hidden="true" style={{ fontSize: 16 }}>🪶</span>
+                        <span className="text-[12px] tracking-[0.3em]" style={{ color: c.goldSolid }}>
                           倪师解读
                         </span>
                       </div>
-                      <p className="text-[10px] tracking-wider mb-2"
+                      <p className="text-[12px] tracking-wider mb-2"
                         style={{ color: c.tagText, fontFamily: 'var(--font-serif)' }}>
                         倪海厦《天纪》易经象数派
                       </p>
@@ -288,7 +289,7 @@ export default function HexagramDetailPage() {
                 }}>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-px w-6" style={{ background: c.goldSolid }} />
-                  <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid }}>
+                  <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.goldSolid }}>
                     倪师解读 · Ni Interpretation
                   </span>
                 </div>
@@ -310,7 +311,7 @@ export default function HexagramDetailPage() {
                 }}>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-px w-6" style={{ background: c.goldLine }} />
-                  <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
+                  <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
                     断事要诀 · Divination
                   </span>
                 </div>
@@ -327,7 +328,7 @@ export default function HexagramDetailPage() {
       <section className="relative px-6 py-12" style={{ background: c.bgAlt }}>
         <div className="mx-auto" style={{ maxWidth: '960px' }}>
           <div className="mb-5 text-center">
-            <div className="text-[10px] tracking-[0.3em] mb-1" style={{ color: c.tagText }}>
+            <div className="text-[12px] tracking-[0.3em] mb-1" style={{ color: c.tagText }}>
               AI · 问卦
             </div>
             <h2 className="text-lg font-medium tracking-wider"
@@ -355,7 +356,7 @@ export default function HexagramDetailPage() {
                   background: c.featureBg,
                   border: `1px solid ${c.featureBord}`,
                 }}>
-                <div className="text-[10px] tracking-[0.25em] mb-1" style={{ color: c.tagText }}>
+                <div className="text-[12px] tracking-[0.25em] mb-1" style={{ color: c.tagText }}>
                   ← 上一卦
                 </div>
                 <div className="flex items-center gap-3">
@@ -388,7 +389,7 @@ export default function HexagramDetailPage() {
                   background: c.featureBg,
                   border: `1px solid ${c.featureBord}`,
                 }}>
-                <div className="text-[10px] tracking-[0.25em] mb-1" style={{ color: c.tagText }}>
+                <div className="text-[12px] tracking-[0.25em] mb-1" style={{ color: c.tagText }}>
                   下一卦 →
                 </div>
                 <div className="flex items-center justify-end gap-3">
@@ -421,13 +422,7 @@ export default function HexagramDetailPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-10 px-6" style={{ borderTop: `1px solid ${c.featureBord}` }}>
-        <div className="text-center max-w-2xl mx-auto">
-          <p className="text-[10px] tracking-wider" style={{ color: c.textFaint }}>
-            易经 64 卦 · 基于倪海夏《天纪》象数派体系整理 · 仅供学习参考
-          </p>
-        </div>
-      </footer>
+      <SiteFooter note="紫微命盘 · 天纪·易经 · 基于倪海夏《天纪》公开教学讲义整理" />
     </div>
   );
 }

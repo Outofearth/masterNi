@@ -19,7 +19,8 @@ import {
   type ShangHanFormula,
 } from '@/lib/renji/shanghan';
 import TianjiFadeIn from '../../tianji/TianjiFadeIn';
-import GlobalSearch from '@/components/GlobalSearch';
+import NihaiHero from '@/components/NihaiHero';
+import SiteFooter from '@/components/SiteFooter';
 
 const JING_LUO: ShangHanFormula['jingluo'][] = ['太阳', '阳明', '少阳', '太阴', '少阴', '厥阴'];
 
@@ -56,50 +57,20 @@ export default function ShanghanPage() {
 
   return (
     <main className="min-h-screen">
-      <nav
-        className="sticky top-0 z-40 backdrop-blur-md"
-        style={{
-          background: theme === 'dark' ? 'rgba(2,8,16,0.78)' : 'rgba(245,239,224,0.78)',
-          borderBottom: `1px solid ${c.featureBord}`,
-        }}
-      >
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-4 min-0">
-            <Link href="/renji" className="text-sm font-medium tracking-wider shrink-0" style={{ color: c.goldSolid }}>
-              ← 人纪
-            </Link>
-            <span className="text-sm tracking-widest font-serif truncate" style={{ color: c.textPrimary }}>
-              《伤寒论》核心方剂
-            </span>
-          </div>
-          <GlobalSearch variant="full" />
-        </div>
-      </nav>
-
-      {/* Hero */}
+            {/* Hero */}
       <section className="max-w-5xl mx-auto px-4 pt-12 pb-8">
-        <TianjiFadeIn>
-          <div className="text-center">
-            <div
-              className="inline-block px-3 py-1 rounded-full text-[10px] tracking-[0.3em] mb-4"
-              style={{
-                background: c.featureBg,
-                border: `1px solid ${c.goldLine}`,
-                color: c.goldSolid,
-              }}
-            >
-              汉·张仲景 · 113 方
-            </div>
-            <h1 className="text-4xl md:text-5xl font-serif tracking-widest leading-tight mb-4" style={{ color: c.textPrimary }}>
-              《伤寒论》方剂
-            </h1>
-            <p className="text-base leading-relaxed max-w-2xl mx-auto" style={{ color: c.textSecond }}>
+        <NihaiHero
+          badge="汉·张仲景 · 113 方"
+          title="《伤寒论》方剂"
+          titleSize="clamp(48px, 8vw, 96px)"
+          description={
+            <>
               按六经辨证 · 太阳 / 阳明 / 少阳 / 太阴 / 少阴 / 厥阴
               <br />
               每一经皆有其主方，君臣佐使各有定法。
-            </p>
-          </div>
-        </TianjiFadeIn>
+            </>
+          }
+        />
       </section>
 
       {/* 过滤 */}
@@ -112,7 +83,7 @@ export default function ShanghanPage() {
                   key={opt}
                   type="button"
                   onClick={() => setJingluoFilter(opt)}
-                  className="px-3 py-1.5 rounded-full text-[11px] tracking-wider transition-colors"
+                  className="px-3 py-1.5 rounded-full text-[13px] tracking-wider transition-colors"
                   style={{
                     background: jingluoFilter === opt ? c.goldSolid : c.featureBg,
                     color: jingluoFilter === opt ? '#fff' : c.textMuted,
@@ -128,7 +99,7 @@ export default function ShanghanPage() {
               placeholder="搜索方名 / 主治 / 症状…"
               value={searchQ}
               onChange={e => setSearchQ(e.target.value)}
-              className="text-[11px] px-3 py-1.5 rounded-full outline-none"
+              className="text-[13px] px-3 py-1.5 rounded-full outline-none"
               style={{
                 background: c.featureBg,
                 border: `1px solid ${c.featureBord}`,
@@ -148,7 +119,7 @@ export default function ShanghanPage() {
             style={{ background: c.cardBg, border: `1px solid ${c.featureBord}` }}
           >
             <div
-              className="grid grid-cols-12 gap-2 px-4 py-3 text-[10px] tracking-[0.2em]"
+              className="grid grid-cols-12 gap-2 px-4 py-3 text-[12px] tracking-[0.2em]"
               style={{
                 background: c.featureBg,
                 color: c.tagText,
@@ -172,7 +143,7 @@ export default function ShanghanPage() {
                   key={f.no}
                   type="button"
                   onClick={() => setSelectedNo(f.no === selectedNo ? null : f.no)}
-                  className="w-full grid grid-cols-12 gap-2 px-4 py-3 text-left text-[11px] transition-colors hover:!bg-[rgba(184,146,42,0.05)]"
+                  className="w-full grid grid-cols-12 gap-2 px-4 py-3 text-left text-[13px] transition-colors hover:!bg-[rgba(184,146,42,0.05)]"
                   style={{
                     borderBottom: `1px solid ${c.featureBord}`,
                     background: selectedNo === f.no ? 'rgba(184,146,42,0.08)' : 'transparent',
@@ -185,7 +156,7 @@ export default function ShanghanPage() {
                   <div className="col-span-2 font-serif font-medium" style={{ color: c.goldSolid }}>
                     {f.name}
                   </div>
-                  <div className="col-span-1 text-[10px]">
+                  <div className="col-span-1 text-[12px]">
                     <span
                       className="px-1.5 py-0.5 rounded"
                       style={{
@@ -210,7 +181,7 @@ export default function ShanghanPage() {
               ))
             )}
           </div>
-          <div className="mt-2 text-[10px] tracking-widest text-right" style={{ color: c.textFaint }}>
+          <div className="mt-2 text-[12px] tracking-widest text-right" style={{ color: c.textFaint }}>
             共 {SHANGHAN_FORMULAS.length} 方 · 当前显示 {filtered.length} 方
           </div>
         </TianjiFadeIn>
@@ -240,13 +211,13 @@ export default function ShanghanPage() {
                   第 {selected.no}
                 </div>
                 <div className="flex-1">
-                  <div className="text-[10px] tracking-[0.3em] mb-1" style={{ color: c.tagText }}>
+                  <div className="text-[12px] tracking-[0.3em] mb-1" style={{ color: c.tagText }}>
                     {selected.jingluo}经 · 君药：{selected.king}
                   </div>
                   <h2 className="text-2xl md:text-3xl font-serif tracking-wider" style={{ color: c.textPrimary }}>
                     {selected.name}
                   </h2>
-                  <p className="text-[12px] mt-2" style={{ color: c.goldSolid }}>
+                  <p className="text-[14px] mt-2" style={{ color: c.goldSolid }}>
                     {selected.indication}
                   </p>
                 </div>
@@ -254,18 +225,18 @@ export default function ShanghanPage() {
 
               <div className="grid md:grid-cols-2 gap-4 mb-5">
                 <div className="rounded-lg p-4" style={{ background: c.featureBg, border: `1px solid ${c.featureBord}` }}>
-                  <div className="text-[10px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>
+                  <div className="text-[12px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>
                     主症
                   </div>
-                  <p className="text-[11px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
+                  <p className="text-[13px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
                     {selected.symptoms}
                   </p>
                 </div>
                 <div className="rounded-lg p-4" style={{ background: c.featureBg, border: `1px solid ${c.featureBord}` }}>
-                  <div className="text-[10px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>
+                  <div className="text-[12px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>
                     组成
                   </div>
-                  <p className="text-[11px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
+                  <p className="text-[13px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
                     {selected.composition}
                   </p>
                 </div>
@@ -273,10 +244,10 @@ export default function ShanghanPage() {
 
               {selected.preparation && (
                 <div className="rounded-lg p-4 mb-5" style={{ background: c.featureBg, border: `1px solid ${c.featureBord}` }}>
-                  <div className="text-[10px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>
+                  <div className="text-[12px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>
                     煎服法
                   </div>
-                  <p className="text-[11px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
+                  <p className="text-[13px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
                     {selected.preparation}
                   </p>
                 </div>
@@ -290,20 +261,20 @@ export default function ShanghanPage() {
                   borderLeft: `4px solid ${c.goldSolid}`,
                 }}
               >
-                <div className="text-[10px] tracking-[0.3em] mb-2" style={{ color: c.goldSolid }}>
+                <div className="text-[12px] tracking-[0.3em] mb-2" style={{ color: c.goldSolid }}>
                   倪师要点
                 </div>
-                <p className="text-[12px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
+                <p className="text-[14px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
                   {selected.niNote}
                 </p>
               </div>
 
               {selected.modern && (
                 <div className="rounded-lg p-4" style={{ background: c.featureBg, border: `1px solid ${c.featureBord}` }}>
-                  <div className="text-[10px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>
+                  <div className="text-[12px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>
                     现代应用
                   </div>
-                  <p className="text-[11px] leading-relaxed" style={{ color: c.textSecond }}>
+                  <p className="text-[13px] leading-relaxed" style={{ color: c.textSecond }}>
                     {selected.modern}
                   </p>
                 </div>
@@ -317,7 +288,7 @@ export default function ShanghanPage() {
       <section className="max-w-5xl mx-auto px-4 pb-12">
         <TianjiFadeIn delay={0.15}>
           <div className="mb-6">
-            <div className="text-[10px] tracking-[0.3em] mb-2" style={{ color: c.tagText }}>
+            <div className="text-[12px] tracking-[0.3em] mb-2" style={{ color: c.tagText }}>
               药材使用频次
             </div>
             <h3 className="text-2xl font-serif tracking-wider" style={{ color: c.textPrimary }}>
@@ -328,7 +299,7 @@ export default function ShanghanPage() {
             {herbs.map(h => (
               <span
                 key={h.herb}
-                className="px-3 py-1.5 rounded-full text-[11px]"
+                className="px-3 py-1.5 rounded-full text-[13px]"
                 style={{
                   background: c.featureBg,
                   border: `1px solid ${c.featureBord}`,
@@ -337,7 +308,7 @@ export default function ShanghanPage() {
                 }}
               >
                 {h.herb}
-                <span style={{ color: c.goldSolid, marginLeft: '4px', fontSize: '10px' }}>{h.count}</span>
+                <span style={{ color: c.goldSolid, marginLeft: '4px', fontSize: '12px' }}>{h.count}</span>
               </span>
             ))}
           </div>
@@ -358,7 +329,7 @@ export default function ShanghanPage() {
 
       {/* Footer */}
       <footer className="max-w-5xl mx-auto px-4 pb-10 pt-6" style={{ borderTop: `1px solid ${c.featureBord}` }}>
-        <div className="flex flex-wrap items-center justify-center gap-4 text-[11px]">
+        <div className="flex flex-wrap items-center justify-center gap-4 text-[13px]">
           <Link href="/renji" className="tracking-wider hover:underline" style={{ color: c.textSecond }}>
             ← 人纪总览
           </Link>
@@ -367,6 +338,7 @@ export default function ShanghanPage() {
             《金匮要略》方剂 →
           </Link>
         </div>
+              <SiteFooter compact as="div" />
       </footer>
     </main>
   );

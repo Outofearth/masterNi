@@ -13,7 +13,8 @@ import { useTheme } from '@/components/ThemeProvider';
 import { useTianjiColors } from '../../tianji/_colors';
 import { FIVE_ELEMENTS, type FiveElement } from '@/lib/diji/mountains';
 import TianjiFadeIn from '../../tianji/TianjiFadeIn';
-import GlobalSearch from '@/components/GlobalSearch';
+import NihaiHero from '@/components/NihaiHero';
+import SiteFooter from '@/components/SiteFooter';
 
 export default function WujuePage() {
   const { theme } = useTheme();
@@ -24,50 +25,20 @@ export default function WujuePage() {
 
   return (
     <main className="min-h-screen">
-      <nav
-        className="sticky top-0 z-40 backdrop-blur-md"
-        style={{
-          background: theme === 'dark' ? 'rgba(2,8,16,0.78)' : 'rgba(245,239,224,0.78)',
-          borderBottom: `1px solid ${c.featureBord}`,
-        }}
-      >
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-4 min-0">
-            <Link href="/diji" className="text-sm font-medium tracking-wider shrink-0" style={{ color: c.goldSolid }}>
-              ← 地纪
-            </Link>
-            <span className="text-sm tracking-widest font-serif truncate" style={{ color: c.textPrimary }}>
-              地理五诀
-            </span>
-          </div>
-          <GlobalSearch variant="full" />
-        </div>
-      </nav>
-
-      {/* Hero */}
+            {/* Hero */}
       <section className="max-w-5xl mx-auto px-4 pt-12 pb-8">
-        <TianjiFadeIn>
-          <div className="text-center">
-            <div
-              className="inline-block px-3 py-1 rounded-full text-[10px] tracking-[0.3em] mb-4"
-              style={{
-                background: c.featureBg,
-                border: `1px solid ${c.goldLine}`,
-                color: c.goldSolid,
-              }}
-            >
-              堪舆心法 · 清·王道亨
-            </div>
-            <h1 className="text-4xl md:text-5xl font-serif tracking-widest leading-tight mb-4" style={{ color: c.textPrimary }}>
-              地理五诀
-            </h1>
-            <p className="text-base leading-relaxed max-w-2xl mx-auto" style={{ color: c.textSecond }}>
+        <NihaiHero
+          badge="堪舆心法 · 清·王道亨"
+          title="地理五诀"
+          titleSize="clamp(48px, 8vw, 96px)"
+          description={
+            <>
               龙、穴、砂、水、向 —— 五者合一，方为吉地。
               <br />
               缺一则偏，余一则孤。
-            </p>
-          </div>
-        </TianjiFadeIn>
+            </>
+          }
+        />
       </section>
 
       {/* 五字大按钮 */}
@@ -90,7 +61,7 @@ export default function WujuePage() {
                   }}
                 >
                   <div className="text-3xl md:text-4xl font-serif">{e.key}</div>
-                  <div className="text-[10px] tracking-[0.2em] mt-1 md:mt-2" style={{
+                  <div className="text-[12px] tracking-[0.2em] mt-1 md:mt-2" style={{
                     color: isActive ? 'rgba(255,255,255,0.85)' : c.textMuted,
                   }}>
                     {e.name}
@@ -125,7 +96,7 @@ export default function WujuePage() {
                 {current.key}
               </div>
               <div className="flex-1">
-                <div className="text-[10px] tracking-[0.3em] mb-1" style={{ color: c.tagText }}>
+                <div className="text-[12px] tracking-[0.3em] mb-1" style={{ color: c.tagText }}>
                   {current.name}
                 </div>
                 <h2 className="text-2xl md:text-3xl font-serif tracking-wider" style={{ color: c.textPrimary }}>
@@ -136,14 +107,14 @@ export default function WujuePage() {
 
             {/* 要诀列表 */}
             <div className="mb-6">
-              <div className="text-[10px] tracking-[0.3em] mb-3" style={{ color: c.tagText }}>
+              <div className="text-[12px] tracking-[0.3em] mb-3" style={{ color: c.tagText }}>
                 要诀
               </div>
               <ul className="space-y-2">
                 {current.keyPoints.map((p, i) => (
                   <li
                     key={i}
-                    className="text-[12px] flex gap-3 leading-relaxed font-serif"
+                    className="text-[14px] flex gap-3 leading-relaxed font-serif"
                     style={{ color: c.textPrimary }}
                   >
                     <span style={{ color: c.goldSolid }} className="shrink-0">·</span>
@@ -162,12 +133,12 @@ export default function WujuePage() {
                   border: `1px solid ${theme === 'dark' ? 'rgba(34,197,94,0.3)' : 'rgba(34,197,94,0.25)'}`,
                 }}
               >
-                <div className="text-[10px] tracking-[0.3em] mb-2" style={{
+                <div className="text-[12px] tracking-[0.3em] mb-2" style={{
                   color: theme === 'dark' ? 'rgba(134,239,172,0.9)' : 'rgba(22,163,74,0.9)',
                 }}>
                   吉象
                 </div>
-                <p className="text-[11px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
+                <p className="text-[13px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
                   {current.lucky}
                 </p>
               </div>
@@ -178,12 +149,12 @@ export default function WujuePage() {
                   border: `1px solid ${theme === 'dark' ? 'rgba(239,68,68,0.3)' : 'rgba(239,68,68,0.25)'}`,
                 }}
               >
-                <div className="text-[10px] tracking-[0.3em] mb-2" style={{
+                <div className="text-[12px] tracking-[0.3em] mb-2" style={{
                   color: theme === 'dark' ? 'rgba(252,165,165,0.9)' : 'rgba(220,38,38,0.9)',
                 }}>
                   凶象
                 </div>
-                <p className="text-[11px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
+                <p className="text-[13px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
                   {current.unlucky}
                 </p>
               </div>
@@ -198,10 +169,10 @@ export default function WujuePage() {
                 borderLeft: `4px solid ${c.goldSolid}`,
               }}
             >
-              <div className="text-[10px] tracking-[0.3em] mb-2" style={{ color: c.goldSolid }}>
+              <div className="text-[12px] tracking-[0.3em] mb-2" style={{ color: c.goldSolid }}>
                 倪师要点
               </div>
-              <p className="text-[12px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
+              <p className="text-[14px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
                 {current.niNote}
               </p>
             </div>
@@ -223,7 +194,7 @@ export default function WujuePage() {
 
       {/* Footer */}
       <footer className="max-w-5xl mx-auto px-4 pb-10 pt-6" style={{ borderTop: `1px solid ${c.featureBord}` }}>
-        <div className="flex flex-wrap items-center justify-center gap-4 text-[11px]">
+        <div className="flex flex-wrap items-center justify-center gap-4 text-[13px]">
           <Link href="/diji/mountains" className="tracking-wider hover:underline" style={{ color: c.textSecond }}>
             ← 廿四山向
           </Link>
@@ -232,6 +203,7 @@ export default function WujuePage() {
             地纪总览 →
           </Link>
         </div>
+              <SiteFooter compact as="div" />
       </footer>
     </main>
   );

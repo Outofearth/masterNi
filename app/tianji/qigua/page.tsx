@@ -20,6 +20,7 @@ import {
 import { buildFullReading } from '@/lib/qigua/yaoci';
 import type { TianjiContext } from '@/lib/nihai/chat';
 import ExportReportButton from '@/components/ExportReportButton';
+import SiteFooter from '@/components/SiteFooter';
 
 const TABS = [
   { key: 'coin', label: '铜钱起卦', desc: '摇六次 · 观阴阳' },
@@ -200,8 +201,7 @@ export default function QiguaPage() {
         />
         <TianjiFadeIn className="relative z-10">
           <h1
-            className="text-3xl sm:text-4xl font-serif tracking-[0.25em] mb-4"
-            style={{ color: c.goldSolid }}
+            className="grad-text text-3xl sm:text-4xl font-bold tracking-[0.25em] mb-4"
           >
             起卦问天
           </h1>
@@ -226,7 +226,7 @@ export default function QiguaPage() {
                   role="tab"
                   aria-selected={selected}
                   onClick={() => { setActive(t.key); setResult(null); setAiOpen(false); }}
-                  className="relative px-4 sm:px-5 py-2 rounded-full text-[11px] sm:text-xs tracking-wider transition-colors"
+                  className="relative px-4 sm:px-5 py-2 rounded-full text-[13px] sm:text-xs tracking-wider transition-colors"
                   style={{
                     color: selected ? '#08080a' : c.textMuted,
                     background: selected ? c.goldSolid : 'transparent',
@@ -234,7 +234,7 @@ export default function QiguaPage() {
                 >
                   <span className="block">{t.label}</span>
                   <span
-                    className="block text-[9px] mt-0.5 opacity-70"
+                    className="block text-[12px] mt-0.5 opacity-70"
                     style={{ color: selected ? '#08080a' : c.textFaint }}
                   >
                     {t.desc}
@@ -251,7 +251,7 @@ export default function QiguaPage() {
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
-              className="px-4 py-1.5 rounded-full text-[10px] tracking-[0.2em] transition-colors qigua-history-btn"
+              className="px-4 py-1.5 rounded-full text-[12px] tracking-[0.2em] transition-colors qigua-history-btn"
               style={{ border: `1px solid ${c.goldLine}`, color: c.goldSolid }}
               aria-label="查看起卦历史"
             >
@@ -331,7 +331,7 @@ export default function QiguaPage() {
                 <button
                   type="button"
                   onClick={() => setAiOpen(false)}
-                  className="text-[10px] tracking-[0.2em]"
+                  className="text-[12px] tracking-[0.2em]"
                   style={{ color: c.textFaint }}
                   aria-label="收起 AI 断卦"
                 >
@@ -416,18 +416,18 @@ export default function QiguaPage() {
                         <span className="text-sm font-serif" style={{ color: c.textPrimary }}>
                           {h.hexName}
                         </span>
-                        <span className="text-[10px]" style={{ color: c.textMuted }}>
+                        <span className="text-[12px]" style={{ color: c.textMuted }}>
                           {h.methodLabel}
                         </span>
                         <span className="flex-1" />
-                        <span className="text-[9px]" style={{ color: c.textFaint }}>
+                        <span className="text-[12px]" style={{ color: c.textFaint }}>
                           {new Date(h.at).toLocaleString('zh-CN', {
                             month: 'numeric', day: 'numeric',
                             hour: '2-digit', minute: '2-digit',
                           })}
                         </span>
                       </div>
-                      <p className="text-[10px] mt-1" style={{ color: c.textFaint }}>
+                      <p className="text-[12px] mt-1" style={{ color: c.textFaint }}>
                         {metaText(h.meta)}
                         {h.question ? ` · ${h.question}` : ''}
                       </p>
@@ -435,7 +435,7 @@ export default function QiguaPage() {
                     <button
                       type="button"
                       onClick={() => handleRemove(h.at)}
-                      className="text-[9px] mt-1.5"
+                      className="text-[12px] mt-1.5"
                       style={{ color: c.textFaint }}
                       aria-label="删除这条记录"
                     >
@@ -450,7 +450,7 @@ export default function QiguaPage() {
                   <button
                     type="button"
                     onClick={handleClearHistory}
-                    className="w-full py-2 rounded-lg text-[10px] tracking-[0.2em]"
+                    className="w-full py-2 rounded-lg text-[12px] tracking-[0.2em]"
                     style={{ border: `1px solid ${c.cardBorder}`, color: c.textMuted }}
                   >
                     清空历史
@@ -461,6 +461,7 @@ export default function QiguaPage() {
           </>
         )}
       </AnimatePresence>
+      <SiteFooter />
     </main>
   );
 }

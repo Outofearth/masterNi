@@ -18,7 +18,8 @@ import {
   type Mountain,
 } from '@/lib/diji/mountains';
 import TianjiFadeIn from '../../tianji/TianjiFadeIn';
-import GlobalSearch from '@/components/GlobalSearch';
+import NihaiHero from '@/components/NihaiHero';
+import SiteFooter from '@/components/SiteFooter';
 
 export default function MountainsPage() {
   const { theme } = useTheme();
@@ -36,50 +37,20 @@ export default function MountainsPage() {
 
   return (
     <main className="min-h-screen">
-      <nav
-        className="sticky top-0 z-40 backdrop-blur-md"
-        style={{
-          background: theme === 'dark' ? 'rgba(2,8,16,0.78)' : 'rgba(245,239,224,0.78)',
-          borderBottom: `1px solid ${c.featureBord}`,
-        }}
-      >
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-4 min-0">
-            <Link href="/diji" className="text-sm font-medium tracking-wider shrink-0" style={{ color: c.goldSolid }}>
-              ← 地纪
-            </Link>
-            <span className="text-sm tracking-widest font-serif truncate" style={{ color: c.textPrimary }}>
-              廿四山向
-            </span>
-          </div>
-          <GlobalSearch variant="full" />
-        </div>
-      </nav>
-
-      {/* Hero */}
+            {/* Hero */}
       <section className="max-w-5xl mx-auto px-4 pt-12 pb-8">
-        <TianjiFadeIn>
-          <div className="text-center">
-            <div
-              className="inline-block px-3 py-1 rounded-full text-[10px] tracking-[0.3em] mb-4"
-              style={{
-                background: c.featureBg,
-                border: `1px solid ${c.goldLine}`,
-                color: c.goldSolid,
-              }}
-            >
-              堪舆基础 · 罗经正针
-            </div>
-            <h1 className="text-4xl md:text-5xl font-serif tracking-widest leading-tight mb-4" style={{ color: c.textPrimary }}>
-              廿四山向
-            </h1>
-            <p className="text-base leading-relaxed max-w-2xl mx-auto" style={{ color: c.textSecond }}>
+        <NihaiHero
+          badge="堪舆基础 · 罗经正针"
+          title="廿四山向"
+          titleSize="clamp(48px, 8vw, 96px)"
+          description={
+            <>
               罗经三百六十度，每十五度为一山，廿四山以定阴阳、辨五行、分三元。
               <br />
               龙、穴、砂、水、向，五者皆以此为度。
-            </p>
-          </div>
-        </TianjiFadeIn>
+            </>
+          }
+        />
       </section>
 
       {/* 龙分类过滤 */}
@@ -91,7 +62,7 @@ export default function MountainsPage() {
                 key={opt}
                 type="button"
                 onClick={() => setDragonFilter(opt)}
-                className="px-4 py-1.5 rounded-full text-[11px] tracking-wider transition-colors"
+                className="px-4 py-1.5 rounded-full text-[13px] tracking-wider transition-colors"
                 style={{
                   background: dragonFilter === opt ? c.goldSolid : c.featureBg,
                   color: dragonFilter === opt ? '#fff' : c.textMuted,
@@ -112,7 +83,7 @@ export default function MountainsPage() {
             className="rounded-2xl p-6"
             style={{ background: c.cardBg, border: `1px solid ${c.featureBord}` }}
           >
-            <div className="text-[10px] tracking-[0.3em] mb-4" style={{ color: c.tagText }}>
+            <div className="text-[12px] tracking-[0.3em] mb-4" style={{ color: c.tagText }}>
               罗盘分布 · 共 {filtered.length} 山
             </div>
             <div className="grid grid-cols-6 md:grid-cols-8 gap-2">
@@ -132,7 +103,7 @@ export default function MountainsPage() {
                     }}
                   >
                     <div className="text-lg font-serif">{m.name}</div>
-                    <div className="text-[9px] tracking-widest mt-1" style={{
+                    <div className="text-[12px] tracking-widest mt-1" style={{
                       color: isSelected ? 'rgba(255,255,255,0.85)' : c.textFaint,
                     }}>
                       {m.element} · {m.yinYang}
@@ -169,14 +140,14 @@ export default function MountainsPage() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <div className="text-[10px] tracking-[0.3em]" style={{ color: c.tagText }}>
+                    <div className="text-[12px] tracking-[0.3em]" style={{ color: c.tagText }}>
                       第 {selected.index} 山 · {selected.degree}°
                     </div>
                   </div>
                   <h3 className="text-2xl font-serif tracking-wider mb-2" style={{ color: c.textPrimary }}>
                     {selected.dragon} · {selected.element} · {selected.yinYang}
                   </h3>
-                  <p className="text-[11px] tracking-widest" style={{ color: c.goldSolid }}>
+                  <p className="text-[13px] tracking-widest" style={{ color: c.goldSolid }}>
                     {selected.starNote}
                   </p>
                 </div>
@@ -184,24 +155,24 @@ export default function MountainsPage() {
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="rounded-lg p-4" style={{ background: c.featureBg, border: `1px solid ${c.featureBord}` }}>
-                  <div className="text-[10px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>
+                  <div className="text-[12px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>
                     阳宅宜忌
                   </div>
-                  <p className="text-[11px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
+                  <p className="text-[13px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
                     {selected.yangZhai}
                   </p>
                 </div>
                 <div className="rounded-lg p-4" style={{ background: c.featureBg, border: `1px solid ${c.featureBord}` }}>
-                  <div className="text-[10px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>
+                  <div className="text-[12px] tracking-[0.2em] mb-2" style={{ color: c.tagText }}>
                     阴宅葬法
                   </div>
-                  <p className="text-[11px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
+                  <p className="text-[13px] leading-relaxed font-serif" style={{ color: c.textPrimary }}>
                     {selected.yinZhai}
                   </p>
                 </div>
               </div>
 
-              <div className="mt-4 text-[10px] tracking-[0.15em] flex items-center gap-3 flex-wrap" style={{ color: c.textFaint }}>
+              <div className="mt-4 text-[12px] tracking-[0.15em] flex items-center gap-3 flex-wrap" style={{ color: c.textFaint }}>
                 <span>纳音：{selected.nayinElement}</span>
                 <span>·</span>
                 <span>主龙：{selected.mainDragon}</span>
@@ -215,7 +186,7 @@ export default function MountainsPage() {
       <section className="max-w-5xl mx-auto px-4 pb-10">
         <TianjiFadeIn delay={0.15}>
           <div className="mb-6">
-            <div className="text-[10px] tracking-[0.3em] mb-2" style={{ color: c.tagText }}>
+            <div className="text-[12px] tracking-[0.3em] mb-2" style={{ color: c.tagText }}>
               八宫分野
             </div>
             <h3 className="text-2xl font-serif tracking-wider" style={{ color: c.textPrimary }}>
@@ -243,10 +214,10 @@ export default function MountainsPage() {
                     {g.gua}
                   </div>
                   <div>
-                    <div className="text-[10px] tracking-[0.2em]" style={{ color: c.tagText }}>
+                    <div className="text-[12px] tracking-[0.2em]" style={{ color: c.tagText }}>
                       {g.position}
                     </div>
-                    <div className="text-[11px] tracking-wider" style={{ color: c.goldSolid }}>
+                    <div className="text-[13px] tracking-wider" style={{ color: c.goldSolid }}>
                       {g.godNote}
                     </div>
                   </div>
@@ -257,7 +228,7 @@ export default function MountainsPage() {
                       key={`${m.name}-${m.index}`}
                       type="button"
                       onClick={() => setSelected(m)}
-                      className="px-3 py-1 rounded-full text-[11px] font-serif transition-colors"
+                      className="px-3 py-1 rounded-full text-[13px] font-serif transition-colors"
                       style={{
                         background: c.featureBg,
                         border: `1px solid ${c.featureBord}`,
@@ -265,7 +236,7 @@ export default function MountainsPage() {
                       }}
                     >
                       {m.name}
-                      <span style={{ color: c.textFaint, fontSize: '9px', marginLeft: '4px' }}>
+                      <span style={{ color: c.textFaint, fontSize: '12px', marginLeft: '4px' }}>
                         {m.degree}°
                       </span>
                     </button>
@@ -281,7 +252,7 @@ export default function MountainsPage() {
       <section className="max-w-5xl mx-auto px-4 pb-12">
         <TianjiFadeIn delay={0.2}>
           <div className="mb-6">
-            <div className="text-[10px] tracking-[0.3em] mb-2" style={{ color: c.tagText }}>
+            <div className="text-[12px] tracking-[0.3em] mb-2" style={{ color: c.tagText }}>
               堪舆术语
             </div>
             <h3 className="text-2xl font-serif tracking-wider" style={{ color: c.textPrimary }}>
@@ -294,7 +265,7 @@ export default function MountainsPage() {
           >
             <ul className="space-y-3">
               {CONCEPT_GLOSSARY.map((g, i) => (
-                <li key={i} className="text-[11px] leading-relaxed" style={{ color: c.textSecond }}>
+                <li key={i} className="text-[13px] leading-relaxed" style={{ color: c.textSecond }}>
                   <span style={{ color: c.goldSolid, fontWeight: 600 }}>{g.word}</span>
                   <span style={{ color: c.textFaint }}> · </span>
                   <span>{g.brief}</span>
@@ -319,7 +290,7 @@ export default function MountainsPage() {
 
       {/* Footer */}
       <footer className="max-w-5xl mx-auto px-4 pb-10 pt-6" style={{ borderTop: `1px solid ${c.featureBord}` }}>
-        <div className="flex flex-wrap items-center justify-center gap-4 text-[11px]">
+        <div className="flex flex-wrap items-center justify-center gap-4 text-[13px]">
           <Link href="/diji" className="tracking-wider hover:underline" style={{ color: c.textSecond }}>
             ← 地纪总览
           </Link>
@@ -328,6 +299,7 @@ export default function MountainsPage() {
             地理五诀 →
           </Link>
         </div>
+              <SiteFooter compact as="div" />
       </footer>
     </main>
   );

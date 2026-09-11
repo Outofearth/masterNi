@@ -10,6 +10,7 @@ import {
   useSyncBodyBackground,
 } from '../_colors';
 import TianjiFadeIn from '../TianjiFadeIn';
+import SiteFooter from '@/components/SiteFooter';
 
 /**
  * 易经 64 卦浏览页
@@ -86,15 +87,15 @@ export default function YijingPage() {
           <TianjiFadeIn>
             <div className="flex items-center justify-center gap-3 mb-6">
               <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-              <span className="text-[11px] tracking-[0.45em]" style={{ color: c.tagText }}>
+              <span className="text-[13px] tracking-[0.45em]" style={{ color: c.tagText }}>
                 Yi Jing 64 · 象数派
               </span>
               <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
             </div>
           </TianjiFadeIn>
 
-          <TianjiFadeIn delay={0.1}>
-            <h1 className="grad-text font-bold leading-none text-center mb-4 tracking-tight"
+          <TianjiFadeIn delay={0.1} className="text-center">
+            <h1 className="grad-text font-bold leading-none mb-4 tracking-tight"
               style={{ fontSize: 'clamp(48px, 8vw, 96px)', letterSpacing: '0.07em' }}>
               易经 64 卦
             </h1>
@@ -138,7 +139,7 @@ export default function YijingPage() {
               }}>
               {/* 搜索框 */}
               <div className="flex items-center gap-3 mb-4">
-                <span className="text-[10px] tracking-[0.25em] uppercase whitespace-nowrap"
+                <span className="text-[12px] tracking-[0.25em] uppercase whitespace-nowrap"
                   style={{ color: c.tagText, minWidth: '64px' }}>
                   搜索
                 </span>
@@ -172,7 +173,7 @@ export default function YijingPage() {
 
               {/* 上卦 */}
               <div className="flex items-center gap-3 mb-4 flex-wrap">
-                <span className="text-[10px] tracking-[0.25em] uppercase whitespace-nowrap"
+                <span className="text-[12px] tracking-[0.25em] uppercase whitespace-nowrap"
                   style={{ color: c.tagText, minWidth: '64px' }}>
                   上卦
                 </span>
@@ -198,7 +199,7 @@ export default function YijingPage() {
               </div>
               {/* 下卦 */}
               <div className="flex items-center gap-3 mb-4 flex-wrap">
-                <span className="text-[10px] tracking-[0.25em] uppercase whitespace-nowrap"
+                <span className="text-[12px] tracking-[0.25em] uppercase whitespace-nowrap"
                   style={{ color: c.tagText, minWidth: '64px' }}>
                   下卦
                 </span>
@@ -226,7 +227,7 @@ export default function YijingPage() {
               {/* 状态条 */}
               <div className="flex items-center justify-between pt-3 flex-wrap gap-2"
                 style={{ borderTop: `1px solid ${c.featureBord}` }}>
-                <span className="text-[11px] tracking-wider" style={{ color: c.textMuted }}>
+                <span className="text-[13px] tracking-wider" style={{ color: c.textMuted }}>
                   显示 <span style={{ color: c.goldSolid, fontWeight: 600 }}>{filtered.length}</span> 卦
                   {filterUpper && ` · 上卦 ${filterUpper}`}
                   {filterLower && ` · 下卦 ${filterLower}`}
@@ -234,7 +235,7 @@ export default function YijingPage() {
                 </span>
                 {hasAnyFilter && (
                   <button type="button" onClick={clearFilter}
-                    className="text-[11px] tracking-wider cursor-pointer transition-colors"
+                    className="text-[13px] tracking-wider cursor-pointer transition-colors"
                     style={{ color: c.goldSolid }}>
                     清除过滤 ×
                   </button>
@@ -275,13 +276,7 @@ export default function YijingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-10 px-6" style={{ borderTop: `1px solid ${c.featureBord}` }}>
-        <div className="text-center max-w-2xl mx-auto">
-          <p className="text-[10px] tracking-wider" style={{ color: c.textFaint }}>
-            易经 64 卦 · 基于倪海夏《天纪》象数派体系整理 · 仅供参考
-          </p>
-        </div>
-      </footer>
+      <SiteFooter note="紫微命盘 · 天纪·易经 · 基于倪海夏《天纪》公开教学讲义整理" />
     </div>
   );
 }
@@ -306,7 +301,7 @@ function HexagramCard({
         }}
       >
         {/* 卦序号 */}
-        <div className="text-[8px] tracking-wider mb-1"
+        <div className="text-[11px] tracking-wider mb-1"
           style={{ color: c.textMuted, fontFamily: 'var(--font-mono)' }}>
           {String(hex.number).padStart(2, '0')}
         </div>
@@ -316,7 +311,7 @@ function HexagramCard({
           {hex.name}
         </div>
         {/* 卦象 */}
-        <div className="text-[8px] sm:text-[9px] tracking-wider leading-tight px-1 truncate w-full"
+        <div className="text-[11px] sm:text-[12px] tracking-wider leading-tight px-1 truncate w-full"
           style={{ color: c.textSecond }} title={hex.composition}>
           {hex.composition}
         </div>

@@ -7,7 +7,9 @@ import { useTianjiColors } from '../tianji/_colors';
 import { DIJI_MODULES, DIJI_STATS } from '@/lib/nihai/diji';
 import { DIJI_QUOTES } from '@/lib/nihai/diji-quotes';
 import TianjiFadeIn from '../tianji/TianjiFadeIn';
-import GlobalSearch from '@/components/GlobalSearch';
+import NihaiHero from '@/components/NihaiHero';
+import StatusBadge from '@/components/StatusBadge';
+import SiteFooter from '@/components/SiteFooter';
 
 /**
  * /diji 地纪总览
@@ -21,72 +23,35 @@ export default function DijiPage() {
 
   return (
     <main className="min-h-screen">
-      {/* 顶部 nav */}
-      <nav
-        className="sticky top-0 z-40 backdrop-blur-md"
-        style={{
-          background: theme === 'dark' ? 'rgba(2,8,16,0.78)' : 'rgba(245,239,224,0.78)',
-          borderBottom: `1px solid ${c.featureBord}`,
-        }}
-      >
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-4 min-0">
-            <Link href="/" className="text-sm font-medium tracking-wider shrink-0" style={{ color: c.goldSolid }}>
-              ← 首页
-            </Link>
-            <span className="text-sm tracking-widest font-serif" style={{ color: c.textPrimary }}>
-              地纪
-            </span>
-            <span className="text-[10px] tracking-[0.2em]" style={{ color: c.textFaint }}>
-              DI JI · 地脉承志
-            </span>
-          </div>
-          <GlobalSearch variant="full" />
-        </div>
-      </nav>
-
       {/* Hero */}
       <section className="max-w-6xl mx-auto px-4 pt-16 pb-10">
-        <TianjiFadeIn>
-          <div className="text-center">
-            <div
-              className="inline-block px-3 py-1 rounded-full text-[10px] tracking-[0.3em] mb-4"
-              style={{
-                background: c.featureBg,
-                border: `1px solid ${c.goldLine}`,
-                color: c.goldSolid,
-              }}
-            >
-              倪海厦 · 三大遗著之第二
-            </div>
-            <h1
-              className="text-4xl md:text-5xl font-serif tracking-widest leading-tight mb-4"
-              style={{ color: c.textPrimary }}
-            >
-              地纪
-            </h1>
-            <p
-              className="text-base md:text-lg leading-relaxed max-w-2xl mx-auto"
-              style={{ color: c.textSecond }}
-            >
-              承天文以察地理，汇堪舆以解人间。
+        <NihaiHero
+          badge="Di Ji · 下知地理"
+          title="地纪"
+          subtitle="堪舆 · 国家地理志 · 遗稿后学"
+          description={
+            <>
+              倪海厦三大遗著之二 —— 承天文以察地理，汇堪舆以解人间。
               <br />
               倪师未竟之宏愿，后辈薪火以传承。
-            </p>
-            <div className="flex items-center justify-center gap-6 mt-6 text-[10px] tracking-widest" style={{ color: c.textFaint }}>
+            </>
+          }
+        >
+          <TianjiFadeIn delay={0.4} className="text-center">
+            <div className="flex items-center justify-center gap-6 text-[12px] tracking-widest" style={{ color: c.textFaint }}>
               <span>{DIJI_STATS.totalModules} 模块</span>
               <span>·</span>
               <span>{DIJI_STATS.totalChapters} 章</span>
             </div>
-          </div>
-        </TianjiFadeIn>
+          </TianjiFadeIn>
+        </NihaiHero>
       </section>
 
       {/* 三模块卡片 */}
       <section className="max-w-6xl mx-auto px-4 pb-16">
         <TianjiFadeIn delay={0.1}>
           <div className="mb-6">
-            <div className="text-[10px] tracking-[0.3em] mb-2" style={{ color: c.tagText }}>
+            <div className="text-[12px] tracking-[0.3em] mb-2" style={{ color: c.tagText }}>
               三大主题
             </div>
             <h3 className="text-2xl font-serif tracking-wider" style={{ color: c.textPrimary }}>
@@ -119,23 +84,23 @@ export default function DijiPage() {
                   >
                     {m.icon}
                   </div>
-                  <div className="text-[10px] tracking-[0.2em] mb-1" style={{ color: c.tagText }}>
+                  <div className="text-[12px] tracking-[0.2em] mb-1" style={{ color: c.tagText }}>
                     {m.subtitle}
                   </div>
                   <h4 className="text-lg font-serif tracking-wider mb-2" style={{ color: c.textPrimary }}>
                     {m.name}
                   </h4>
-                  <p className="text-[11px] leading-relaxed line-clamp-3" style={{ color: c.textSecond }}>
+                  <p className="text-[13px] leading-relaxed line-clamp-3" style={{ color: c.textSecond }}>
                     {m.description}
                   </p>
                   <div className="flex items-center justify-between mt-4 pt-3" style={{ borderTop: `1px solid ${c.featureBord}` }}>
-                    <span className="text-[9px] tracking-[0.2em]" style={{ color: c.textFaint }}>
+                    <span className="text-[12px] tracking-[0.2em]" style={{ color: c.textFaint }}>
                       {m.chapters.length} 章 ·{' '}
                       <span style={{ color: m.status === 'active' ? c.goldSolid : c.textFaint }}>
-                        {m.status === 'active' ? '已上线' : m.status === 'preview' ? '试读' : '筹备'}
+                        <StatusBadge status={m.status} />
                       </span>
                     </span>
-                    <span className="text-[10px]" style={{ color: c.goldSolid }}>
+                    <span className="text-[12px]" style={{ color: c.goldSolid }}>
                       查看 →
                     </span>
                   </div>
@@ -150,7 +115,7 @@ export default function DijiPage() {
       <section className="max-w-6xl mx-auto px-4 pb-12">
         <TianjiFadeIn delay={0.18}>
           <div className="mb-6">
-            <div className="text-[10px] tracking-[0.3em] mb-2" style={{ color: c.tagText }}>
+            <div className="text-[12px] tracking-[0.3em] mb-2" style={{ color: c.tagText }}>
               扩展阅读
             </div>
             <h3 className="text-2xl font-serif tracking-wider" style={{ color: c.textPrimary }}>
@@ -180,13 +145,13 @@ export default function DijiPage() {
                     罗
                   </div>
                   <div className="flex-1">
-                    <div className="text-[10px] tracking-[0.2em] mb-1" style={{ color: c.tagText }}>
+                    <div className="text-[12px] tracking-[0.2em] mb-1" style={{ color: c.tagText }}>
                       罗经正针
                     </div>
                     <h4 className="text-lg font-serif tracking-wider mb-2 group-hover:underline" style={{ color: c.textPrimary }}>
                       廿四山向
                     </h4>
-                    <p className="text-[11px] leading-relaxed" style={{ color: c.textSecond }}>
+                    <p className="text-[13px] leading-relaxed" style={{ color: c.textSecond }}>
                       壬子癸、艮寅甲、卯乙辰、巽巳丙、午丁未、坤申庚、酉辛戌、乾亥壬
                       —— 八宫二十四山，分天元地元人元龙，详列阴阳五行、阳宅阴宅吉凶。
                     </p>
@@ -216,13 +181,13 @@ export default function DijiPage() {
                     五
                   </div>
                   <div className="flex-1">
-                    <div className="text-[10px] tracking-[0.2em] mb-1" style={{ color: c.tagText }}>
+                    <div className="text-[12px] tracking-[0.2em] mb-1" style={{ color: c.tagText }}>
                       地理五诀
                     </div>
                     <h4 className="text-lg font-serif tracking-wider mb-2 group-hover:underline" style={{ color: c.textPrimary }}>
                       龙穴砂水向
                     </h4>
-                    <p className="text-[11px] leading-relaxed" style={{ color: c.textSecond }}>
+                    <p className="text-[13px] leading-relaxed" style={{ color: c.textSecond }}>
                       寻龙点穴、察砂观水、立向定向 —— 五大要素相辅相成，缺一不可。
                       详列各要素吉象、凶象与倪师心法。
                     </p>
@@ -238,7 +203,7 @@ export default function DijiPage() {
       <section className="max-w-6xl mx-auto px-4 pb-20">
         <TianjiFadeIn delay={0.2}>
           <div className="mb-6">
-            <div className="text-[10px] tracking-[0.3em] mb-2" style={{ color: c.tagText }}>
+            <div className="text-[12px] tracking-[0.3em] mb-2" style={{ color: c.tagText }}>
               地纪心法
             </div>
             <h3 className="text-2xl font-serif tracking-wider" style={{ color: c.textPrimary }}>
@@ -257,7 +222,7 @@ export default function DijiPage() {
                   border: `1px solid ${c.featureBord}`,
                 }}
               >
-                <div className="text-[10px] tracking-[0.25em] mb-2" style={{ color: c.goldSolid }}>
+                <div className="text-[12px] tracking-[0.25em] mb-2" style={{ color: c.goldSolid }}>
                   「{q.topic}」
                 </div>
                 <p className="text-sm font-serif leading-relaxed" style={{ color: c.textPrimary }}>
@@ -271,7 +236,7 @@ export default function DijiPage() {
 
       {/* Footer */}
       <footer className="max-w-6xl mx-auto px-4 pb-10 pt-6" style={{ borderTop: `1px solid ${c.featureBord}` }}>
-        <div className="flex flex-wrap items-center justify-center gap-4 text-[11px]">
+        <div className="flex flex-wrap items-center justify-center gap-4 text-[13px]">
           <Link href="/tianji" className="tracking-wider hover:underline" style={{ color: c.textSecond }}>
             ← 天纪
           </Link>
@@ -280,6 +245,7 @@ export default function DijiPage() {
             人纪 →
           </Link>
         </div>
+              <SiteFooter compact as="div" />
       </footer>
     </main>
   );

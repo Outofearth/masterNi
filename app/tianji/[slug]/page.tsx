@@ -12,6 +12,7 @@ import {
 } from '../_colors';
 import TianjiFadeIn from '../TianjiFadeIn';
 import ModuleExtra from './_extras';
+import SiteFooter from '@/components/SiteFooter';
 
 /**
  * 天纪子模块详情页
@@ -74,12 +75,12 @@ export default function ModuleDetailPage() {
           <TianjiFadeIn>
             <div className="flex items-center justify-center gap-2 mb-6">
               <Link href="/tianji"
-                className="text-[10px] tracking-[0.25em] inline-flex items-center gap-1"
+                className="text-[12px] tracking-[0.25em] inline-flex items-center gap-1"
                 style={{ color: c.tagText }}>
                 ← 天纪
               </Link>
               <span style={{ color: c.textFaint }}>·</span>
-              <span className="text-[10px] tracking-[0.25em]" style={{ color: c.tagText }}>
+              <span className="text-[12px] tracking-[0.25em]" style={{ color: c.tagText }}>
                 {mod.nameEn}
               </span>
             </div>
@@ -99,8 +100,8 @@ export default function ModuleDetailPage() {
             </div>
           </TianjiFadeIn>
 
-          <TianjiFadeIn delay={0.2}>
-            <h1 className="grad-text font-bold leading-none text-center mb-3 tracking-tight"
+          <TianjiFadeIn delay={0.2} className="text-center">
+            <h1 className="grad-text font-bold leading-none mb-3 tracking-tight"
               style={{
                 fontSize: 'clamp(48px, 8vw, 96px)',
                 letterSpacing: '0.07em',
@@ -151,7 +152,7 @@ export default function ModuleDetailPage() {
                 }}>
                 <div className="flex items-center gap-3 mb-2">
                   <div className="h-px w-6" style={{ background: c.goldLine }} />
-                  <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
+                  <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
                     详细介绍
                   </span>
                 </div>
@@ -164,7 +165,7 @@ export default function ModuleDetailPage() {
                 {mod.chapters.find(ch => ch.quotes && ch.quotes.length > 0) && (
                   <div className="pt-5 mt-5"
                     style={{ borderTop: `1px solid ${c.featureBord}` }}>
-                    <div className="text-[10px] tracking-[0.25em] uppercase mb-2" style={{ color: c.tagText }}>
+                    <div className="text-[12px] tracking-[0.25em] uppercase mb-2" style={{ color: c.tagText }}>
                       倪师语录
                     </div>
                     <div className="space-y-2">
@@ -193,7 +194,7 @@ export default function ModuleDetailPage() {
             <TianjiFadeIn>
               <div className="flex items-center gap-3 mb-6 justify-center">
                 <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-                <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
+                <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
                   课程章节
                 </span>
                 <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
@@ -230,7 +231,7 @@ export default function ModuleDetailPage() {
                             {ch.title}
                           </h3>
                           {ch.subtitle && (
-                            <span className="text-[10px] tracking-wider" style={{ color: c.tagText }}>
+                            <span className="text-[12px] tracking-wider" style={{ color: c.tagText }}>
                               · {ch.subtitle}
                             </span>
                           )}
@@ -275,7 +276,7 @@ export default function ModuleDetailPage() {
                 }}>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-px w-6" style={{ background: c.goldLine }} />
-                  <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
+                  <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
                     关键词
                   </span>
                 </div>
@@ -304,7 +305,7 @@ export default function ModuleDetailPage() {
                 }}>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-px w-6" style={{ background: c.goldLine }} />
-                  <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
+                  <span className="text-[12px] tracking-[0.4em] uppercase" style={{ color: c.tagText }}>
                     参考书目
                   </span>
                 </div>
@@ -327,7 +328,7 @@ export default function ModuleDetailPage() {
       <section className="relative px-6 py-12" style={{ background: c.bgAlt }}>
         <div className="mx-auto" style={{ maxWidth: '960px' }}>
           <div className="mb-5 text-center">
-            <div className="text-[10px] tracking-[0.3em] mb-1" style={{ color: c.tagText }}>
+            <div className="text-[12px] tracking-[0.3em] mb-1" style={{ color: c.tagText }}>
               AI · 问学
             </div>
             <h2 className="text-lg font-medium tracking-wider"
@@ -360,13 +361,7 @@ export default function ModuleDetailPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-10 px-6" style={{ borderTop: `1px solid ${c.featureBord}` }}>
-        <div className="text-center max-w-2xl mx-auto">
-          <p className="text-[10px] tracking-wider" style={{ color: c.textFaint }}>
-            {mod.name} · 基于倪海夏《天纪》讲义整理 · 仅供学习参考
-          </p>
-        </div>
-      </footer>
+      <SiteFooter note="紫微命盘 · 天纪模块 · 基于倪海夏《天纪》公开教学讲义整理" />
     </div>
   );
 }
