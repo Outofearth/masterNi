@@ -2,6 +2,12 @@
 
 基于**倪海厦先生《天纪》**体系的紫微斗数排盘 + 学习平台。除排盘引擎外，还包含三纪（天纪 / 地纪 / 人纪）内容模块、古籍原文库、命盘知识图谱，以及一套可运行的测试与 CI。
 
+> 本仓库代码 fork 自上游 [Renhuai123/ziwei-doushu](https://github.com/Renhuai123/ziwei-doushu)，
+> 代码层沿用上游 [MIT License](./LICENSE) 开源（Copyright (c) 2026 紫微研究）。
+> 在上游基础上新增了三纪内容、知识图谱、合婚 UI、设计系统统一与导出报告。
+> 关于来源标注、致谢名单与权利处理的完整说明见文末
+> [「协议、来源与致谢」](#协议来源与致谢)。
+
 - 上游仓库：<https://github.com/Renhuai123/ziwei-doushu>
 - 本仓库（`origin`）：<https://github.com/Outofearth/masterNi>
 
@@ -170,42 +176,52 @@ npm run typecheck && npm test
 - 用户系统（登录 / 会员 / 支付）
 - 部署配置（Vercel / Nginx / Docker / 数据库）
 
-已知待办见 `docs/TODO.md`（本地文件，不进 git），主要包括：
-
-1. **知识库精细化论断** —— 现为聚合渲染，逐格精细化论断需补充资料后启动
-2. **流年逐段详解** —— 大限详解已上线；流年缺 `LiuNian` 数据结构与落宫计算
-3. **合婚评分算法** —— 现有 `HEMING_SCORE_CRITERIA` 是定性描述，无可直接套用的计算规则
-
 ---
 
-## 协议与授权
+## 协议、来源与致谢
 
-本仓库分三部分授权，**商用均无障碍**：
+本仓库代码 fork 自上游 [Renhuai123/ziwei-doushu](https://github.com/Renhuai123/ziwei-doushu)，
+代码层沿用上游 [MIT License](./LICENSE)（Copyright (c) 2026 紫微研究）。
+仓库内不同内容采用**三层协议**：
 
 | 内容 | 协议 | 说明 |
 |---|---|---|
 | **代码**（`app/`、`components/`、`lib/` 等） | [MIT License](./LICENSE) | 自由使用，保留 LICENSE 文件即可 |
-| **样本数据集**（上游 Releases 中的 51.8 万条 v3.0） | 自由使用 · 要求 attribution | 商用亦可，**须保留数据来源标注**，见下 |
-| **古籍原文**（紫微斗数全集 / 全书、骨髓赋等） | Public Domain | 古籍属公有领域，不存在版权 |
+| **古籍原文**（紫微斗数全集 / 全书、骨髓赋、伤寒论、金匮要略等） | Public Domain | 古籍属公有领域，无版权 |
+| **本站聚合内容**（知识图谱 182 页、三纪讲义摘录、针灸透针经验等） | 详见下「致谢与来源」 | 非商业使用免费；整站转载或商业使用请先联系 |
 
-### 样本数据集 attribution（如使用上游数据集，必须保留）
+### 致谢与来源
 
-> 本项目使用了 **紫微斗数开源样本数据集 v3.0**（518,400 条）
-> 来源：https://github.com/Renhuai123/ziwei-doushu
-> 作者：王多鱼AI
+本项目代码层的紫微斗数排盘算法、四化系统、格局库、合婚方法论等核心来自上游开源版本。
+感谢原作者（王多鱼AI / 紫微研究）的开源贡献。
 
-标注位置任选其一即可：
+本站实际引入的依赖与资源清单：
 
-- **网页 / 产品**：About 页、关于我们、数据来源或页脚，写一行链接
-- **AI 模型**：模型卡（Model Card）或数据集卡（Dataset Card）的 `Training Data` 字段
-- **学术论文**：参考文献或致谢章节
-- **二次发布的数据集**：README 或 metadata 中注明上游来源
+| 来源 | 用法 | 协议 |
+|---|---|---|
+| [iztro](https://github.com/SylarLong/iztro) `^2.5.8` | 排盘参考实现（`lib/ziwei/algorithm.ts`） | MIT |
+| [lunar-javascript](https://github.com/jjonline/calendar.js) `^1.7.3` | 农历 / 真太阳时转换 | MIT |
+| 古籍《紫微斗数全集》《紫微斗数全书》《骨髓赋》 | `lib/classics/data/` 三部共 75 段 | Public Domain |
+| 倪海厦先生《天纪》讲授体系 | 紫微斗数理论框架与术语依据 | 著作权归原作者及权利人；本站仅学习研究范围内引用整理 |
+| 倪海厦讲义（15 集，紫微斗数部分） | `docs/ni-tianji-zjds/cleaned/`（22,123 字） | **个人学习用途整理**，非商业发行品；如涉及权利问题请联系删除 |
+| 人纪·伤寒论 32 方 / 金匮要略 40 方 | `lib/renji/shanghan.ts` / `jingui.ts` | 古籍原文 Public Domain；条目整理按传统分章 |
+| 地纪·廿四山向 | `lib/diji/mountains.ts` | 传统堪舆术语整理 |
+| 针灸透针经验（31 条） | `lib/nihai/renji.ts` | 行级标 author（**倪海厦 / 孙培荣 / 周左宇**） |
+| 易经 64 卦起卦 | `lib/qigua/*` | 传统易学公开方法 |
 
-### 其他来源说明
+### 关于上游 51.8 万样本数据集
 
-- 命理体系与术语源自**倪海厦先生《天纪》**讲授内容
-- `docs/ni-tianji-zjds/` 讲义为**个人学习用途**整理，非商业发行品；如涉及权利问题请联系删除
-- 排盘实现参考 [iztro](https://github.com/SylarLong/iztro) 与 lunar-javascript
+上游 [Releases](https://github.com/Renhuai123/ziwei-doushu/releases/tag/v3.0-samples) 中发布的
+**紫微斗数开源样本数据集 v3.0**（518,400 条，5.5 GB）**本 fork 未引入**。
+本项目所有命盘数据均由用户在前端实时排盘产生，无任何离线样本数据库。
+若引用该数据集，请遵守其原始 attribution 要求（详见上游 README）。
+
+### 权利处理
+
+- **代码层**：MIT 协议下自由使用，保留 LICENSE 文件即可
+- **倪海厦先生相关内容**：著作权归原作者及相关权利人所有，本站仅作学习研究范围内的引用与整理，不作商业使用
+- **本站原创部分**（页面设计、知识组织、三纪聚合 UI）：欢迎注明来源的引用；整站转载或商业使用请先联系
+- **版权问题反馈**：通过 [GitHub Issues](../../issues) 提交，我们会尽快响应
 
 ---
 
